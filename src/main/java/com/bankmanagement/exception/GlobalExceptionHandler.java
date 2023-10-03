@@ -30,4 +30,17 @@ public class GlobalExceptionHandler {
         webRequest.getDescription(false);
         return ResponseEntity.ok(errorDetails);
     }
+    @ExceptionHandler(value={UserTransactionException.class})
+    public ResponseEntity<ErrorDetails> handleUserTransactionException(UserTransactionException exception,WebRequest webRequest){
+       ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.NOT_FOUND);
+       webRequest.getDescription(false);
+        return ResponseEntity.ok(errorDetails);
+    }
+    @ExceptionHandler(value={LoggerException.class})
+    public ResponseEntity<ErrorDetails> loggerExceptionHandle(LoggerException exception,WebRequest webRequest){
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.NOT_FOUND);
+        webRequest.getDescription(false);
+        return ResponseEntity.ok(errorDetails);
+
+    }
 }

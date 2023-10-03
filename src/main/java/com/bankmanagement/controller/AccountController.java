@@ -1,19 +1,23 @@
 package com.bankmanagement.controller;
 
 import com.bankmanagement.dto.AccountDto;
+import com.bankmanagement.entity.Account;
 import com.bankmanagement.entity.UserTransaction;
 import com.bankmanagement.service.AccountService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class AccountController {
     @Autowired
     private AccountService accountService;
+
     @PostMapping("/saveAccount")
     public ResponseEntity<AccountDto> saveAccount(@RequestBody AccountDto accountdto)
     {
@@ -29,7 +33,7 @@ public class AccountController {
         return ResponseEntity.ok(accountService.accountFindById(accountId));
     }
     @PutMapping("/account/{accountId}")
-    public ResponseEntity<AccountDto> updateAccountDto(@RequestBody AccountDto accountDto, @PathVariable("accountId") Long accountId) {
+    public ResponseEntity<AccountDto> updateAccountDto(@RequestBody AccountDto accountDto, @PathVariable("accountId") Long accountId) throws AccountException {
 
         return ResponseEntity.ok(accountService.updateAccountById(accountDto, accountId));
     }
@@ -38,18 +42,28 @@ public class AccountController {
     {
         return accountService.deleteAccountById(accountId);
     }
-    @GetMapping("/checkBalanceById/{accountId}")
-    public ResponseEntity<List<AccountDto>> balanceCheck(@PathVariable Double balance){
-        return accountService.getBalanceById(balance);
+    @GetMapping("/checkAmountById/{accountId}")
+    public ResponseEntity<List<AccountDto>> balanceCheck(@PathVariable Double amount) throws AccountException {
+        return ResponseEntity.ok(accountService.getAmountById(amount));
     }
-    @PutMapping("/depositAmount/{accountId}")
-    public ResponseEntity <AccountDto>DepositMoney(@RequestBody AccountDto accountDto,@PathVariable Long accountId) throws AccountException {
-        return ResponseEntity.ok(accountService.depositAmount(accountDto,accountId));
+
+    @PostMapping("/{accountId}/deposit")
+    public Account deposit(@PathVariable Long accountId, @RequestBody Map<String, Double> request) throws AccountException {
+        Double amount = request.get("amount");
+
+        return accountService.deposit(accountId, amount);
     }
-    @GetMapping("/withdrawalAmount/{accountId}")
-    public ResponseEntity<AccountDto> withdrawalAmount(@PathVariable Long accountId){
-        return ResponseEntity.ok(accountService.withdrawalAmountById(accountId));
+    @PostMapping("/{accountId}/withdrawalAmount")
+    public ResponseEntity<Account> withdrawalAmount(@PathVariable Long accountId,@RequestBody Map<String, Double> request) throws AccountException {
+        Double amount = request.get("amount");
+        return ResponseEntity.ok(accountService.withdrawalAmountById(accountId,amount));
 
     }
+
+
+
+
+
+
 
 }

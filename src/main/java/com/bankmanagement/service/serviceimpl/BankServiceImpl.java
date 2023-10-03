@@ -1,5 +1,4 @@
 package com.bankmanagement.service.serviceimpl;
-
 import com.bankmanagement.dto.BankDto;
 import com.bankmanagement.entity.Bank;
 import com.bankmanagement.exception.BankException;
@@ -8,7 +7,6 @@ import com.bankmanagement.service.BankService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,7 +19,7 @@ public class BankServiceImpl implements BankService {
     @Override
     public BankDto saveBank(BankDto bankDto) {
         Bank bank = new Bank();
-        BeanUtils.copyProperties(bank,bankDto);
+        BeanUtils.copyProperties(bankDto,bank);
         bankRepository.save(bank);
         return bankDto;
     }

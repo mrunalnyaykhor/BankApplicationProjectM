@@ -17,10 +17,9 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
 
     @Override
-    public CustomerDto saveCustomer(CustomerDto customers) {
+    public CustomerDto saveCustomer(CustomerDto customerDto) {
         Customer customer= new Customer();
-        CustomerDto customerDto= new CustomerDto();
-        BeanUtils.copyProperties(customerDto, customer);
+        BeanUtils.copyProperties(customerDto,customer);
         customerRepository.save(customer);
         return customerDto;
     }
@@ -41,7 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
         if(customerRepository.findById(customerId).isEmpty())
             throw new CustomerException(" Customer not present");
 
-         return   customerRepository.findById(customerId).stream().filter(Objects::nonNull)
+         return  customerRepository.findById(customerId).stream().filter(Objects::nonNull)
                    .map(customer -> {
                        CustomerDto customerDto = new CustomerDto();
                        BeanUtils.copyProperties(customer,customerDto);

@@ -1,5 +1,6 @@
 package com.bankmanagement.dto;
 
+import com.bankmanagement.entity.Account;
 import com.bankmanagement.entity.Bank;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,10 @@ public class AccountDto {
     private String customerAddress;
     private long customerAccountNumber;
     private String email;
+    private Double balance;
     @OneToMany(cascade = CascadeType.ALL)
     private Bank bank;
+
+
+
 }

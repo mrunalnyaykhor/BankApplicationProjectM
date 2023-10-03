@@ -1,6 +1,8 @@
 package com.bankmanagement.service;
 
 import com.bankmanagement.dto.AccountDto;
+import com.bankmanagement.entity.Account;
+import com.bankmanagement.entity.UserTransaction;
 import org.springframework.http.ResponseEntity;
 
 import javax.security.auth.login.AccountException;
@@ -14,13 +16,17 @@ public interface AccountService {
 
     List<AccountDto> accountFindById(Long accountId) throws AccountException;
 
-    AccountDto updateAccountById(AccountDto accountDto, Long accountId);
+    AccountDto updateAccountById(AccountDto accountDto, Long accountId) throws AccountException;
 
     String deleteAccountById(Long accountId);
 
-    ResponseEntity<List<AccountDto>> getBalanceById(Double balance);
+    List<AccountDto> getAmountById(Double amount) throws AccountException;
 
     AccountDto depositAmount(AccountDto accountDto, Long accountId) throws AccountException;
 
-    AccountDto withdrawalAmountById(Long accountId);
+    Account withdrawalAmountById(Long accountId,Double amount) throws AccountException;
+    Account deposit(Long accountId, Double amount) throws AccountException;
+
+
+    Account findByCustomerAccountNumber(Long toAccountNumber);
 }

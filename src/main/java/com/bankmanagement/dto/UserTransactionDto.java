@@ -9,8 +9,8 @@ import java.util.Date;
 public class UserTransactionDto {
     private long transactionId;
     private double amount;
-    private long accountNumberFrom;
-    private long accountNumberTo;
+    private Long accountNumberFrom;
+    private Long accountNumberTo;
     private  String ifscCode;
     private String name;
     private Date date;

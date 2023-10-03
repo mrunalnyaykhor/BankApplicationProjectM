@@ -26,6 +26,7 @@ public class Account {
     private String customerAddress;
     private long customerAccountNumber;
     private String email;
+    private Double balance;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="bankId",referencedColumnName = "bankId")
     private Bank bank;
