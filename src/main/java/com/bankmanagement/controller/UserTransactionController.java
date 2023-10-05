@@ -31,10 +31,7 @@ public class UserTransactionController {
     public UserTransaction depositAmount(@RequestBody UserTransaction userTransaction) throws AccountException {
         return userTransactionService.depositAmount(userTransaction);
     }
-//    @PostMapping("account/{accountNumberFrom}/{accountNumberTo}")
-//    public ResponseEntity<UserTransaction> depositAmountFromAccount(@RequestBody UserTransaction userTransaction,@PathVariable Long accountNumberTo,@PathVariable Long accountNumberFrom){
-//        return ResponseEntity.ok( userTransactionService.transactionAmountToAccount(userTransaction,accountNumberTo,accountNumberFrom));
-//    }
+
 
 
 }

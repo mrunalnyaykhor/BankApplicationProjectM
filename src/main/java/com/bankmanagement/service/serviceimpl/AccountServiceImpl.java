@@ -2,10 +2,16 @@ package com.bankmanagement.service.serviceimpl;
 
 import com.bankmanagement.dto.AccountDto;
 import com.bankmanagement.entity.Account;
+import com.bankmanagement.entity.Bank;
+import com.bankmanagement.entity.Customer;
+import com.bankmanagement.exception.CustomerException;
 import com.bankmanagement.repository.AccountRepository;
+import com.bankmanagement.repository.BankRepository;
+import com.bankmanagement.repository.CustomerRepository;
 import com.bankmanagement.service.AccountService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.login.AccountException;
@@ -18,13 +24,31 @@ import java.util.stream.Collectors;
 public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private BankRepository bankRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Override
-    public AccountDto saveAccount(AccountDto accountdto) {
-        Account account = new Account();
+    public AccountDto saveAccount(AccountDto accountdto,Long customerId,Long bankId) {
+        Optional<Customer> customerOptional =customerRepository.findById(customerId);
+        if(customerOptional.isEmpty())
+            throw new CustomerException("customer not present & Cannot create Account");
+        if(customerOptional.isPresent()) {
+
+        Account account= new Account();
+        Optional<Customer> customer = customerRepository.findById(customerId);
+        Optional<Bank> bank = bankRepository.findById(bankId);
         BeanUtils.copyProperties(accountdto, account);
-        accountRepository.save(account);
-        return accountdto;
+        account.setCustomer(customer.get());
+        accountdto.setCustomerId(customer.get().getCustomerId());
+        account.setBank(bank.get());
+        accountdto.setBankId(bank.get().getBankId());
+
+            accountRepository.save(account);
+        }
+            return accountdto;
+
     }
 
     @Override

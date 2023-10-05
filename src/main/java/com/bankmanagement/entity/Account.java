@@ -9,17 +9,14 @@ import java.util.Date;
 @Getter
 @Entity
 public class Account {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long accountId;
     private String firstName;
     private String middleName;
     private String lastName;
-    private Long contactNumber;
     private double amount;
     private int age;
-    private double customerSalary;
     private String aadhaarNumber;
     private String panCardNumber;
     private String dateOfBirth;
@@ -27,8 +24,14 @@ public class Account {
     private long customerAccountNumber;
     private String email;
     private Double balance;
+    private String ifscCode;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="bankId",referencedColumnName = "bankId")
     private Bank bank;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="customerId",referencedColumnName = "customerId")
+    private Customer customer;
+
+
 
 }

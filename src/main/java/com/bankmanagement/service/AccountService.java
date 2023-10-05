@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface AccountService {
 
-    AccountDto saveAccount(AccountDto accountdto);
+    AccountDto saveAccount(AccountDto accountdto,Long customerId,Long bankId);
 
     List<AccountDto> getAllAccount() throws AccountException;
 

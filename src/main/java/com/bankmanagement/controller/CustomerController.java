@@ -3,22 +3,27 @@ package com.bankmanagement.controller;
 
 
 import com.bankmanagement.dto.CustomerDto;
+import com.bankmanagement.dto.UserTransactionDto;
 import com.bankmanagement.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @PostMapping("/saveCustomer")
-    public ResponseEntity<CustomerDto> saveCustomer(@RequestBody CustomerDto customerDto)
+    @PostMapping("/saveCustomer/{bankId}")
+    public ResponseEntity<CustomerDto> saveCustomer(@Valid @RequestBody CustomerDto customerDto, @PathVariable Long bankId)
     {
-        return ResponseEntity.ok( customerService.saveCustomer(customerDto));
+        return ResponseEntity.ok( customerService.saveCustomer(customerDto,bankId));
 
     }
     @GetMapping("/getAllCustomer")
@@ -39,4 +44,10 @@ public class CustomerController {
     {
         return customerService.deleteCustomerById(customerId);
     }
+    @PutMapping("/transferMoney")
+    public ResponseEntity<String> transferMoney(@RequestBody UserTransactionDto transactionDto) {
+        String s = customerService.transferMoney(transactionDto);
+        return new ResponseEntity<>(s, HttpStatus.CREATED);
+    }
+
 }
