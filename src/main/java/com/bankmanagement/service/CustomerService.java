@@ -1,11 +1,9 @@
 package com.bankmanagement.service;
 
 import com.bankmanagement.dto.CustomerDto;
-import com.bankmanagement.dto.UserTransactionDto;
-import com.bankmanagement.entity.Customer;
+import com.bankmanagement.dto.TransactionDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CustomerService {
     CustomerDto saveCustomer(CustomerDto customerDto,Long bankId) ;
@@ -18,5 +16,5 @@ public interface CustomerService {
 
     CustomerDto updateCustomer(CustomerDto customerDto,Long customerId);
 
-    String transferMoney(UserTransactionDto transactionDto);
+    String transferMoney(TransactionDto transactionDto);
 }

@@ -3,12 +3,11 @@ package com.bankmanagement.controller;
 
 
 import com.bankmanagement.dto.CustomerDto;
-import com.bankmanagement.dto.UserTransactionDto;
+import com.bankmanagement.dto.TransactionDto;
 import com.bankmanagement.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -44,10 +43,7 @@ public class CustomerController {
     {
         return customerService.deleteCustomerById(customerId);
     }
-    @PutMapping("/transferMoney")
-    public ResponseEntity<String> transferMoney(@RequestBody UserTransactionDto transactionDto) {
-        String s = customerService.transferMoney(transactionDto);
-        return new ResponseEntity<>(s, HttpStatus.CREATED);
-    }
+
+
 
 }

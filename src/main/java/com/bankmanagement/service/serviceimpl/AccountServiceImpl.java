@@ -11,7 +11,6 @@ import com.bankmanagement.repository.CustomerRepository;
 import com.bankmanagement.service.AccountService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.login.AccountException;
@@ -166,10 +165,6 @@ public class AccountServiceImpl implements AccountService {
         return account.orElse(null);
     }
 
-    @Override
-    public Account findByCustomerAccountNumber(Long toAccountNumber) {
-         return accountRepository.findByCustomerAccountNumber(toAccountNumber);
-    }
 
 
 }

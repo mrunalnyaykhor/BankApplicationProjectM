@@ -24,9 +24,15 @@ public class CustomerDto {
     private String email;
     @NotNull(message = "aadhaar Number is Mandatory")
     private String aadhaarNumber;
+    @NotBlank(message = "panCardNumber should not be null")
+    @Size(min=8, message="Name should have at least 8 characters")
     private String panCardNumber;
+    @NotNull
     private String dateOfBirth;
+    @NotBlank(message = "Address should be mandatory")
+    @Size(min =2,message = "address should be 2 characters")
     private String address;
+    @NotNull
     private long accountNumber;
     private Long bankId;
 }

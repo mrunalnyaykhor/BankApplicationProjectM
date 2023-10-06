@@ -2,8 +2,6 @@ package com.bankmanagement.service;
 
 import com.bankmanagement.dto.AccountDto;
 import com.bankmanagement.entity.Account;
-import com.bankmanagement.entity.UserTransaction;
-import org.springframework.http.ResponseEntity;
 
 import javax.security.auth.login.AccountException;
 import java.util.List;
@@ -28,5 +26,5 @@ public interface AccountService {
     Account deposit(Long accountId, Double amount) throws AccountException;
 
 
-    Account findByCustomerAccountNumber(Long toAccountNumber);
+
 }

@@ -1,6 +1,4 @@
 package com.bankmanagement.exception;
-
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -35,8 +33,8 @@ public class GlobalExceptionHandler {
         webRequest.getDescription(false);
         return ResponseEntity.ok(errorDetails);
     }
-    @ExceptionHandler(value={UserTransactionException.class})
-    public ResponseEntity<ErrorDetails> handleUserTransactionException(UserTransactionException exception){
+    @ExceptionHandler(value={TransactionException.class})
+    public ResponseEntity<ErrorDetails> handleUserTransactionException(TransactionException exception){
        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.BAD_REQUEST);
 
         return ResponseEntity.badRequest().body(errorDetails);

@@ -1,17 +1,16 @@
 package com.bankmanagement.service.serviceimpl;
-
 import com.bankmanagement.dto.CustomerDto;
-import com.bankmanagement.dto.UserTransactionDto;
+import com.bankmanagement.dto.TransactionDto;
 import com.bankmanagement.entity.Account;
 import com.bankmanagement.entity.Bank;
 import com.bankmanagement.entity.Customer;
-import com.bankmanagement.entity.UserTransaction;
+import com.bankmanagement.entity.Transaction;
 import com.bankmanagement.exception.BankException;
 import com.bankmanagement.exception.CustomerException;
 import com.bankmanagement.repository.AccountRepository;
 import com.bankmanagement.repository.BankRepository;
 import com.bankmanagement.repository.CustomerRepository;
-import com.bankmanagement.repository.UserTransactionRepository;
+import com.bankmanagement.repository.TransactionRepository;
 import com.bankmanagement.service.CustomerService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private BankRepository bankRepository;
     @Autowired
-    private UserTransactionRepository transactionRepository;
+    private TransactionRepository transactionRepository;
 
     @Override
     public CustomerDto saveCustomer(CustomerDto customerDto, Long bankId) {
@@ -91,38 +90,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public String transferMoney(UserTransactionDto transactionDto) {
-        UserTransaction transaction = new UserTransaction();
-        Account fromAccount = accountRepository.findByCustomerAccountNumber(transactionDto.getAccountNumberFrom());
-        Account toAccount = accountRepository.findByCustomerAccountNumber(transactionDto.getAccountNumberTo());
-
-        if (Objects.isNull(fromAccount)) {
-            throw new BankException("Account Not Present"
-                    + transactionDto.getAccountNumberFrom());
-        }
-        if (Objects.isNull(toAccount)) {
-            throw new BankException("Account Not Present"
-                    + transactionDto.getAccountNumberFrom());
-        }
+    public String transferMoney(TransactionDto transactionDto) {
+        Transaction transaction = new Transaction();
+        accountRepository.findByAccountNumber(transactionDto.getAccountNumberFrom());
+        accountRepository.findByAccountNumber(transactionDto.getAccountNumberTo());
 
 
-        if (!transactionDto.getIfscCode().equals(toAccount.getIfscCode())) {
-            return transactionDto.getIfscCode();
-        }
-        if (transactionDto.getAmount() > fromAccount.getAmount()) {
-            return "low Balance";
-        }
-        double fromAccountDebited = fromAccount.getAmount() - transactionDto.getAmount();
-        double toAccountCredited = toAccount.getAmount() + transactionDto.getAmount();
 
-        fromAccount.setAmount(fromAccountDebited);
-        toAccount.setAmount(toAccountCredited);
 
-        BeanUtils.copyProperties(transactionDto, transaction);
 
-        accountRepository.save(fromAccount);
-        accountRepository.save(toAccount);
-        transactionRepository.save(transaction);
+
 
         return null;
     }

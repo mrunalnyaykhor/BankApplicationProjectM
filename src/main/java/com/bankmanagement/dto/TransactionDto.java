@@ -6,9 +6,9 @@ import lombok.Setter;
 import java.util.Date;
 @Setter
 @Getter
-public class UserTransactionDto {
+public class TransactionDto {
     private long transactionId;
-    private double amount;
+    private double transferAmount;
     private Long accountNumberFrom;
     private Long accountNumberTo;
     private  String ifscCode;

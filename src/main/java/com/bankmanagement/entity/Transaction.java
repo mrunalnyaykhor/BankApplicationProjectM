@@ -16,7 +16,7 @@ import java.util.Date;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserTransaction {
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long transactionId;

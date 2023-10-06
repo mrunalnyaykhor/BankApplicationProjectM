@@ -13,15 +13,14 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long accountId;
     private String firstName;
-    private String middleName;
     private String lastName;
     private double amount;
     private int age;
-    private String aadhaarNumber;
+    private Double aadhaarNumber;
     private String panCardNumber;
     private String dateOfBirth;
     private String customerAddress;
-    private long customerAccountNumber;
+    private long accountNumber;
     private String email;
     private Double balance;
     private String ifscCode;
