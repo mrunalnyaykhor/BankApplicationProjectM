@@ -36,7 +36,6 @@ public class BankServiceImpl implements BankService {
 
                 }).collect(Collectors.toList());
 
-
     }
 
     @Override
@@ -55,17 +54,11 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public BankDto updateBankById(BankDto bankDto, Long bankId) {
-        Optional<Bank> bankOptional = bankRepository.findById(bankId);
-        if(bankOptional.isEmpty())
-        {
-            throw new BankException("Bank Not Available");
-        }
-       if(bankOptional.isPresent()){
-           Bank bank = bankOptional.get();
-           BeanUtils.copyProperties(bankDto,bank);
-           bankRepository.save(bank);
-       }
-       return bankDto;
+        Bank bank = bankRepository.findById(bankId)
+                .orElseThrow(() -> new BankException("Bank Not Available"));
+        BeanUtils.copyProperties(bankDto, bank);
+        bankRepository.save(bank);
+        return bankDto;
 
     }
 
@@ -76,10 +69,8 @@ public class BankServiceImpl implements BankService {
         {
             throw new BankException("Bank Not Available");
         }
-        if(bankOptional.isPresent())
-        {
-            bankRepository.deleteById(bankId);
-        }
+        bankOptional.ifPresent(bank -> bankRepository.deleteById(bankId));
+
 
     }
 }

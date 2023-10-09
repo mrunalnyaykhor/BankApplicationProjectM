@@ -1,12 +1,10 @@
 package com.bankmanagement.controller;
-
 import com.bankmanagement.dto.AccountDto;
 import com.bankmanagement.entity.Account;
 import com.bankmanagement.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.security.auth.login.AccountException;
 import java.util.List;
 import java.util.Map;
@@ -27,25 +25,22 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAllAccount());
     }
 
-    @GetMapping("/getAccountById/{accountId}")
-    public ResponseEntity<List<AccountDto>> getAccountById(@PathVariable Long accountId) throws AccountException {
-        return ResponseEntity.ok(accountService.accountFindById(accountId));
-    }
 
-    @PutMapping("/account/{accountId}")
-    public ResponseEntity<AccountDto> updateAccountDto(@RequestBody AccountDto accountDto, @PathVariable("accountId") Long accountId) throws AccountException {
+
+    @PutMapping("/accounts/{accountId}")
+    public ResponseEntity<String> updateAccountDto(@RequestBody AccountDto accountDto, @PathVariable("accountId") Long accountId) throws AccountException {
 
         return ResponseEntity.ok(accountService.updateAccountById(accountDto, accountId));
     }
 
     @DeleteMapping("/deleteAccountIdById/{accountId}")
-    public String deleteAccountById(@PathVariable Long accountId) {
+    public String deleteAccountById(@PathVariable Long accountId) throws AccountException {
         return accountService.deleteAccountById(accountId);
     }
 
     @GetMapping("/checkAmountById/{accountId}")
-    public ResponseEntity<List<AccountDto>> balanceCheck(@PathVariable Double amount) throws AccountException {
-        return ResponseEntity.ok(accountService.getAmountById(amount));
+    public ResponseEntity<List<Double>> balanceCheck(@PathVariable Long accountId) throws AccountException {
+        return ResponseEntity.ok(accountService.getBalance(accountId));
     }
 
     @PostMapping("/{accountId}/deposit")

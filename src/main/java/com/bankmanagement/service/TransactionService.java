@@ -6,7 +6,7 @@ import com.bankmanagement.exception.AccountException;
 
 public interface TransactionService {
 
-    TransactionDto transactionAmount(TransactionDto transactionDto, Long accountId);
+
 
 
 

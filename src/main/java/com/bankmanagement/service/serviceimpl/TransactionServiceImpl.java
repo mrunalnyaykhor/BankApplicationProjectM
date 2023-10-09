@@ -1,13 +1,16 @@
 package com.bankmanagement.service.serviceimpl;
+import com.bankmanagement.dto.AccountDto;
 import com.bankmanagement.dto.TransactionDto;
 import com.bankmanagement.entity.Account;
 import com.bankmanagement.entity.Transaction;
+import com.bankmanagement.exception.TransactionException;
 import com.bankmanagement.repository.AccountRepository;
 import com.bankmanagement.repository.CustomerRepository;
 import com.bankmanagement.repository.TransactionRepository;
 import com.bankmanagement.service.AccountService;
 import com.bankmanagement.service.CustomerService;
 import com.bankmanagement.service.TransactionService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,34 +29,39 @@ public class TransactionServiceImpl implements TransactionService {
     private AccountRepository accountRepository;
 
 
-    @Override
-    public TransactionDto transactionAmount(TransactionDto transactionDto, Long accountId) {
-
-      Optional<Account>  account1 =  accountRepository.findById(accountId);
-      Optional<Account>  account2 =  accountRepository.findById(accountId);
-      Long accountNumberFrom = transactionDto.getAccountNumberFrom();
-      Long accountNumberTo = transactionDto.getAccountNumberTo();
-        Double amount = transactionDto.getTransferAmount();
-
-//        Account toAccount = accountService.findByAccountNumber(accountNumberTo);
-//        toAccount.setBalance(toAccount.getBalance() + amount);
-//        accountRepository.save(toAccount);
-//
-//        Account fromaccount = accountService.findByAccountNumber(accountNumberFrom);
-//        fromaccount.setBalance(toAccount.getBalance() - amount);
-//        accountRepository.save(fromaccount);
-
-        return transactionDto;
-    }
 
     @Override
     public String transferMoney(TransactionDto transactionDto) {
 
-        Account byAccountNumberFrom = accountRepository.findByAccountNumber(transactionDto.getAccountNumberFrom());
-        Account byAccountNumberTo = accountRepository.findByAccountNumber(transactionDto.getAccountNumberTo());
+        Optional<Account> byAccountNumberFrom = Optional.ofNullable(accountRepository.findByAccountNumber(transactionDto.getAccountNumberFrom()));
+        Optional<Account> byAccountNumberTo = Optional.ofNullable(accountRepository.findByAccountNumber(transactionDto.getAccountNumberTo()));
+
+        if (byAccountNumberFrom.isEmpty() && byAccountNumberTo.isEmpty()) {
+            throw new TransactionException("Account not present");
+        }
 
 
-        return null;
+        Account toAccount = null;
+        if (byAccountNumberFrom.isPresent() && byAccountNumberTo.isPresent()) {
+            Account fromAccount = byAccountNumberFrom.get();
+            toAccount = byAccountNumberTo.get();
+            double amountFromTransaction = fromAccount.getAmount() - transactionDto.getAmount();
+            double amountToAccount = toAccount.getAmount() + transactionDto.getAmount();
+
+            fromAccount.setAmount(amountFromTransaction);
+            toAccount.setAmount(amountToAccount);
+            Transaction transaction = new Transaction();
+            BeanUtils.copyProperties(transactionDto, transaction);
+
+            accountRepository.save(fromAccount);
+            accountRepository.save(toAccount);
+            transactionRepository.save(transaction);
+        }
+
+        return "your transaction from Account Number :" + transactionDto.getAccountNumberFrom() + "to Account Number :" + transactionDto.getAccountNumberTo() + "is successfully__!! \n" +
+                "Transfer Debited Amount : " + transactionDto.getAmount() + "\n" +
+                "Credited Amount " + toAccount.getAmount() + transactionDto.getAmount();
+
     }
 
 

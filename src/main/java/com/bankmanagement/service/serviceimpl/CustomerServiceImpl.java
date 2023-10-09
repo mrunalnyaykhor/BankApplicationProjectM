@@ -1,11 +1,8 @@
 package com.bankmanagement.service.serviceimpl;
+
 import com.bankmanagement.dto.CustomerDto;
-import com.bankmanagement.dto.TransactionDto;
-import com.bankmanagement.entity.Account;
 import com.bankmanagement.entity.Bank;
 import com.bankmanagement.entity.Customer;
-import com.bankmanagement.entity.Transaction;
-import com.bankmanagement.exception.BankException;
 import com.bankmanagement.exception.CustomerException;
 import com.bankmanagement.repository.AccountRepository;
 import com.bankmanagement.repository.BankRepository;
@@ -34,12 +31,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto saveCustomer(CustomerDto customerDto, Long bankId) {
-        Customer customer = new Customer();
+
         Optional<Bank> bank = bankRepository.findById(bankId);
-        BeanUtils.copyProperties(customerDto, customer);
-        customer.setBank(bank.get());
-        customerDto.setBankId(bank.get().getBankId());
-        customerRepository.save(customer);
+       Customer customer = new Customer();
+                    BeanUtils.copyProperties(customerDto, customer);
+                    customer.setBank(bank.get());
+                    customerDto.setBankId(bank.get().getBankId());
+                    customerRepository.save(customer);
 
         return customerDto;
     }
@@ -58,50 +56,51 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerDto> customerFindById(Long customerId) {
 
-        if (customerRepository.findById(customerId).isEmpty())
-            throw new CustomerException(" Customer not present");
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
 
-        return customerRepository.findById(customerId).stream().filter(Objects::nonNull)
+        if (customerOptional.isEmpty()) {
+            throw new CustomerException("Customer not present");
+        }
+
+        return customerOptional.stream()
                 .map(customer -> {
                     CustomerDto customerDto = new CustomerDto();
                     BeanUtils.copyProperties(customer, customerDto);
                     return customerDto;
-                }).collect(Collectors.toList());
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
     public String deleteCustomerById(Long customerId) {
 
-        if (customerRepository.findById(customerId).isEmpty()) {
-            throw new CustomerException(" Customer not present");
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+
+        if (customerOptional.isEmpty()) {
+            throw new CustomerException("Customer not present");
         }
-        if (customerRepository.findById(customerId).isPresent()) {
+
+        customerOptional.ifPresent(customer -> {
             customerRepository.deleteById(customerId);
-        }
-        return "deleted successfully";
+        });
+
+        return " Customer Id: " + customerId + " Deleted successfully";
 
     }
 
     @Override
     public CustomerDto updateCustomer(CustomerDto customerDto, Long customerId) {
         Optional<Customer> customerOptional = customerRepository.findById(customerId);
-
+        if (customerOptional.isEmpty()) {
+            throw new CustomerException("Customer Does not exist____!!!");
+        }
+        if (customerOptional.isPresent()) {
+            customerOptional.stream().map(customer -> {
+                BeanUtils.copyProperties(customerDto, customer);
+                return customerRepository.save(customer);
+            });
+        }
         return customerDto;
-    }
-
-    @Override
-    public String transferMoney(TransactionDto transactionDto) {
-        Transaction transaction = new Transaction();
-        accountRepository.findByAccountNumber(transactionDto.getAccountNumberFrom());
-        accountRepository.findByAccountNumber(transactionDto.getAccountNumberTo());
-
-
-
-
-
-
-
-        return null;
     }
 
 

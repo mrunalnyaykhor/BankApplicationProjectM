@@ -10,9 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Serializable> {
-     Long findAmountByAccountId(Long accountID);
 
-     Account findByAadhaarNumberAndPanCardNumber(String aadhaarNumber, String panCard);
+    // Account findByAadhaarNumberAndPanCardNumber(String aadhaarNumber, String panCard);
 
     Account findByAccountNumber(Long accountNumberTo);
+    Optional<Account> findByAmount(Double amount);
 }

@@ -15,16 +15,18 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = {CustomerException.class})
     public ResponseEntity<ErrorDetails> handleResourceNotFoundException(CustomerException exception, WebRequest webRequest) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.NOT_FOUND);
-        webRequest.getDescription(false);
-        return ResponseEntity.ok(errorDetails);
+
+
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.BAD_REQUEST);
+
+        return  ResponseEntity.badRequest().body(errorDetails);
     }
 
     @ExceptionHandler(value = {AccountException.class})
-    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(AccountException exception, WebRequest webRequest) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.NOT_FOUND);
-        webRequest.getDescription(false);
-        return ResponseEntity.ok(errorDetails);
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(AccountException exception) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.BAD_REQUEST);
+
+        return ResponseEntity.badRequest().body(errorDetails);
     }
 
     @ExceptionHandler(value = {BankException.class})

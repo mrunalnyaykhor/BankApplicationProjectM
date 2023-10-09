@@ -12,13 +12,12 @@ public interface AccountService {
 
     List<AccountDto> getAllAccount() throws AccountException;
 
-    List<AccountDto> accountFindById(Long accountId) throws AccountException;
 
-    AccountDto updateAccountById(AccountDto accountDto, Long accountId) throws AccountException;
+    String updateAccountById(AccountDto accountDto, Long accountId) throws AccountException;
 
-    String deleteAccountById(Long accountId);
+    String deleteAccountById(Long accountId) throws AccountException;
 
-    List<AccountDto> getAmountById(Double amount) throws AccountException;
+    List<Double> getBalance(Long accountId) throws AccountException;
 
     AccountDto depositAmount(AccountDto accountDto, Long accountId) throws AccountException;
 

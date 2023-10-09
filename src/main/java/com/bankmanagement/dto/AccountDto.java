@@ -31,8 +31,7 @@ public class AccountDto {
     private String panCardNumber;
     @NotBlank(message = "Date of Birth is Mandatory")
     private String dateOfBirth;
-    @NotBlank(message = "Address is Mandatory")
-    private String address;
+
     @NotNull(message = "Account Number is mandatory")
     private long accountNumber;
 

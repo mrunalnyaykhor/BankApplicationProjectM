@@ -14,17 +14,16 @@ import java.util.Date;
 @Setter
 @Getter
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long transactionId;
     private Long accountNumberFrom;
     private Long accountNumberTo;
-    private Double transferAmount;
+    private Double amount;
     private  String ifscCode;
-    private Date date;
 
 
 

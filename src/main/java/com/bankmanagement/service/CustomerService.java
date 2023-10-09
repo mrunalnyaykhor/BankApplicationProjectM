@@ -16,5 +16,5 @@ public interface CustomerService {
 
     CustomerDto updateCustomer(CustomerDto customerDto,Long customerId);
 
-    String transferMoney(TransactionDto transactionDto);
+
 }
