@@ -33,11 +33,13 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDto saveCustomer(CustomerDto customerDto, Long bankId) {
 
         Optional<Bank> bank = bankRepository.findById(bankId);
-       Customer customer = new Customer();
-                    BeanUtils.copyProperties(customerDto, customer);
-                    customer.setBank(bank.get());
-                    customerDto.setBankId(bank.get().getBankId());
-                    customerRepository.save(customer);
+        Customer customer = new Customer();
+
+        BeanUtils.copyProperties(customerDto, customer);
+        customer.setBank(bank.get());
+        customerDto.setBankId(bank.get().getBankId());
+
+        customerRepository.save(customer);
 
         return customerDto;
     }
@@ -85,7 +87,6 @@ public class CustomerServiceImpl implements CustomerService {
         });
 
         return " Customer Id: " + customerId + " Deleted successfully";
-
     }
 
     @Override
@@ -102,7 +103,5 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return customerDto;
     }
-
-
 }
 

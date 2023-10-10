@@ -15,7 +15,7 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping("/saveAccount/{customerId}/{bankId}")
-    public ResponseEntity<AccountDto> saveAccount(@RequestBody AccountDto accountdto,@PathVariable Long customerId,@PathVariable Long bankId) {
+    public ResponseEntity<AccountDto> saveAccount(@RequestBody AccountDto accountdto,@PathVariable Long customerId,@PathVariable Long bankId) throws AccountException {
         return ResponseEntity.ok(accountService.saveAccount(accountdto,customerId,bankId));
 
     }
@@ -42,16 +42,19 @@ public class AccountController {
     public ResponseEntity<List<Double>> balanceCheck(@PathVariable Long accountId) throws AccountException {
         return ResponseEntity.ok(accountService.getBalance(accountId));
     }
-
+    @GetMapping("/accountStatus/{accountId}")
+    public ResponseEntity<AccountDto> updateAccountStatus(@RequestBody AccountDto accountDto,@PathVariable("accountId")  Long accountId) throws AccountException {
+        return ResponseEntity.ok(accountService.updateAccountStatus(accountDto,accountId));
+    }
     @PostMapping("/{accountId}/deposit")
-    public Account deposit(@PathVariable Long accountId, @RequestBody Map<String, Double> request) throws AccountException {
+    public ResponseEntity<String> depositAmount(@PathVariable Long accountId, @RequestBody Map<String, Double> request) throws AccountException {
         Double amount = request.get("amount");
 
-        return accountService.deposit(accountId, amount);
+        return ResponseEntity.ok(accountService.deposit(accountId, amount));
     }
 
     @PostMapping("/{accountId}/withdrawalAmount")
-    public ResponseEntity<Account> withdrawalAmount(@PathVariable Long accountId, @RequestBody Map<String, Double> request) throws AccountException {
+    public ResponseEntity<String> withdrawalAmount(@PathVariable Long accountId, @RequestBody Map<String, Double> request) throws AccountException {
         Double amount = request.get("amount");
         return ResponseEntity.ok(accountService.withdrawalAmountById(accountId, amount));
 

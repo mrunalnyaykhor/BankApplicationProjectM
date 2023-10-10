@@ -5,7 +5,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -14,7 +13,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = {CustomerException.class})
-    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(CustomerException exception, WebRequest webRequest) {
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(CustomerException exception) {
 
 
         ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.BAD_REQUEST);
@@ -30,10 +29,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = {BankException.class})
-    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(BankException exception, WebRequest webRequest) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.NOT_FOUND);
-        webRequest.getDescription(false);
-        return ResponseEntity.ok(errorDetails);
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(BankException exception) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.BAD_REQUEST);
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body( errorDetails);
     }
     @ExceptionHandler(value={TransactionException.class})
     public ResponseEntity<ErrorDetails> handleUserTransactionException(TransactionException exception){

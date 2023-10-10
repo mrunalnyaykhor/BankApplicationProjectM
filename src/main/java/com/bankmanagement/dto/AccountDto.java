@@ -34,19 +34,15 @@ public class AccountDto {
 
     @NotNull(message = "Account Number is mandatory")
     private long accountNumber;
+    private boolean blocked;
 
     @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
             flags = Pattern.Flag.CASE_INSENSITIVE)
     private String email;
-    @NotNull(message = "Balance is mandatory")
-    private Double balance;
     private Long customerId;
 
     private Long bankId;
-//    @OneToMany(cascade = CascadeType.ALL)
-//    private Bank bank;
-//    @OneToMany(cascade = CascadeType.ALL)
-//    private Customer customer;
+
 
 
 }

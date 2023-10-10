@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AccountService {
 
-    AccountDto saveAccount(AccountDto accountdto,Long customerId,Long bankId);
+    AccountDto saveAccount(AccountDto accountdto,Long customerId,Long bankId) throws AccountException;
 
     List<AccountDto> getAllAccount() throws AccountException;
 
@@ -19,11 +19,9 @@ public interface AccountService {
 
     List<Double> getBalance(Long accountId) throws AccountException;
 
-    AccountDto depositAmount(AccountDto accountDto, Long accountId) throws AccountException;
-
-    Account withdrawalAmountById(Long accountId,Double amount) throws AccountException;
-    Account deposit(Long accountId, Double amount) throws AccountException;
+    String withdrawalAmountById(Long accountId,Double amount) throws AccountException;
+    String deposit(Long accountId, Double amount) throws AccountException;
 
 
-
+    AccountDto updateAccountStatus(AccountDto accountDto,Long accountId) throws AccountException;
 }

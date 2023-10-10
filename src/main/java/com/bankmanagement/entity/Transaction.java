@@ -23,6 +23,8 @@ public class Transaction {
     private Long accountNumberFrom;
     private Long accountNumberTo;
     private Double amount;
+    private Date transactionDate;
+    private String description;
     private  String ifscCode;
 
 

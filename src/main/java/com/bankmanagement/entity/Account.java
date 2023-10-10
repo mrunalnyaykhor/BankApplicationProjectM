@@ -14,14 +14,13 @@ public class Account {
     private String firstName;
     private String lastName;
     private double amount;
+    private boolean blocked;
     private int age;
     private Double aadhaarNumber;
     private String panCardNumber;
     private String dateOfBirth;
     private long accountNumber;
     private String email;
-    private Double balance;
-    private String ifscCode;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="bankId",referencedColumnName = "bankId")
     private Bank bank;

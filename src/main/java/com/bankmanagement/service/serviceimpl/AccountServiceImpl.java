@@ -28,27 +28,32 @@ public class AccountServiceImpl implements AccountService {
     private BankRepository bankRepository;
     @Autowired
     private CustomerRepository customerRepository;
+    Account account1 = null;
 
     @Override
-    public AccountDto saveAccount(AccountDto accountdto, Long customerId, Long bankId) {
+    public AccountDto saveAccount(AccountDto accountdto, Long customerId, Long bankId) throws AccountException {
 
 
-        Optional<Customer> customerOptional =customerRepository.findById(customerId);
-        if(customerOptional.isEmpty())
-            throw new CustomerException("customer not present & Cannot create Account");
-        if(customerOptional.isPresent()) {
+        String email = accountdto.getEmail();
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+        if (customerOptional.isEmpty()) throw new CustomerException("customer not present & Cannot create Account");
+        Optional<Bank> bankOptional = bankRepository.findById(bankId);
+        if (bankOptional.isEmpty()) throw new BankException("Bank not Present & Cannot create Account");
+        if (email.endsWith("@gmail.com") || email.endsWith("@yahoo.com"))
 
-            Account account= new Account();
-            Optional<Customer> customer = customerRepository.findById(customerId);
-            Optional<Bank> bank = bankRepository.findById(bankId);
-            BeanUtils.copyProperties(accountdto, account);
-            account.setCustomer(customer.get());
-            accountdto.setCustomerId(customer.get().getCustomerId());
-            account.setBank(bank.get());
-            accountdto.setBankId(bank.get().getBankId());
+            if (customerOptional.isPresent()) {
 
-            accountRepository.save(account);
-        }
+                Account account = new Account();
+                Optional<Customer> customer = customerRepository.findById(customerId);
+                Optional<Bank> bank = bankRepository.findById(bankId);
+                BeanUtils.copyProperties(accountdto, account);
+                account.setCustomer(customer.get());
+                accountdto.setCustomerId(customer.get().getCustomerId());
+                account.setBank(bank.get());
+                accountdto.setBankId(bank.get().getBankId());
+
+                accountRepository.save(account);
+            }
         return accountdto;
 
     }
@@ -64,11 +69,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
-
     @Override
     public String updateAccountById(AccountDto accountDto, Long accountId) throws AccountException {
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new AccountException("Account not present"));
+        Account account = accountRepository.findById(accountId).orElseThrow(() -> new AccountException("Account not present"));
         BeanUtils.copyProperties(accountDto, account);
         accountRepository.save(account);
 
@@ -82,7 +85,6 @@ public class AccountServiceImpl implements AccountService {
         if (accountOptional.isEmpty()) {
             throw new AccountException("Account Id does not exist");
         }
-
         accountOptional.ifPresent(account -> {
             accountRepository.deleteById(accountId);
         });
@@ -92,65 +94,69 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<Double> getBalance(Long accountId) throws AccountException {
-        Optional<Account> optionalAccount1= accountRepository.findById(accountId);
-        if (optionalAccount1.isEmpty()){
+        Optional<Account> optionalAccount1 = accountRepository.findById(accountId);
+        if (optionalAccount1.isEmpty()) {
             throw new AccountException("Account not exist");
         }
-      return optionalAccount1.stream().filter(Objects::nonNull).map(amount ->amount.getAmount()).collect(Collectors.toList());
+        return optionalAccount1.stream().filter(Objects::nonNull).map(amount -> amount.getAmount()).collect(Collectors.toList());
 
     }
 
     @Override
-    public AccountDto depositAmount(AccountDto accountDto, Long accountId) throws AccountException {
+    public String withdrawalAmountById(Long accountId, Double amount) throws AccountException {
+        Optional<Account> account = accountRepository.findById(accountId);
+        if (account.isPresent()) {
+            account1 = account.get();
+            account.stream().filter(amt -> amount >= 500 && amt.getAmount() >= 2000).map(account2 -> {
+                account2.setAmount((account2.getAmount() - amount));
+                return accountRepository.save(account2);
+            }).collect(Collectors.toList());
+        }
+
+        if (amount <= 500) {
+            throw new AccountException("Enter more than 500 rs for withdrawal");
+        } else if (account1.getAmount() <= 2000) {
+            throw new AccountException("Insufficient Balance");
+        } else {
+            System.out.println("some problem");
+        }
+
+
+        return "Amount withdrawal successfully " + amount + " && Required Balance is" + account1.getAmount();
+    }
+
+    @Override
+    public String deposit(Long accountId, Double amount) throws AccountException {
+        Optional<Account> account = accountRepository.findById(accountId);
+
+
+       if (account.isEmpty()) {
+            account1 = account.get();
+
+            account.stream().filter(amount1 -> amount >= 100).map(account2 -> {
+                account2.setAmount(account2.getAmount() + amount);
+                return accountRepository.save(account2);
+            }).collect(Collectors.toList());
+
+        } else if(amount <= 100) {
+            throw new AccountException("Please Enter More than 100 rs");
+        }
+
+        return "Your Amount deposited successfully :" + "deposited amount :" + amount + "\n" + "Now Current Balance is :" + account1.getAmount();
+    }
+
+    @Override
+    public AccountDto updateAccountStatus(AccountDto accountDto, Long accountId) throws AccountException {
         Optional<Account> optionalAccount = accountRepository.findById(accountId);
-        if (optionalAccount.isEmpty()) throw new AccountException("Account not Available");
-        if (optionalAccount.isPresent()) {
-            Account account = optionalAccount.get();
-
-            BeanUtils.copyProperties(account, accountDto);
-            Double amt = account.getAmount();
-            Double balance = amt + accountDto.getAmount();
-            account.setAmount(balance);
-            accountRepository.save(account);
+        if (optionalAccount.isEmpty()) {
+            throw new AccountException("Account not present");
         }
+        Account accounts = new Account();
+        BeanUtils.copyProperties(accounts, accountDto);
+        Account account = optionalAccount.get();
+        accountDto.setBlocked(accountDto.getAmount() < 1000);
+        accountRepository.save(account);
         return accountDto;
-    }
-
-    @Override
-    public Account withdrawalAmountById(Long accountId, Double amount) throws AccountException {
-        Optional<Account> account = accountRepository.findById(accountId);
-        if (account.isPresent()) {
-            Account account1 = account.get();
-            if (amount >= 500 && account1.getAmount() >= 2000) {
-                account1.setAmount((account1.getAmount() - amount));
-                accountRepository.save(account1);
-            } else {
-                if (amount >= 500) {
-                    throw new AccountException("Enter more than 500 rs for withdrawal");
-                } else if (account1.getAmount() <= 2000) {
-                    throw new AccountException("Insufficient Balance");
-                } else {
-                    System.out.println("some problem");
-                }
-            }
-        }
-        return account.orElse(null);
-    }
-
-    @Override
-    public Account deposit(Long accountId, Double amount) throws AccountException {
-        Optional<Account> account = accountRepository.findById(accountId);
-
-        if (account.isPresent()) {
-            Account account1 = account.get();
-            if (amount >= 100) {
-                account1.setAmount(account1.getAmount() + amount);
-                accountRepository.save(account1);
-            } else {
-                throw new AccountException("Please Enter More than 500 rs");
-            }
-        }
-        return account.orElse(null);
     }
 
 
