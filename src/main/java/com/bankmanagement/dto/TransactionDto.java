@@ -4,6 +4,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Setter
@@ -16,7 +17,7 @@ public class TransactionDto {
     private Long accountNumberFrom;
     @NotNull
     private Long accountNumberTo;
-    private Date transactionDate;
+    private LocalDate transactionDate;
     @NotBlank(message = "Description is required")
     private String description;
     @NotBlank(message = "ifsc code is mandatory")

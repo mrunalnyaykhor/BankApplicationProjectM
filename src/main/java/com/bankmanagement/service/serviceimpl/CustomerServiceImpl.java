@@ -86,7 +86,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerRepository.deleteById(customerId);
         });
 
-        return " Customer Id: " + customerId + " Deleted successfully";
+        return "Customer Id :%d deleted successfully....!!".formatted(customerId);
     }
 
     @Override

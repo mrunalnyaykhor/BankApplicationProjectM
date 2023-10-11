@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
+    Account toAccount = null;
     @Autowired
     private TransactionRepository transactionRepository;
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
     private AccountService accountService;
-    Account toAccount = null;
     @Autowired
     private AccountRepository accountRepository;
 
@@ -60,32 +60,54 @@ public class TransactionServiceImpl implements TransactionService {
                     throw new TransactionException("Cannot send money Insufficient Balance");
                 }
             }
+            LocalDate date = LocalDate.now();
+
             Transaction transaction = new Transaction();
+            transaction.setTransactionDate(date);
             BeanUtils.copyProperties(transactionDto, transaction);
             accountRepository.save(fromAccount);
             accountRepository.save(toAccount);
             transactionRepository.save(transaction);
         }
 
-        return "your transaction from Account Number :" + transactionDto.getAccountNumberFrom() + "to Account Number :" + transactionDto.getAccountNumberTo() + "is successfully__!! \n" +
-                "Transfer Debited Amount : " + transactionDto.getAmount() + "rs" + "\n" +
-                "Now Credited Account Balance is :" + toAccount.getAmount() + transactionDto.getAmount() + "rs";
+//        return "Your transaction from Account Number: %s to Account Number: %s is successful!\n" +
+//                "Transfer Debited Amount: %.2f rs\n" +
+//                "Now Credited Account Balance is: %.2f rs".formatted(
+//                        transactionDto.getAccountNumberFrom(), transactionDto.getAccountNumberTo(),
+//                        transactionDto.getAmount(), toAccount.getAmount() + transactionDto.getAmount());
 
+        return "Transaction successful";
     }
-
 
     @Override
-    public List<TransactionDto> findTransaction(Long accountId) {
-        Optional<Account> accountOptional = accountRepository.findById(accountId);
-        if(accountOptional.isPresent())
-        {
-            Account account= accountOptional.get();
-        }
-      accountOptional.stream().filter(Objects::nonNull).map(transaction->{
+    public List<TransactionDto> findTransaction(Long accountNumber, long days) {
 
-          return null;
-      }).collect(Collectors.toList());
-        return null;
+        LocalDate toDate = LocalDate.now();
+        LocalDate fromDate = toDate.minusDays(days);
+        List<Transaction> transaction = transactionRepository.findAllByAccountNumberToOrAccountNumberFromAndTransactionDateBetween(accountNumber,accountNumber,fromDate,toDate);
+
+      //   List<TransactionDto> transactionDtos = new ArrayList<>();
+        return transaction.stream().filter(Objects::nonNull).map(transaction1 -> {
+            TransactionDto transactionDto = new TransactionDto();
+            BeanUtils.copyProperties(transaction1, transactionDto);
+            return transactionDto;
+        }).collect(Collectors.toList());
+//        transaction.forEach(transaction1 ->
+//        {
+//            TransactionDto transactionDto = new TransactionDto();
+//            BeanUtils.copyProperties(transaction1, transactionDto);
+//            transactionDtos.add(transactionDto);
+//        });
+//
+//        for(Transaction transaction1 : transaction){
+//             TransactionDto transactionDto = new TransactionDto();
+//             BeanUtils.copyProperties(transaction1,transactionDto);
+//             transactionDtos.add(transactionDto);
+//         }
+//
+//         return transactionDtos;
+
     }
+
 
 }

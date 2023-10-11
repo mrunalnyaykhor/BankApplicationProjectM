@@ -1,10 +1,11 @@
 package com.bankmanagement.controller;
+
 import com.bankmanagement.dto.AccountDto;
-import com.bankmanagement.entity.Account;
 import com.bankmanagement.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.security.auth.login.AccountException;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +16,8 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping("/saveAccount/{customerId}/{bankId}")
-    public ResponseEntity<AccountDto> saveAccount(@RequestBody AccountDto accountdto,@PathVariable Long customerId,@PathVariable Long bankId) throws AccountException {
-        return ResponseEntity.ok(accountService.saveAccount(accountdto,customerId,bankId));
+    public ResponseEntity<AccountDto> saveAccount(@RequestBody AccountDto accountdto, @PathVariable Long customerId, @PathVariable Long bankId) throws AccountException {
+        return ResponseEntity.ok(accountService.saveAccount(accountdto, customerId, bankId));
 
     }
 
@@ -24,7 +25,6 @@ public class AccountController {
     public ResponseEntity<List<AccountDto>> getAllAccountDetails() throws AccountException {
         return ResponseEntity.ok(accountService.getAllAccount());
     }
-
 
 
     @PutMapping("/accounts/{accountId}")
@@ -42,10 +42,12 @@ public class AccountController {
     public ResponseEntity<List<Double>> balanceCheck(@PathVariable Long accountId) throws AccountException {
         return ResponseEntity.ok(accountService.getBalance(accountId));
     }
+
     @GetMapping("/accountStatus/{accountId}")
-    public ResponseEntity<AccountDto> updateAccountStatus(@RequestBody AccountDto accountDto,@PathVariable("accountId")  Long accountId) throws AccountException {
-        return ResponseEntity.ok(accountService.updateAccountStatus(accountDto,accountId));
+    public ResponseEntity<AccountDto> updateAccountStatus(@RequestBody AccountDto accountDto, @PathVariable("accountId") Long accountId) throws AccountException {
+        return ResponseEntity.ok(accountService.updateAccountStatus(accountDto, accountId));
     }
+
     @PostMapping("/{accountId}/deposit")
     public ResponseEntity<String> depositAmount(@PathVariable Long accountId, @RequestBody Map<String, Double> request) throws AccountException {
         Double amount = request.get("amount");

@@ -1,5 +1,4 @@
 package com.bankmanagement.service.serviceimpl;
-
 import com.bankmanagement.dto.AccountDto;
 import com.bankmanagement.entity.Account;
 import com.bankmanagement.entity.Bank;
@@ -13,7 +12,6 @@ import com.bankmanagement.service.AccountService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.security.auth.login.AccountException;
 import java.util.List;
 import java.util.Objects;
@@ -34,15 +32,10 @@ public class AccountServiceImpl implements AccountService {
     public AccountDto saveAccount(AccountDto accountdto, Long customerId, Long bankId) throws AccountException {
 
 
-        String email = accountdto.getEmail();
-        Optional<Customer> customerOptional = customerRepository.findById(customerId);
-        if (customerOptional.isEmpty()) throw new CustomerException("customer not present & Cannot create Account");
-        Optional<Bank> bankOptional = bankRepository.findById(bankId);
-        if (bankOptional.isEmpty()) throw new BankException("Bank not Present & Cannot create Account");
-        if (email.endsWith("@gmail.com") || email.endsWith("@yahoo.com"))
-
-            if (customerOptional.isPresent()) {
-
+        var email = accountdto.getEmail();
+        var customerOptional = customerRepository.findById(customerId).orElseThrow(() -> new CustomerException("customer not present & Cannot create Account"));
+        var bankOptional = bankRepository.findById(bankId).orElseThrow(()->new BankException("Bank not Present & Cannot create Account"));
+        if (email.endsWith("@gmail.com") || email.endsWith("@yahoo.com")) {
                 Account account = new Account();
                 Optional<Customer> customer = customerRepository.findById(customerId);
                 Optional<Bank> bank = bankRepository.findById(bankId);
@@ -51,11 +44,9 @@ public class AccountServiceImpl implements AccountService {
                 accountdto.setCustomerId(customer.get().getCustomerId());
                 account.setBank(bank.get());
                 accountdto.setBankId(bank.get().getBankId());
-
                 accountRepository.save(account);
             }
         return accountdto;
-
     }
 
     @Override
@@ -75,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
         BeanUtils.copyProperties(accountDto, account);
         accountRepository.save(account);
 
-        return "Account Id Number: " + accountDto.getAccountId() + " Updated Successfully";
+        return "Account Id Number: %d Updated Successfully".formatted(accountDto.getAccountId());
     }
 
     @Override
@@ -89,7 +80,7 @@ public class AccountServiceImpl implements AccountService {
             accountRepository.deleteById(accountId);
         });
 
-        return "Account Id " + accountId + " deleted successfully....!!";
+        return "Account Id :%d deleted successfully....!!".formatted(accountId);
     }
 
     @Override
@@ -98,7 +89,7 @@ public class AccountServiceImpl implements AccountService {
         if (optionalAccount1.isEmpty()) {
             throw new AccountException("Account not exist");
         }
-        return optionalAccount1.stream().filter(Objects::nonNull).map(amount -> amount.getAmount()).collect(Collectors.toList());
+        return optionalAccount1.stream().filter(Objects::nonNull).map(Account::getAmount).collect(Collectors.toList());
 
     }
 
@@ -107,10 +98,10 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> account = accountRepository.findById(accountId);
         if (account.isPresent()) {
             account1 = account.get();
-            account.stream().filter(amt -> amount >= 500 && amt.getAmount() >= 2000).map(account2 -> {
+            account.stream().filter(amt -> amount >= 500 && amt.getAmount() >= 2000).forEach(account2 -> {
                 account2.setAmount((account2.getAmount() - amount));
-                return accountRepository.save(account2);
-            }).collect(Collectors.toList());
+                 accountRepository.save(account2);
+            });
         }
 
         if (amount <= 500) {
@@ -121,28 +112,24 @@ public class AccountServiceImpl implements AccountService {
             System.out.println("some problem");
         }
 
-
-        return "Amount withdrawal successfully " + amount + " && Required Balance is" + account1.getAmount();
+        return "Amount withdrawal successfully %.2f && Required Balance is %.2f".formatted(amount,account1.getAmount());
     }
 
     @Override
     public String deposit(Long accountId, Double amount) throws AccountException {
         Optional<Account> account = accountRepository.findById(accountId);
-
-
        if (account.isEmpty()) {
             account1 = account.get();
-
-            account.stream().filter(amount1 -> amount >= 100).map(account2 -> {
+            account.stream().filter(amount1 -> amount >= 100).forEach(account2 -> {
                 account2.setAmount(account2.getAmount() + amount);
-                return accountRepository.save(account2);
-            }).collect(Collectors.toList());
+                accountRepository.save(account2);
+            });
 
         } else if(amount <= 100) {
             throw new AccountException("Please Enter More than 100 rs");
         }
 
-        return "Your Amount deposited successfully :" + "deposited amount :" + amount + "\n" + "Now Current Balance is :" + account1.getAmount();
+        return "Your Amount deposited successfully: deposited amount: %.2f%nNow Current Balance is: %.2f".formatted(amount, account1.getAmount());
     }
 
     @Override
