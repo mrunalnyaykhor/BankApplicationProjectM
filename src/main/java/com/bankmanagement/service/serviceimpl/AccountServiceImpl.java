@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class AccountServiceImpl implements AccountService {
+    int x=10;
     Account account1 = null;
     @Autowired
     private AccountRepository accountRepository;
