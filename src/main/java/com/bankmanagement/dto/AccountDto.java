@@ -8,12 +8,9 @@ import javax.validation.constraints.*;
 @Setter
 @Getter
 public class AccountDto {
-    private Long accountId;
     @NotBlank(message = "First Name is Mandatory")
-    @Size(min = 2, message = "first Name at list 2 characters")
     private String firstName;
     @NotBlank(message = "last Name is Mandatory")
-    @Size(min = 2, message = "last Name at list 2 characters")
     private String lastName;
     @NotNull(message = "contact number is mandatory")
     @Size(min = 10, message = "contact number should be 10 characters")
@@ -32,7 +29,6 @@ public class AccountDto {
     @NotBlank(message = "Date of Birth is Mandatory")
     private String dateOfBirth;
 
-    @NotNull(message = "Account Number is mandatory")
     private long accountNumber;
     private boolean blocked;
 

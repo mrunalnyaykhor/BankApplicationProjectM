@@ -26,7 +26,7 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.customerFindById(customerId));
     }
     @PutMapping("/customer/{customerId}")
-    public ResponseEntity<CustomerDto> updateCustomerDto(@RequestBody CustomerDto customerDto, @PathVariable("customerId") Long customerId) {
+    public ResponseEntity<CustomerDto> updateCustomerDto(@Valid @RequestBody CustomerDto customerDto, @PathVariable("customerId") Long customerId) {
 
         return ResponseEntity.ok(customerService.updateCustomer(customerDto, customerId));
     }

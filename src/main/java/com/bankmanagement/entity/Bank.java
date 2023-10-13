@@ -1,13 +1,9 @@
 package com.bankmanagement.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 @Setter
@@ -17,9 +13,13 @@ public class Bank {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long bankId;
+    @Column(name = "bankName", nullable = false, length = 20)
     private String bankName;
+    @Column(name = "branchName", nullable = false, length = 20)
     private String branchName;
+    @Column(name = "ifscCode", nullable = false)
     private String ifscCode;
+    @Column(name = "address", nullable = false, length = 20)
     private String address;
 
 }

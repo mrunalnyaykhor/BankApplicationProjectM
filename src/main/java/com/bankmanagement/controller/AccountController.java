@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountException;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping("/saveAccount/{customerId}/{bankId}")
-    public ResponseEntity<AccountDto> saveAccount(@RequestBody AccountDto accountdto, @PathVariable Long customerId, @PathVariable Long bankId) throws AccountException {
+    public ResponseEntity<AccountDto> saveAccount(@Valid @RequestBody AccountDto accountdto, @PathVariable Long customerId, @PathVariable Long bankId) throws AccountException {
         return ResponseEntity.ok(accountService.saveAccount(accountdto, customerId, bankId));
 
     }
@@ -28,7 +29,7 @@ public class AccountController {
 
 
     @PutMapping("/accounts/{accountId}")
-    public ResponseEntity<String> updateAccountDto(@RequestBody AccountDto accountDto, @PathVariable("accountId") Long accountId) throws AccountException {
+    public ResponseEntity<String> updateAccountDto(@Valid @RequestBody AccountDto accountDto, @PathVariable("accountId") Long accountId) throws AccountException {
 
         return ResponseEntity.ok(accountService.updateAccountById(accountDto, accountId));
     }

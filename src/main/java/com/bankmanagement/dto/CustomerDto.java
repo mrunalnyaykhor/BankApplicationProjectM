@@ -1,38 +1,36 @@
 package com.bankmanagement.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.Date;
+import javax.validation.constraints.*;
+
 @Setter
 @Getter
 public class CustomerDto {
-    @NotNull
-    @Size(min=2, message="Name should have at least 2 characters")
+ @NotBlank(message = "first Name is mandatory")
     private String firstName;
-    @NotBlank(message = "Name is mandatory")
+   @NotBlank(message = "Name is mandatory")
     private String lastName;
-    @NotNull(message = "contactNumber is mandatory")
+ @NotNull(message = "Contact Number should be 10 digit")
     private Long contactNumber;
-    @NotNull
+   @NotNull(message = "age is mandatory")
     private int age;
-    @NotBlank(message = "email is mandatory")
+    @Email(message = "email should be a valid email format")
     private String email;
+
     @NotNull(message = "aadhaar Number is Mandatory")
     private String aadhaarNumber;
-    @NotBlank(message = "panCardNumber should not be null")
-    @Size(min=8, message="Name should have at least 8 characters")
+
+   @Pattern(regexp = "[A-Z]{5}[0-9]{4}[A-Z]{1}",message = "panCardNumber should not be null")
+
     private String panCardNumber;
-    @NotNull
+
+    @NotBlank(message = "date Of Birth is Mandatory")
     private String dateOfBirth;
-    @NotBlank(message = "Address should be mandatory")
-    @Size(min =2,message = "address should be 2 characters")
+
+   @NotBlank(message = "Address should be mandatory")
     private String address;
-    @NotNull
-    private long accountNumber;
+
     private Long bankId;
 }

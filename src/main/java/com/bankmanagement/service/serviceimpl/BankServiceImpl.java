@@ -18,9 +18,13 @@ public class BankServiceImpl implements BankService {
     private BankRepository bankRepository;
     @Override
     public BankDto saveBank(BankDto bankDto) {
-        Bank bank = new Bank();
-        BeanUtils.copyProperties(bankDto,bank);
-        bankRepository.save(bank);
+        if (bankRepository.existsByIfscCode(bankDto.getIfscCode())) {
+            throw new BankException("A bank with IFSC code %s already exists.".formatted(bankDto.getIfscCode()));
+        } else {
+            Bank bank = new Bank();
+            BeanUtils.copyProperties(bankDto, bank);
+            bankRepository.save(bank);
+        }
         return bankDto;
     }
 
@@ -33,16 +37,13 @@ public class BankServiceImpl implements BankService {
                     BankDto bankDto = new BankDto();
                     BeanUtils.copyProperties(bank,bankDto);
                     return bankDto;
-
                 }).collect(Collectors.toList());
-
     }
 
     @Override
     public List<BankDto> getBankById(Long bankId) {
-        Optional<Bank> bank = bankRepository.findById(bankId);
-        if(bank.isEmpty())
-            throw new BankException("Bank Does Not exist");
+         bankRepository.findById(bankId).orElseThrow(()-> new BankException("BankId does not exist"));
+
         return bankRepository.findById(bankId).stream().filter(Objects::nonNull)
                 .map(bank1 -> {
                     BankDto bankDto = new BankDto();
@@ -54,11 +55,15 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public BankDto updateBankById(BankDto bankDto, Long bankId) {
-        Bank bank = bankRepository.findById(bankId)
-                .orElseThrow(() -> new BankException("Bank Not Available"));
-        BeanUtils.copyProperties(bankDto, bank);
-        bankRepository.save(bank);
-        return bankDto;
+        Bank bank = bankRepository.findById(bankId).orElseThrow(() -> new BankException("Bank Not Available"));
+        if (bankRepository.existsByIfscCode(bankDto.getIfscCode())) {
+            throw new BankException("A bank with IFSC code %s already exists.".formatted(bankDto.getIfscCode()));
+        }
+        else {
+            BeanUtils.copyProperties(bankDto, bank);
+            bankRepository.save(bank);
+            return bankDto;
+        }
 
     }
 

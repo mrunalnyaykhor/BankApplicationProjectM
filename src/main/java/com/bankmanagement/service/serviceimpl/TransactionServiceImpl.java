@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -46,7 +45,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (byAccountNumberFrom.isPresent() && byAccountNumberTo.isPresent()) {
             Account fromAccount = byAccountNumberFrom.get();
             if (fromAccount.getAmount() < 1000) {
-                throw new TransactionException("You Cannot Transfer Money Because Your Balance is below 1000rs & Now your amount of Balance is : " + fromAccount.getAmount());
+                throw new TransactionException("You Cannot Transfer Money Because Your Balance is below 1000rs & Now your amount of Balance is".formatted(fromAccount.getAmount()));
             } else {
                 Double doubleAmt = fromAccount.getAmount() - transactionDto.getAmount();
                 if (doubleAmt >= 1000) {
@@ -85,27 +84,11 @@ public class TransactionServiceImpl implements TransactionService {
         LocalDate toDate = LocalDate.now();
         LocalDate fromDate = toDate.minusDays(days);
         List<Transaction> transaction = transactionRepository.findAllByAccountNumberToOrAccountNumberFromAndTransactionDateBetween(accountNumber,accountNumber,fromDate,toDate);
-
-      //   List<TransactionDto> transactionDtos = new ArrayList<>();
         return transaction.stream().filter(Objects::nonNull).map(transaction1 -> {
             TransactionDto transactionDto = new TransactionDto();
             BeanUtils.copyProperties(transaction1, transactionDto);
             return transactionDto;
         }).collect(Collectors.toList());
-//        transaction.forEach(transaction1 ->
-//        {
-//            TransactionDto transactionDto = new TransactionDto();
-//            BeanUtils.copyProperties(transaction1, transactionDto);
-//            transactionDtos.add(transactionDto);
-//        });
-//
-//        for(Transaction transaction1 : transaction){
-//             TransactionDto transactionDto = new TransactionDto();
-//             BeanUtils.copyProperties(transaction1,transactionDto);
-//             transactionDtos.add(transactionDto);
-//         }
-//
-//         return transactionDtos;
 
     }
 

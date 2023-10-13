@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.io.Serializable;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,5 +19,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Serial
    List<Transaction> findAllByAccountNumberToOrAccountNumberFromAndTransactionDateBetween(Long accountNumberFrom, Long accountNumberTo, LocalDate fromDate, LocalDate toDate);
 
 
-    //List<Transaction>  findByAccountNumberAndDate(Long accountNumber, Date date);
+   //List<Transaction>  findByAccountNumberAndDate(Long accountNumber, Date date);
 }

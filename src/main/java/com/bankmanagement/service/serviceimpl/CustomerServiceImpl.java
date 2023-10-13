@@ -31,6 +31,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto saveCustomer(CustomerDto customerDto, Long bankId) {
+       // List<Customer>customerList= customerRepository.findAllByContactNumberOrPanCardNumberOrAadhaarNumberOrEmail(customerDto.getContactNumber(),customerDto.getPanCardNumber(),customerDto.getEmail());
+//        if(customerList.isEmpty()){
+//            throw new CustomerException("This customer already exist");
+//        }
 
         Optional<Bank> bank = bankRepository.findById(bankId);
         Customer customer = new Customer();
