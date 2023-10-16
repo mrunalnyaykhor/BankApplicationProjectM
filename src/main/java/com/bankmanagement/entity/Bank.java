@@ -1,5 +1,6 @@
 package com.bankmanagement.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,13 +14,13 @@ public class Bank {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long bankId;
-    @Column(name = "bankName", nullable = false, length = 20)
+    @Column(name = "bankName")
     private String bankName;
-    @Column(name = "branchName", nullable = false, length = 20)
+    @Column(name = "branchName")
     private String branchName;
-    @Column(name = "ifscCode", nullable = false)
+    @Column(name = "ifscCode")
     private String ifscCode;
-    @Column(name = "address", nullable = false, length = 20)
+    @Column(name = "address")
     private String address;
 
 }

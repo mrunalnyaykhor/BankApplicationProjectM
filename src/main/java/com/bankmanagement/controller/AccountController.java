@@ -44,11 +44,6 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getBalance(accountId));
     }
 
-    @GetMapping("/accountStatus/{accountId}")
-    public ResponseEntity<AccountDto> updateAccountStatus(@RequestBody AccountDto accountDto, @PathVariable("accountId") Long accountId) throws AccountException {
-        return ResponseEntity.ok(accountService.updateAccountStatus(accountDto, accountId));
-    }
-
     @PostMapping("/{accountId}/deposit")
     public ResponseEntity<String> depositAmount(@PathVariable Long accountId, @RequestBody Map<String, Double> request) throws AccountException {
         Double amount = request.get("amount");
@@ -61,6 +56,10 @@ public class AccountController {
         Double amount = request.get("amount");
         return ResponseEntity.ok(accountService.withdrawalAmountById(accountId, amount));
 
+    }
+    @GetMapping("/blockAccountOrNot/{accountId}")
+    public ResponseEntity<String> blockAccountCheck(@PathVariable Long accountId) throws AccountException {
+        return ResponseEntity.ok(accountService.isBlocked(accountId));
     }
 
 

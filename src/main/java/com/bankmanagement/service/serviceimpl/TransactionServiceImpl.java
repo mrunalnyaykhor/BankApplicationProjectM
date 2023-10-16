@@ -1,5 +1,6 @@
 package com.bankmanagement.service.serviceimpl;
 
+import ch.qos.logback.core.joran.conditional.ThenOrElseActionBase;
 import com.bankmanagement.dto.TransactionDto;
 import com.bankmanagement.entity.Account;
 import com.bankmanagement.entity.Transaction;
@@ -13,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.AccountException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,7 +36,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    public String transferMoney(TransactionDto transactionDto) {
+    public String transferMoney(TransactionDto transactionDto) throws AccountException {
 
         Optional<Account> byAccountNumberFrom = Optional.ofNullable(accountRepository.findByAccountNumber(transactionDto.getAccountNumberFrom()));
         Optional<Account> byAccountNumberTo = Optional.ofNullable(accountRepository.findByAccountNumber(transactionDto.getAccountNumberTo()));
@@ -54,8 +56,17 @@ public class TransactionServiceImpl implements TransactionService {
                     double amountToAccount = toAccount.getAmount() + transactionDto.getAmount();
 
                     fromAccount.setAmount(amountFromTransaction);
+                    if (fromAccount.isBlocked() == true) {
+                        throw new AccountException("You cannot send Money Your Account is Blocked Please Deposit Money in your Account");
+                    }
                     toAccount.setAmount(amountToAccount);
-                } else {
+                    double dataBaseAmount = toAccount.getAmount();
+                    if(dataBaseAmount >= 2000){
+                       toAccount.setBlocked(false);
+                    }
+
+                }
+                else {
                     throw new TransactionException("Cannot send money Insufficient Balance");
                 }
             }
@@ -63,6 +74,7 @@ public class TransactionServiceImpl implements TransactionService {
 
             Transaction transaction = new Transaction();
             transaction.setTransactionDate(date);
+
             BeanUtils.copyProperties(transactionDto, transaction);
             accountRepository.save(fromAccount);
             accountRepository.save(toAccount);
@@ -75,7 +87,7 @@ public class TransactionServiceImpl implements TransactionService {
 //                        transactionDto.getAccountNumberFrom(), transactionDto.getAccountNumberTo(),
 //                        transactionDto.getAmount(), toAccount.getAmount() + transactionDto.getAmount());
 
-        return "Transaction successful__!!";
+       return "Transaction successful__!!"+toAccount.getAmount();
     }
 
     @Override

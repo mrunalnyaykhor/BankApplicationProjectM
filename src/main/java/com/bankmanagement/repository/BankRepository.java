@@ -10,4 +10,6 @@ import java.io.Serializable;
 public interface BankRepository extends JpaRepository<Bank, Serializable> {
 
     boolean existsByIfscCode(String ifscCode);
+
+
 }

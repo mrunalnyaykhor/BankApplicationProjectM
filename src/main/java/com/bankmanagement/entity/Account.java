@@ -11,25 +11,27 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long accountId;
-    @Column(name = "firstName", nullable = false, length = 20)
+    @Column(name = "firstName")
     private String firstName;
-    @Column(name = "lastName", nullable = false, length = 20)
+    @Column(name = "lastName")
     private String lastName;
-    @Column(name = "amount", nullable = false)
+    @Column(name = "amount")
     private double amount;
-    @Column(name = "blocked", nullable = false)
-    private boolean blocked;
-    @Column(name = "age", nullable = false)
+    @Column(name = "contactNumber")
+    private Long contactNumber;
+    @Column(name = "blocked")
+    private boolean isBlocked = false;
+    @Column(name = "age")
     private int age;
-    @Column(name = "aadhaarNum", nullable = false, length=12)
-    private Double aadhaarNumber;
-    @Column(name = "panCardNumber", nullable = false)
+    @Column(name = "aadhaarNum")
+    private Long aadhaarNumber;
+    @Column(name = "panCardNumber")
     private String panCardNumber;
-    @Column(name = "dateOfBirth", nullable = false)
+    @Column(name = "dateOfBirth")
     private String dateOfBirth;
-    @Column(name = "bankName", nullable = false, length = 11)
+    @Column(name = "accountNumber")
     private long accountNumber;
-    @Column(name = "email", nullable = false, length = 20)
+    @Column(name = "email")
     private String email;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="bankId",referencedColumnName = "bankId")

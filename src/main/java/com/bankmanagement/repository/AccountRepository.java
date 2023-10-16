@@ -14,5 +14,5 @@ public interface AccountRepository extends JpaRepository<Account, Serializable> 
     // Account findByAadhaarNumberAndPanCardNumber(String aadhaarNumber, String panCard);
 
     Account findByAccountNumber(Long accountNumberTo);
-    Optional<Account> findByAmount(Double amount);
+
 }

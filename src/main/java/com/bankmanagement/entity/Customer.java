@@ -1,9 +1,11 @@
 package com.bankmanagement.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Setter
 @Getter
@@ -16,13 +18,13 @@ public class Customer {
     private String firstName;
     @Column(name = "lastName")
     private String lastName;
-    @Column(name = "contactNumber", nullable = false, length = 10)
+    @Column(name = "contactNumber")
     private Long contactNumber;
-    @Column(name = "age", nullable = false)
+    @Column(name = "age")
     private int age;
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     private String email;
-    @Column(name = "aadhaarNumber", nullable = false, length = 12)
+    @Column(name = "aadhaarNumber")
     private String aadhaarNumber;
     @Column(name = "panCardNumber")
     private String panCardNumber;
@@ -30,8 +32,6 @@ public class Customer {
     private String dateOfBirth;
     @Column(name = "address")
     private String address;
-    //    @Column(name = "accountNumber")
-//    private long accountNumber;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bankId", referencedColumnName = "bankId")
     private Bank bank;

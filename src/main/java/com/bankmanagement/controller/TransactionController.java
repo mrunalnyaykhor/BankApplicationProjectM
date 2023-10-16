@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.login.AccountException;
 import javax.validation.Valid;
 
 @RestController
@@ -18,7 +19,7 @@ public class TransactionController {
     private AccountService accountService;
 
     @PutMapping("/transferMoney")
-    public ResponseEntity<String> transferMoney(@Valid @RequestBody TransactionDto transactionDto) {
+    public ResponseEntity<String> transferMoney(@Valid @RequestBody TransactionDto transactionDto) throws AccountException {
         String s = transactionService.transferMoney(transactionDto);
         return new ResponseEntity<>(s, HttpStatus.CREATED);
     }

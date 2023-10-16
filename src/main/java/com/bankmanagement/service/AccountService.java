@@ -16,5 +16,7 @@ public interface AccountService {
     List<Double> getBalance(Long accountId) throws AccountException;
     String withdrawalAmountById(Long accountId,Double amount) throws AccountException;
     String deposit(Long accountId, Double amount) throws AccountException;
-    AccountDto updateAccountStatus(AccountDto accountDto,Long accountId) throws AccountException;
+
+
+    String isBlocked(Long accountId) throws AccountException;
 }

@@ -31,11 +31,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto saveCustomer(CustomerDto customerDto, Long bankId) {
-       // List<Customer>customerList= customerRepository.findAllByContactNumberOrPanCardNumberOrAadhaarNumberOrEmail(customerDto.getContactNumber(),customerDto.getPanCardNumber(),customerDto.getEmail());
-//        if(customerList.isEmpty()){
-//            throw new CustomerException("This customer already exist");
-//        }
 
+        if (customerRepository.existsByAadhaarNumber(customerDto.getAadhaarNumber())) {
+            throw new CustomerException("A Customer of AadhaarNumber Number %s already exists.".formatted(customerDto.getAadhaarNumber()));
+        }
         Optional<Bank> bank = bankRepository.findById(bankId);
         Customer customer = new Customer();
 
@@ -48,16 +47,18 @@ public class CustomerServiceImpl implements CustomerService {
         return customerDto;
     }
 
-    @Override
-    public List<CustomerDto> getAllCustomer() {
+        public List<CustomerDto> getAllCustomer() {
         if (customerRepository.findAll().isEmpty())
             throw new CustomerException("customers Data not present in Database");
-        return customerRepository.findAll().stream().filter(Objects::nonNull).map(customer -> {
-            CustomerDto customerdto = new CustomerDto();
-            BeanUtils.copyProperties(customer, customerdto);
-            return customerdto;
-        }).collect(Collectors.toList());
-    }
+            List<CustomerDto> collect = customerRepository.findAll().stream().filter(Objects::nonNull).map(customer -> {
+                CustomerDto customerdto = new CustomerDto();
+                BeanUtils.copyProperties(customer, customerdto);
+                return customerdto;
+
+            }).collect(Collectors.toList());
+
+            return collect;
+        }
 
     @Override
     public List<CustomerDto> customerFindById(Long customerId) {

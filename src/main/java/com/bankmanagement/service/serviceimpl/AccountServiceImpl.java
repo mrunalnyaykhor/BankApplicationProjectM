@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class AccountServiceImpl implements AccountService {
-    int x=10;
     Account account1 = null;
     @Autowired
     private AccountRepository accountRepository;
@@ -40,7 +39,6 @@ public class AccountServiceImpl implements AccountService {
         var email = accountdto.getEmail();
         var customerOptional = customerRepository.findById(customerId).orElseThrow(() -> new CustomerException("customer not present & Cannot create Account"));
         var bankOptional = bankRepository.findById(bankId).orElseThrow(() -> new BankException("Bank not Present & Cannot create Account"));
-        if (email.endsWith("@gmail.com") || email.endsWith("@yahoo.com")) {
             Account account = new Account();
             Optional<Customer> customer = customerRepository.findById(customerId);
             Optional<Bank> bank = bankRepository.findById(bankId);
@@ -50,6 +48,7 @@ public class AccountServiceImpl implements AccountService {
             BigInteger accountNo = new BigInteger("5555" + sAccNum);
             accountdto.setAccountNumber(Long.parseLong(accountNo.toString()));
             account.getAccountNumber();
+        {
 
             BeanUtils.copyProperties(accountdto, account);
             account.setCustomer(customer.get());
@@ -58,6 +57,7 @@ public class AccountServiceImpl implements AccountService {
             accountdto.setBankId(bank.get().getBankId());
             accountRepository.save(account);
         }
+
         return accountdto;
     }
 
@@ -107,7 +107,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String withdrawalAmountById(Long accountId, Double amount) throws AccountException {
+
         Optional<Account> account = accountRepository.findById(accountId);
+        if(account.isEmpty()){
+            throw new AccountException("Account not present");
+        }
+
         if (account.isPresent()) {
             account1 = account.get();
             account.stream().filter(amt -> amount >= 500 && amt.getAmount() >= 2000).forEach(account2 -> {
@@ -115,7 +120,6 @@ public class AccountServiceImpl implements AccountService {
                 accountRepository.save(account2);
             });
         }
-
         if (amount <= 500) {
             throw new AccountException("Enter more than 500 rs for withdrawal");
         } else if (account1.getAmount() <= 2000) {
@@ -144,19 +148,23 @@ public class AccountServiceImpl implements AccountService {
         return "Your Amount deposited successfully: deposited amount: %.2f%nNow Current Balance is: %.2f".formatted(amount, account1.getAmount());
     }
 
+
+
     @Override
-    public AccountDto updateAccountStatus(AccountDto accountDto, Long accountId) throws AccountException {
-        Optional<Account> optionalAccount = accountRepository.findById(accountId);
-        if (optionalAccount.isEmpty()) {
-            throw new AccountException("Account not present");
-        }
-        Account accounts = new Account();
-        BeanUtils.copyProperties(accounts, accountDto);
-        Account account = optionalAccount.get();
-        accountDto.setBlocked(accountDto.getAmount() < 1000);
-        accountRepository.save(account);
-        return accountDto;
+    public String isBlocked(Long accountId) throws AccountException {
+        var account = accountRepository.findById(accountId).orElseThrow(() -> new AccountException("Account not present"));
+         if(accountRepository.findById(accountId).isPresent()){
+
+             double amount = account.getAmount();
+             if(amount <= 2000){
+                 account.setBlocked(true);
+                 accountRepository.save(account);
+             }
+             else {
+                 account.setBlocked(false);
+                 accountRepository.save(account);
+             }
+         }
+        return "account is blocked :".formatted(account.isBlocked());
     }
-
-
 }

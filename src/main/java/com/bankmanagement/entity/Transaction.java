@@ -12,24 +12,21 @@ import java.util.Date;
 @Setter
 @Getter
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long transactionId;
-    @Column(name = "accountNumberFrom", nullable = false)
+    @Column(name = "accountNumberFrom")
     private Long accountNumberFrom;
-    @Column(name = "accountNumberTo", nullable = false)
+    @Column(name = "accountNumberTo")
     private Long accountNumberTo;
-    @Column(name = "amount", nullable = false)
+    @Column(name = "amount")
     private Double amount;
-    @Column(name = "transactionDate", nullable = false)
+    @Column(name = "transactionDate")
     private LocalDate transactionDate;
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
-    @Column(name = "ifscCode", nullable = false)
-
+    @Column(name = "ifscCode")
     private  String ifscCode;
 
 
