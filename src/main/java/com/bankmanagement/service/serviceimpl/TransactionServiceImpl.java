@@ -87,7 +87,7 @@ public class TransactionServiceImpl implements TransactionService {
 //                        transactionDto.getAccountNumberFrom(), transactionDto.getAccountNumberTo(),
 //                        transactionDto.getAmount(), toAccount.getAmount() + transactionDto.getAmount());
 
-       return "Transaction successful__!!"+toAccount.getAmount();
+       return "Transaction successful__!! && Credited Account Balance: "+toAccount.getAmount();
     }
 
     @Override
