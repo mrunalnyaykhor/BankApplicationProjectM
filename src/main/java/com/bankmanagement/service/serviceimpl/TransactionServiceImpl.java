@@ -1,6 +1,5 @@
 package com.bankmanagement.service.serviceimpl;
 
-import ch.qos.logback.core.joran.conditional.ThenOrElseActionBase;
 import com.bankmanagement.dto.TransactionDto;
 import com.bankmanagement.entity.Account;
 import com.bankmanagement.entity.Transaction;
@@ -56,38 +55,42 @@ public class TransactionServiceImpl implements TransactionService {
                     double amountToAccount = toAccount.getAmount() + transactionDto.getAmount();
 
                     fromAccount.setAmount(amountFromTransaction);
-                    if (fromAccount.isBlocked() == true) {
+                    if (fromAccount.isBlocked()) {
                         throw new AccountException("You cannot send Money Your Account is Blocked Please Deposit Money in your Account");
                     }
                     toAccount.setAmount(amountToAccount);
                     double dataBaseAmount = toAccount.getAmount();
-                    if(dataBaseAmount >= 2000){
-                       toAccount.setBlocked(false);
+                    if (dataBaseAmount >= 2000) {
+                        toAccount.setBlocked(false);
                     }
 
-                }
-                else {
+                } else {
                     throw new TransactionException("Cannot send money Insufficient Balance");
                 }
             }
             LocalDate date = LocalDate.now();
 
             Transaction transaction = new Transaction();
-            transaction.setTransactionDate(date);
+            transactionDto.setTransactionDate(date);
+            boolean ifscCode = toAccount.getBank().getIfscCode().equals(transactionDto.getIfscCode());
+            if (!ifscCode) {
+                throw new TransactionException("To account ifsc code is not correct");
+            }
+            boolean name = toAccount.getFirstName().equals(transactionDto.getName());
+            if (!name) {
+                throw new TransactionException("To account Name is not correct");
+            }
 
             BeanUtils.copyProperties(transactionDto, transaction);
             accountRepository.save(fromAccount);
             accountRepository.save(toAccount);
             transactionRepository.save(transaction);
+
+
         }
 
-//        return "Your transaction from Account Number: %s to Account Number: %s is successful!\n" +
-//                "Transfer Debited Amount: %.2f rs\n" +
-//                "Now Credited Account Balance is: %.2f rs".formatted(
-//                        transactionDto.getAccountNumberFrom(), transactionDto.getAccountNumberTo(),
-//                        transactionDto.getAmount(), toAccount.getAmount() + transactionDto.getAmount());
 
-       return "Transaction successful__!! && Credited Account Balance: "+toAccount.getAmount();
+        return "Transaction successful__!!";
     }
 
     @Override
@@ -95,9 +98,10 @@ public class TransactionServiceImpl implements TransactionService {
 
         LocalDate toDate = LocalDate.now();
         LocalDate fromDate = toDate.minusDays(days);
-        List<Transaction> transaction = transactionRepository.findAllByAccountNumberToOrAccountNumberFromAndTransactionDateBetween(accountNumber,accountNumber,fromDate,toDate);
+        List<Transaction> transaction = transactionRepository.findAllByAccountNumberToOrAccountNumberFromAndTransactionDateBetween(accountNumber, accountNumber, fromDate, toDate);
         return transaction.stream().filter(Objects::nonNull).map(transaction1 -> {
             TransactionDto transactionDto = new TransactionDto();
+
             BeanUtils.copyProperties(transaction1, transactionDto);
             return transactionDto;
         }).collect(Collectors.toList());

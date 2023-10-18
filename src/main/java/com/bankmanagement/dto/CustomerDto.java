@@ -13,8 +13,8 @@ public class CustomerDto {
    @NotBlank(message = "Name is mandatory")
     private String lastName;
  @NotNull(message = "Contact Number should be 10 digit")
- //@Size(min=10 ,max = 10 ,message="Contact Number should be 10 digit")
-    private Long contactNumber;
+ @Digits(message="Number should contain 10 digits.", fraction = 0, integer = 10)
+ private Long contactNumber;
    @NotNull(message = "age is mandatory")
     private int age;
     @Email(message = "email should be a valid email format")

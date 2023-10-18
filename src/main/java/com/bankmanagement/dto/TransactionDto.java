@@ -18,7 +18,6 @@ public class TransactionDto {
 
     private Long accountNumberTo;
 
-    //@NotNull(message = "transaction Date is Mandatory")
      private LocalDate transactionDate;
 
 
@@ -27,8 +26,7 @@ public class TransactionDto {
 
     @NotBlank(message = "ifsc code is mandatory")
     private String ifscCode;
-
-   // @NotBlank(message = "name is mandatory")
+    @NotBlank(message = "name is mandatory")
     private String name;
 
 }

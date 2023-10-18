@@ -12,11 +12,14 @@ import com.bankmanagement.service.CustomerService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static org.springframework.aop.support.MethodMatchers.matches;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -35,14 +38,25 @@ public class CustomerServiceImpl implements CustomerService {
         if (customerRepository.existsByAadhaarNumber(customerDto.getAadhaarNumber())) {
             throw new CustomerException("A Customer of AadhaarNumber Number %s already exists.".formatted(customerDto.getAadhaarNumber()));
         }
+        long l = customerDto.getContactNumber();
+        String s = Long.toString(l);
         Optional<Bank> bank = bankRepository.findById(bankId);
         Customer customer = new Customer();
+        if(s.length()==10){
+            if(s.startsWith("9") || s.startsWith("8")||s.startsWith("7")||s.startsWith("6"))
+            {
+            BeanUtils.copyProperties(customerDto, customer);
+            customer.setBank(bank.get());
+            customerDto.setBankId(bank.get().getBankId());
 
-        BeanUtils.copyProperties(customerDto, customer);
-        customer.setBank(bank.get());
-        customerDto.setBankId(bank.get().getBankId());
+            customerRepository.save(customer);
+            }else {
+                throw new CustomerException("Contact Number should be start with 6,7,8,9 digits");
+            }
+        }else {
+            throw new CustomerException("Invalid Contact Number");
+        }
 
-        customerRepository.save(customer);
 
         return customerDto;
     }
@@ -50,8 +64,11 @@ public class CustomerServiceImpl implements CustomerService {
         public List<CustomerDto> getAllCustomer() {
         if (customerRepository.findAll().isEmpty())
             throw new CustomerException("customers Data not present in Database");
-            List<CustomerDto> collect = customerRepository.findAll().stream().filter(Objects::nonNull).map(customer -> {
+            List<CustomerDto> collect = customerRepository.findAll().stream().filter(Objects::nonNull)
+                    .map(customer -> {
+
                 CustomerDto customerdto = new CustomerDto();
+                customerdto.setBankId(customer.getBank().getBankId());
                 BeanUtils.copyProperties(customer, customerdto);
                 return customerdto;
 
@@ -72,6 +89,7 @@ public class CustomerServiceImpl implements CustomerService {
         return customerOptional.stream()
                 .map(customer -> {
                     CustomerDto customerDto = new CustomerDto();
+                    customerDto.setBankId(customer.getBank().getBankId());
                     BeanUtils.copyProperties(customer, customerDto);
                     return customerDto;
                 })

@@ -1,16 +1,13 @@
 package com.bankmanagement.controller;
-
 import com.bankmanagement.dto.AccountDto;
 import com.bankmanagement.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.security.auth.login.AccountException;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
-
 @RestController
 public class AccountController {
     @Autowired
@@ -26,8 +23,6 @@ public class AccountController {
     public ResponseEntity<List<AccountDto>> getAllAccountDetails() throws AccountException {
         return ResponseEntity.ok(accountService.getAllAccount());
     }
-
-
     @PutMapping("/accounts/{accountId}")
     public ResponseEntity<String> updateAccountDto(@Valid @RequestBody AccountDto accountDto, @PathVariable("accountId") Long accountId) throws AccountException {
 

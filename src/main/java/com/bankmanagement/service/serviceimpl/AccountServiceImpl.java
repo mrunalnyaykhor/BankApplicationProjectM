@@ -14,7 +14,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Tuple;
 import javax.security.auth.login.AccountException;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
@@ -35,28 +37,50 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountDto saveAccount(AccountDto accountdto, Long customerId, Long bankId) throws AccountException {
 
-
-        var email = accountdto.getEmail();
         var customerOptional = customerRepository.findById(customerId).orElseThrow(() -> new CustomerException("customer not present & Cannot create Account"));
         var bankOptional = bankRepository.findById(bankId).orElseThrow(() -> new BankException("Bank not Present & Cannot create Account"));
-            Account account = new Account();
-            Optional<Customer> customer = customerRepository.findById(customerId);
-            Optional<Bank> bank = bankRepository.findById(bankId);
-            Random random = new Random();
-            Long accNo = random.nextLong(55);
-            Long sAccNum = accNo;
-            BigInteger accountNo = new BigInteger("5555" + sAccNum);
-            accountdto.setAccountNumber(Long.parseLong(accountNo.toString()));
-            account.getAccountNumber();
-        {
 
-            BeanUtils.copyProperties(accountdto, account);
-            account.setCustomer(customer.get());
-            accountdto.setCustomerId(customer.get().getCustomerId());
-            account.setBank(bank.get());
-            accountdto.setBankId(bank.get().getBankId());
-            accountRepository.save(account);
+        Account account = new Account();
+        Optional<Customer> customer = customerRepository.findById(customerId);
+        Optional<Bank> bank = bankRepository.findById(bankId);
+        Random random = new Random();
+        Long accNo = random.nextLong(44);
+        Long sAccNum = accNo;
+        BigInteger accountNo = new BigInteger("444" + sAccNum);
+        accountdto.setAccountNumber(Long.parseLong(accountNo.toString()));
+        accountdto.getAccountNumber();
+        if(customer.isPresent()) {
+            Customer customer1 = customer.get();
+            boolean firstName = customer1.getFirstName().equals(accountdto.getFirstName());
+            boolean lastName = customer1.getLastName().equals(accountdto.getLastName());
+            boolean panCard = customer1.getPanCardNumber().equals(accountdto.getPanCardNumber());
+            boolean contact = customer1.getContactNumber().equals(accountdto.getContactNumber());
+            boolean dob = customer1.getDateOfBirth().equals(accountdto.getDateOfBirth());
+            if ((!firstName)) {
+                throw new AccountException("Cannot create Account Customer name is incorrect");
+            }
+            if ((!lastName)) {
+                throw new AccountException("Cannot create Account Customer name is incorrect");
+            }
+            if ((!panCard)) {
+                throw new AccountException("Cannot create Account Customer panCardNumber is incorrect");
+            }
+            if ((!contact)) {
+                throw new AccountException("Cannot create Account Customer ContactNumber is incorrect");
+            }
+            if ((!dob)) {
+                throw new AccountException("Cannot create Account Customer dateOfBirth is incorrect");
+            }
+
         }
+
+        BeanUtils.copyProperties(accountdto, account);
+        account.setCustomer(customer.get());
+        accountdto.setCustomerId(customer.get().getCustomerId());
+        account.setBank(bank.get());
+        accountdto.setBankId(bank.get().getBankId());
+        accountRepository.save(account);
+
 
         return accountdto;
     }
@@ -109,7 +133,7 @@ public class AccountServiceImpl implements AccountService {
     public String withdrawalAmountById(Long accountId, Double amount) throws AccountException {
 
         Optional<Account> account = accountRepository.findById(accountId);
-        if(account.isEmpty()){
+        if (account.isEmpty()) {
             throw new AccountException("Account not present");
         }
 
@@ -149,22 +173,20 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
-
     @Override
     public String isBlocked(Long accountId) throws AccountException {
         var account = accountRepository.findById(accountId).orElseThrow(() -> new AccountException("Account not present"));
-         if(accountRepository.findById(accountId).isPresent()){
+        if (accountRepository.findById(accountId).isPresent()) {
 
-             double amount = account.getAmount();
-             if(amount <= 2000){
-                 account.setBlocked(true);
-                 accountRepository.save(account);
-             }
-             else {
-                 account.setBlocked(false);
-                 accountRepository.save(account);
-             }
-         }
+            double amount = account.getAmount();
+            if (amount <= 2000) {
+                account.setBlocked(true);
+                accountRepository.save(account);
+            } else {
+                account.setBlocked(false);
+                accountRepository.save(account);
+            }
+        }
         return "account is blocked :".formatted(account.isBlocked());
     }
 }

@@ -28,6 +28,8 @@ public class Transaction {
     private String description;
     @Column(name = "ifscCode")
     private  String ifscCode;
+    @Column(name="name")
+    private String name;
 
 
 
