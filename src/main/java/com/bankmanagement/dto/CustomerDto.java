@@ -1,12 +1,14 @@
 package com.bankmanagement.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.*;
 
 @Setter
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CustomerDto {
  @NotBlank(message = "first Name is mandatory")
     private String firstName;

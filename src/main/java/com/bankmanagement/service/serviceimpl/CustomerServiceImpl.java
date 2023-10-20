@@ -12,14 +12,11 @@ import com.bankmanagement.service.CustomerService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import static org.springframework.aop.support.MethodMatchers.matches;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -41,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
         long l = customerDto.getContactNumber();
         String s = Long.toString(l);
         Optional<Bank> bank = bankRepository.findById(bankId);
-        Customer customer = new Customer();
+        Customer customer = null;
         if(s.length()==10){
             if(s.startsWith("9") || s.startsWith("8")||s.startsWith("7")||s.startsWith("6"))
             {
@@ -66,11 +63,10 @@ public class CustomerServiceImpl implements CustomerService {
             throw new CustomerException("customers Data not present in Database");
             List<CustomerDto> collect = customerRepository.findAll().stream().filter(Objects::nonNull)
                     .map(customer -> {
+                        CustomerDto dto = CustomerDto.builder().bankId(customer.getBank().getBankId()).build();
 
-                CustomerDto customerdto = new CustomerDto();
-                customerdto.setBankId(customer.getBank().getBankId());
-                BeanUtils.copyProperties(customer, customerdto);
-                return customerdto;
+                        BeanUtils.copyProperties(customer, dto);
+                return dto;
 
             }).collect(Collectors.toList());
 
@@ -88,7 +84,8 @@ public class CustomerServiceImpl implements CustomerService {
 
         return customerOptional.stream()
                 .map(customer -> {
-                    CustomerDto customerDto = new CustomerDto();
+                   // CustomerDto customerDto =null;
+                    CustomerDto customerDto = CustomerDto.builder().bankId(customer.getBank().getBankId()).build();
                     customerDto.setBankId(customer.getBank().getBankId());
                     BeanUtils.copyProperties(customer, customerDto);
                     return customerDto;

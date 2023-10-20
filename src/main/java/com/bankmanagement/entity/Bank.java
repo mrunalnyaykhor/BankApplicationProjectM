@@ -1,8 +1,6 @@
 package com.bankmanagement.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -10,6 +8,9 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Bank {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,5 +23,6 @@ public class Bank {
     private String ifscCode;
     @Column(name = "address")
     private String address;
+
 
 }

@@ -1,6 +1,7 @@
 package com.bankmanagement.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.Size;
 
 @Setter
 @Getter
+@Builder
 @Entity
 public class Customer {
     @Id

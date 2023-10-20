@@ -1,4 +1,5 @@
 package com.bankmanagement.service.serviceimpl;
+
 import com.bankmanagement.dto.BankDto;
 import com.bankmanagement.entity.Bank;
 import com.bankmanagement.exception.BankException;
@@ -7,6 +8,7 @@ import com.bankmanagement.service.BankService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,7 +17,8 @@ import java.util.stream.Collectors;
 @Service
 public class BankServiceImpl implements BankService {
     @Autowired
-    private BankRepository bankRepository;
+    public BankRepository bankRepository;
+
     @Override
     public BankDto saveBank(BankDto bankDto) {
         if (bankRepository.existsByIfscCode(bankDto.getIfscCode())) {
@@ -30,24 +33,24 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public List<BankDto> getAllBank() {
-        if(bankRepository.findAll().isEmpty())
+        if (bankRepository.findAll().isEmpty())
             throw new BankException("Bank not Available");
         return bankRepository.findAll().stream().filter(Objects::nonNull)
-                .map(bank ->{
+                .map(bank -> {
                     BankDto bankDto = new BankDto();
-                    BeanUtils.copyProperties(bank,bankDto);
+                    BeanUtils.copyProperties(bank, bankDto);
                     return bankDto;
                 }).collect(Collectors.toList());
     }
 
     @Override
     public List<BankDto> getBankById(Long bankId) {
-         bankRepository.findById(bankId).orElseThrow(()-> new BankException("BankId does not exist"));
+        bankRepository.findById(bankId).orElseThrow(() -> new BankException("BankId does not exist"));
 
         return bankRepository.findById(bankId).stream().filter(Objects::nonNull)
                 .map(bank1 -> {
                     BankDto bankDto = new BankDto();
-                    BeanUtils.copyProperties(bank1,bankDto);
+                    BeanUtils.copyProperties(bank1, bankDto);
                     return bankDto;
                 }).collect(Collectors.toList());
 
@@ -58,8 +61,7 @@ public class BankServiceImpl implements BankService {
         Bank bank = bankRepository.findById(bankId).orElseThrow(() -> new BankException("Bank Not Available"));
         if (bankRepository.existsByIfscCode(bankDto.getIfscCode())) {
             throw new BankException("A bank with IFSC code %s already exists.".formatted(bankDto.getIfscCode()));
-        }
-        else {
+        } else {
             BeanUtils.copyProperties(bankDto, bank);
             bankRepository.save(bank);
             return bankDto;
@@ -69,9 +71,9 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public void deleteBankById(Long bankId) {
+
         Optional<Bank> bankOptional = bankRepository.findById(bankId);
-        if(bankOptional.isEmpty())
-        {
+        if (bankOptional.isEmpty()) {
             throw new BankException("Bank Not Available");
         }
         bankOptional.ifPresent(bank -> bankRepository.deleteById(bankId));
