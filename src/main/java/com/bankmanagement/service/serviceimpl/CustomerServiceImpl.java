@@ -31,21 +31,17 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto saveCustomer(CustomerDto customerDto, Long bankId) {
-
         if (customerRepository.existsByAadhaarNumber(customerDto.getAadhaarNumber())) {
-            throw new CustomerException("A Customer of AadhaarNumber Number %s already exists.".formatted(customerDto.getAadhaarNumber()));
-        }
+            throw new CustomerException("A Customer of AadhaarNumber Number %s already exists.".formatted(customerDto.getAadhaarNumber()));}
         long l = customerDto.getContactNumber();
         String s = Long.toString(l);
         Optional<Bank> bank = bankRepository.findById(bankId);
-        Customer customer = null;
         if(s.length()==10){
             if(s.startsWith("9") || s.startsWith("8")||s.startsWith("7")||s.startsWith("6"))
-            {
-            BeanUtils.copyProperties(customerDto, customer);
+            {Customer customer = new Customer();
+                BeanUtils.copyProperties(customerDto, customer);
             customer.setBank(bank.get());
             customerDto.setBankId(bank.get().getBankId());
-
             customerRepository.save(customer);
             }else {
                 throw new CustomerException("Contact Number should be start with 6,7,8,9 digits");
@@ -64,7 +60,6 @@ public class CustomerServiceImpl implements CustomerService {
             List<CustomerDto> collect = customerRepository.findAll().stream().filter(Objects::nonNull)
                     .map(customer -> {
                         CustomerDto dto = CustomerDto.builder().bankId(customer.getBank().getBankId()).build();
-
                         BeanUtils.copyProperties(customer, dto);
                 return dto;
 
@@ -75,16 +70,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDto> customerFindById(Long customerId) {
-
         Optional<Customer> customerOptional = customerRepository.findById(customerId);
-
         if (customerOptional.isEmpty()) {
             throw new CustomerException("Customer not present");
         }
-
         return customerOptional.stream()
                 .map(customer -> {
-                   // CustomerDto customerDto =null;
                     CustomerDto customerDto = CustomerDto.builder().bankId(customer.getBank().getBankId()).build();
                     customerDto.setBankId(customer.getBank().getBankId());
                     BeanUtils.copyProperties(customer, customerDto);
@@ -95,17 +86,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public String deleteCustomerById(Long customerId) {
-
         Optional<Customer> customerOptional = customerRepository.findById(customerId);
-
         if (customerOptional.isEmpty()) {
-            throw new CustomerException("Customer not present");
-        }
-
+            throw new CustomerException("Customer not present");}
         customerOptional.ifPresent(customer -> {
             customerRepository.deleteById(customerId);
         });
-
         return "Customer Id :%d deleted successfully....!!".formatted(customerId);
     }
 

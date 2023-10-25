@@ -10,6 +10,7 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerDto {
+    private Long customerId;
  @NotBlank(message = "first Name is mandatory")
     private String firstName;
    @NotBlank(message = "Name is mandatory")

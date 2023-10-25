@@ -10,4 +10,6 @@ import java.io.Serializable;
 public interface CustomerRepository extends JpaRepository<Customer, Serializable> {
 
     boolean existsByAadhaarNumber(String aadhaarNumber);
+
+    void findByContactNumber(Long contactNumber);
 }

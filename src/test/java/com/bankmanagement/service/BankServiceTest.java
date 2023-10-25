@@ -46,6 +46,7 @@ public class BankServiceTest {
                 .ifscCode("SBIN1234")
                 .address("Mohadi").build();
         when(bankRepository.existsByIfscCode(anyString())).thenReturn(false);
+
         BankDto response = bankService.saveBank(bank1);
         assertEquals("SBI", response.getBankName());
         assertEquals("SBIN1234", response.getIfscCode());
