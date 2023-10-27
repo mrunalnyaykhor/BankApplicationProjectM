@@ -1,7 +1,6 @@
 package com.bankmanagement.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -9,6 +8,9 @@ import java.time.LocalDate;
 
 @Setter
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TransactionDto {
     @NotNull
     private double amount;
@@ -19,9 +21,7 @@ public class TransactionDto {
     private Long accountNumberTo;
 
      private LocalDate transactionDate;
-
-
-    @NotBlank(message = "Description is required")
+     @NotBlank(message = "Description is required")
     private String description;
 
     @NotBlank(message = "ifsc code is mandatory")

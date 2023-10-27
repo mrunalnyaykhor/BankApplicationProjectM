@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 @Setter
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -41,6 +41,10 @@ public class Account {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="customerId",referencedColumnName = "customerId")
     private Customer customer;
+    @Column(insertable =  false, updatable = false)
+    private Long customerId;
+    @Column(insertable =  false, updatable = false)
+    private Long bankId;
 
 
 

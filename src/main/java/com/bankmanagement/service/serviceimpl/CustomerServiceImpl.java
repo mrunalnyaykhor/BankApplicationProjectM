@@ -100,8 +100,7 @@ public class CustomerServiceImpl implements CustomerService {
         Optional<Customer> customerOptional = customerRepository.findById(customerId);
         if (customerOptional.isEmpty()) {
             throw new CustomerException("Customer Does not exist____!!!");
-        }
-        if (customerOptional.isPresent()) {
+        }if (customerOptional.isPresent()) {
             customerOptional.stream().map(customer -> {
                 BeanUtils.copyProperties(customerDto, customer);
                 return customerRepository.save(customer);

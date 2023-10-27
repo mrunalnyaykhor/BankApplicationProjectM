@@ -80,19 +80,12 @@ public class TransactionServiceImpl implements TransactionService {
             if (!name) {
                 throw new TransactionException("To account Name is not correct");
             }
-
             BeanUtils.copyProperties(transactionDto, transaction);
             accountRepository.save(fromAccount);
             accountRepository.save(toAccount);
-            transactionRepository.save(transaction);
-
-
-        }
-
-
+            transactionRepository.save(transaction);}
         return "Transaction successful__!!";
     }
-
     @Override
     public List<TransactionDto> findTransaction(Long accountNumber, long days) {
 
@@ -105,8 +98,5 @@ public class TransactionServiceImpl implements TransactionService {
             BeanUtils.copyProperties(transaction1, transactionDto);
             return transactionDto;
         }).collect(Collectors.toList());
-
     }
-
-
 }

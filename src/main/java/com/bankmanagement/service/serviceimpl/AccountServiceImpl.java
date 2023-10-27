@@ -13,6 +13,7 @@ import com.bankmanagement.service.AccountService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.Tuple;
 import javax.security.auth.login.AccountException;
@@ -80,8 +81,6 @@ public class AccountServiceImpl implements AccountService {
         account.setBank(bank.get());
         accountdto.setBankId(bank.get().getBankId());
         accountRepository.save(account);
-
-
         return accountdto;
     }
 
@@ -101,24 +100,17 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId).orElseThrow(() -> new AccountException("Account not present"));
         BeanUtils.copyProperties(accountDto, account);
         accountRepository.save(account);
-
         return "Account Id Number: %d Updated Successfully".formatted(account.getAccountId());
     }
-
     @Override
     public String deleteAccountById(Long accountId) throws AccountException {
         Optional<Account> accountOptional = accountRepository.findById(accountId);
-
-        if (accountOptional.isEmpty()) {
-            throw new AccountException("Account Id does not exist");
-        }
+        if (accountOptional.isEmpty())
+        {throw new AccountException("Account Id does not exist");}
         accountOptional.ifPresent(account -> {
             accountRepository.deleteById(accountId);
         });
-
-        return "Account Id :%d deleted successfully....!!".formatted(accountId);
-    }
-
+        return "Account Id :%d deleted successfully....!!".formatted(accountId);}
     @Override
     public List<Double> getBalance(Long accountId) throws AccountException {
         Optional<Account> optionalAccount1 = accountRepository.findById(accountId);
@@ -135,41 +127,44 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> account = accountRepository.findById(accountId);
         if (account.isEmpty()) {
             throw new AccountException("Account not present");
-        }
-
-        if (account.isPresent()) {
+        }if (account.isPresent()) {
             account1 = account.get();
             account.stream().filter(amt -> amount >= 500 && amt.getAmount() >= 2000).forEach(account2 -> {
                 account2.setAmount((account2.getAmount() - amount));
-                accountRepository.save(account2);
-            });
+                accountRepository.save(account2);});
         }
+
         if (amount <= 500) {
+
             throw new AccountException("Enter more than 500 rs for withdrawal");
+
         } else if (account1.getAmount() <= 2000) {
+
             throw new AccountException("Insufficient Balance");
-        } else {
+
+        }
+        else {
+
             System.out.println("some problem");
         }
 
-        return "Amount withdrawal successfully %.2f && Required Balance is %.2f".formatted(amount, account1.getAmount());
-    }
 
+        return "Amount withdrawal successfully %.2f && Required Balance is %.2f".formatted(amount, account1.getAmount());
+
+    }
     @Override
     public String deposit(Long accountId, Double amount) throws AccountException {
         Optional<Account> account = accountRepository.findById(accountId);
-        if (account.isEmpty()) {
-            account1 = account.get();
-            account.stream().filter(amount1 -> amount >= 100).forEach(account2 -> {
-                account2.setAmount(account2.getAmount() + amount);
-                accountRepository.save(account2);
-            });
-
-        } else if (amount <= 100) {
-            throw new AccountException("Please Enter More than 100 rs");
+        if (account.isPresent() && amount>=100) {
+            Account account2 = account.get();
+            account2.setAmount(account2.getAmount() + amount);
+            accountRepository.save(account2);
         }
+        if (amount <= 100) {
+            throw new AccountException("Please Enter More than 100 rs");
 
-        return "Your Amount deposited successfully: deposited amount: %.2f%nNow Current Balance is: %.2f".formatted(amount, account1.getAmount());
+        }
+        return "amount deposited successfully...!!";
     }
 
 

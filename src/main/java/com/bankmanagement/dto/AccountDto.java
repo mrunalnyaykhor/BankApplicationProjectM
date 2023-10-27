@@ -2,6 +2,7 @@ package com.bankmanagement.dto;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.validation.constraints.*;
 
 @Setter
@@ -10,6 +11,7 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountDto {
+
     private Long accountId;
     @NotBlank(message = "First Name is Mandatory")
     private String firstName;
@@ -33,6 +35,7 @@ public class AccountDto {
     @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
             flags = Pattern.Flag.CASE_INSENSITIVE)
     private String email;
+
     private Long customerId;
 
     private Long bankId;

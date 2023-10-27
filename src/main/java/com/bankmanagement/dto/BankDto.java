@@ -2,6 +2,7 @@ package com.bankmanagement.dto;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Builder
 public class BankDto {
+
     private Long bankId;
     @NotBlank(message = "Bank Name should not be blank")
     private String bankName;
@@ -24,6 +26,6 @@ public class BankDto {
     @NotBlank(message = "Address should not be null")
     private String address;
 
-    public BankDto(long l, String sbi, String sbiMohadi, String sbin1234, String mohadi) {
-    }
+//    public BankDto(long l, String sbi, String sbiMohadi, String sbin1234, String mohadi) {
+//    }
 }
