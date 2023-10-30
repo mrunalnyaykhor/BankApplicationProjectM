@@ -1,0 +1,16 @@
+{
+  "accountId": 1,
+  "firstName": "Virat",
+  "lastName": "Kohli",
+  "contactNumber": 9876567836,
+  "amount": 60000.00,
+  "age": 25,
+  "aadhaarNumber": 667764534354,
+  "panCardNumber": "AAA4565K",
+  "dateOfBirth": "1996-09-25",
+  "accountNumber": 45456655,
+  "isBlocked": false,
+  "email": "viratkohli@gmail.com",
+  "customerId": 1,
+  "bankId": 1
+}

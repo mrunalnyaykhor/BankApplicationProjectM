@@ -1,0 +1,10 @@
+{
+  "transactionId": 1,
+  "accountNumberFrom": 5678990,
+  "accountNumberTo": 5678544,
+  "amount": 778999.00,
+  "transactionDate": "2023-10-30",
+  "description": "Hello",
+  "ifscCode": "SBIN1234N",
+  "name": "Virat"
+}

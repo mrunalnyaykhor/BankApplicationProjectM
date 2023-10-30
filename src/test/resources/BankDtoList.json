@@ -1,0 +1,16 @@
+[
+{
+  "bankId": 1,
+  "bankName": "SBI",
+  "branchName": "SBIMohadi",
+  "ifscCode": "SBIN123N",
+  "address": "Mohadi"
+},
+{
+"bankId": 2,
+"bankName": "HDFC",
+"branchName": "HDFCMohadi",
+"ifscCode": "HDFC123N",
+"address": "Mohadi"
+}
+]
