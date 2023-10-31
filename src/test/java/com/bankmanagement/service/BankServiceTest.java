@@ -1,5 +1,4 @@
 package com.bankmanagement.service;
-
 import com.bankmanagement.dto.BankDto;
 import com.bankmanagement.entity.Bank;
 import com.bankmanagement.exception.BankException;
@@ -11,18 +10,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-
 @ExtendWith(SpringExtension.class)
 public class BankServiceTest {
     Bank bank = Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi").ifscCode("SBIN123").address("Mohadi").build();
@@ -34,7 +29,7 @@ public class BankServiceTest {
     private BankServiceImpl bankService;
     @Mock
     private BankRepository bankRepository;
-    private MockMvc mockMvc;
+
 
     @BeforeEach
     public void setup() {

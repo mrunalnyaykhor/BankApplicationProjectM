@@ -61,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
                 throw new AccountException("Cannot create Account Customer name is incorrect");
             }
             if ((!lastName)) {
-                throw new AccountException("Cannot create Account Customer name is incorrect");
+                throw new AccountException("Cannot create Account Customer Last Name is incorrect");
             }
             if ((!panCard)) {
                 throw new AccountException("Cannot create Account Customer panCardNumber is incorrect");

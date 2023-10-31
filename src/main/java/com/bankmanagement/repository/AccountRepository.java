@@ -11,8 +11,6 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Serializable> {
 
-    // Account findByAadhaarNumberAndPanCardNumber(String aadhaarNumber, String panCard);
-
     Account findByAccountNumber(Long accountNumberTo);
 
 }

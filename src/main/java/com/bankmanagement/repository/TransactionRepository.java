@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Serializable> {
-    Optional<Account> findByAccountNumberTo(Long accountNumberTo);
+   // Optional<Account> findByAccountNumberTo(Long accountNumberTo);
 
    List<Transaction> findAllByAccountNumberToOrAccountNumberFromAndTransactionDateBetween(Long accountNumberFrom, Long accountNumberTo, LocalDate fromDate, LocalDate toDate);
 

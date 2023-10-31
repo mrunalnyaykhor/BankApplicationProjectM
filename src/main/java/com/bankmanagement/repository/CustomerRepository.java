@@ -11,5 +11,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Serializable
 
     boolean existsByAadhaarNumber(String aadhaarNumber);
 
-    void findByContactNumber(Long contactNumber);
+//    void findByContactNumber(Long contactNumber);
 }
