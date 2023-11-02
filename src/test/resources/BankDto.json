@@ -1,7 +1,14 @@
+//{
+//  "bankId": 1,
+//  "bankName": "SBI",
+//  "branchName": "SBIMohadi",
+//  "ifscCode": "SBIN123N",
+//  "address": "Mohadi"
+//}
 {
   "bankId": 1,
   "bankName": "SBI",
-  "branchName": "SBIMohadi",
-  "ifscCode": "SBIN123N",
+  "branchName": "SBMMohadi",
+  "ifscCode": "SPIN123N",
   "address": "Mohadi"
 }

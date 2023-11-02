@@ -15,7 +15,7 @@ public class BankController {
     @Autowired
     private BankService bankservice;
     @PostMapping("/saveBank")
-    public ResponseEntity<BankDto> saveBanks(@Valid @RequestBody BankDto bankDto){
+    public ResponseEntity<BankDto> saveBanks(@RequestBody BankDto bankDto){
         return ResponseEntity.ok(bankservice.saveBank(bankDto));
     }
     @GetMapping("/getAllBank")
