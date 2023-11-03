@@ -46,16 +46,8 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public List<BankDto> getBankById(Long bankId)
-    {
-        bankRepository.findById(bankId).orElseThrow(() -> new BankException("BankId does not exist"));
-        return bankRepository.findById(bankId).stream().filter(Objects::nonNull)
-                .map(bank1 -> {
-                    BankDto bankDto = new BankDto();
-                    BeanUtils.copyProperties(bank1, bankDto);
-                    return bankDto;
-                }).collect(Collectors.toList());
-
+    public Bank getBankById(Long bankId) {
+        return bankRepository.findById(bankId).get();
     }
 
     @Override

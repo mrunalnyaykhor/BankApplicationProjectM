@@ -80,9 +80,9 @@ List<Bank> bankList=new ArrayList<>();
     public void getBankByIdTest() {
         Long id = bank.getBankId();
         Mockito.when(bankRepository.findById(id)).thenReturn(Optional.ofNullable(bank1)); //Optional.ofNullable throw NoSuchElement
-        List<BankDto> response = bankService.getBankById(id);
+        Bank response = bankService.getBankById(id);
         assertThat(response).isNotNull();
-        assertThat(response.size()).isEqualTo(1);
+        assertThat(response).isEqualTo(1);
     }
     @DisplayName("Junit Test for getBankById is empty method")
     @Test

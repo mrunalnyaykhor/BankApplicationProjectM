@@ -24,8 +24,9 @@ public class BankController {
         return ResponseEntity.ok(bankservice.getAllBank());
     }
     @GetMapping("/getBankById/{bankId}")
-    public ResponseEntity<List<BankDto>> getBankById(@PathVariable Long bankId){
-        return ResponseEntity.ok(bankservice.getBankById(bankId));
+    public ResponseEntity<Bank> getBankId(@PathVariable Long bankId){
+        Bank bankId1 = bankservice.getBankById(bankId);
+        return ResponseEntity.ok(bankId1);
     }
     @PutMapping("/updateBank/{bankId}")
     public ResponseEntity<BankDto> updateBank(@Valid @RequestBody BankDto bankDto,@PathVariable Long bankId){

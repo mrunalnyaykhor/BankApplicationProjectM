@@ -31,7 +31,7 @@ public class MiniStateMentControllerTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        transactionDto = objectMapper.readValue(new ClassPathResource("TransactionDto.json").getInputStream(), TransactionDto.class);
+        transactionDto = objectMapper.readValue(new ClassPathResource("transactionDto.json").getInputStream(), TransactionDto.class);
 
     }
 

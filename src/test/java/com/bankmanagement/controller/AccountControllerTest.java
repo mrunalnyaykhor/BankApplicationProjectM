@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
@@ -52,12 +51,12 @@ public class AccountControllerTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        accountDto = objectMapper.readValue(new ClassPathResource("AccountDto.json").getInputStream(), AccountDto.class);
-        account = objectMapper.readValue(new ClassPathResource("Account.json").getInputStream(), Account.class);
+        accountDto = objectMapper.readValue(new ClassPathResource("accountDto.json").getInputStream(), AccountDto.class);
+        account = objectMapper.readValue(new ClassPathResource("account.json").getInputStream(), Account.class);
         customerDto = objectMapper.readValue(new ClassPathResource("customerDto.json").getInputStream(), CustomerDto.class);
         customer = objectMapper.readValue(new ClassPathResource("customer.json").getInputStream(), Customer.class);
-        bankDto = objectMapper.readValue(new ClassPathResource("BankDto.json").getInputStream(), BankDto.class);
-        bank = objectMapper.readValue(new ClassPathResource("Bank.json").getInputStream(), Bank.class);
+        bankDto = objectMapper.readValue(new ClassPathResource("bankDto.json").getInputStream(), BankDto.class);
+        bank = objectMapper.readValue(new ClassPathResource("bank.json").getInputStream(), Bank.class);
 
     }
 

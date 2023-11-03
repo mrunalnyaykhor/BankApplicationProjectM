@@ -10,7 +10,7 @@ public interface BankService {
 
     List<BankDto> getAllBank();
 
-    List<BankDto> getBankById(Long bankId);
+    Bank getBankById(Long bankId);
 
     BankDto updateBankById(BankDto bankDto, Long bankId);
 
