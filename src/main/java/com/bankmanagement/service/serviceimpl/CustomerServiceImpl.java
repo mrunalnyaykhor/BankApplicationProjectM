@@ -41,8 +41,8 @@ public class CustomerServiceImpl implements CustomerService {
             if (s.startsWith("9") || s.startsWith("8") || s.startsWith("7") || s.startsWith("6")) {
                 Customer customer = new Customer();
                 BeanUtils.copyProperties(customerDto, customer);
-                customer.setBank(bank.get());
-                customerDto.setBankId(bank.get().getBankId());
+                customer.setBank(customer.getBank());
+               // customerDto.setBankId(bank.get().getBankId());
                 customerRepository.save(customer);
             } else {
                 throw new CustomerException("Contact Number should be start with 6,7,8,9 digits");
@@ -69,17 +69,18 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDto> customerFindById(Long customerId) {
+    public CustomerDto customerFindById(Long customerId) {
         Optional<Customer> customerOptional = customerRepository.findById(customerId);
         if (customerOptional.isEmpty()) {
             throw new CustomerException("Customer not present");
         }
-        return customerOptional.stream().map(customer -> {
-            CustomerDto customerDto = CustomerDto.builder().bankId(customer.getBank().getBankId()).build();
-            customerDto.setBankId(customer.getBank().getBankId());
+        Customer customer = customerOptional.get();
+
+            CustomerDto customerDto = CustomerDto.builder().bankId(customerOptional.get().getBank().getBankId()).build();
+            customerDto.setBankId(customerOptional.get().getBank().getBankId());
             BeanUtils.copyProperties(customer, customerDto);
             return customerDto;
-        }).collect(Collectors.toList());
+
     }
 
     @Override
@@ -96,7 +97,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDto updateCustomer(CustomerDto customerDto, Long customerId) {
         Optional<Customer> customerOptional = customerRepository.findById(customerId);
-        if (customerOptional.isEmpty()) throw new CustomerException("Customer Does not exist____!!!");
+        if (customerOptional.isEmpty()){
+            throw new CustomerException("Customer Does not exist____!!!");
+        }
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerDto, customer);
         customerRepository.save(customer);

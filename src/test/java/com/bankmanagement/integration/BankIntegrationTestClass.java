@@ -1,5 +1,4 @@
 package com.bankmanagement.integration;
-
 import com.bankmanagement.BankManagementApplication;
 import com.bankmanagement.dto.BankDto;
 import com.bankmanagement.entity.Bank;
@@ -17,9 +16,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import java.io.IOException;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -28,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @AutoConfigureMockMvc
 @SpringBootTest(classes = BankManagementApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BankIntegrationTestClass {
-
     private static BankDto bankDto;
     private static Bank bank;
     private final HttpHeaders headers = new HttpHeaders();
@@ -104,8 +100,6 @@ public class BankIntegrationTestClass {
         HttpEntity<BankDto> entity = new HttpEntity<>(bankDto, headers);
         ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToUpdateBank), HttpMethod.PUT, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-
     }
 
 

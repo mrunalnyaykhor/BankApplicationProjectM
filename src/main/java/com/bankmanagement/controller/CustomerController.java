@@ -22,7 +22,7 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.getAllCustomer());
     }
     @GetMapping("/getCustomerById/{customerId}")
-    public ResponseEntity<List <CustomerDto>> getCustomerById(@PathVariable Long customerId){
+    public ResponseEntity<CustomerDto> getCustomerById(@PathVariable Long customerId){
         return ResponseEntity.ok(customerService.customerFindById(customerId));
     }
     @PutMapping("/customer/{customerId}")

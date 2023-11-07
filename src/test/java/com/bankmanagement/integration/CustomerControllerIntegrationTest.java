@@ -1,55 +1,53 @@
 package com.bankmanagement.integration;
 
+import com.bankmanagement.BankManagementApplication;
 import com.bankmanagement.dto.CustomerDto;
-import com.bankmanagement.entity.Bank;
 import com.bankmanagement.entity.Customer;
+import com.bankmanagement.repository.BankRepository;
 import com.bankmanagement.repository.CustomerRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-
-//@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ExtendWith(SpringExtension.class)
+@AutoConfigureMockMvc
+@SpringBootTest(classes = BankManagementApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
 public class CustomerControllerIntegrationTest {
     private final HttpHeaders headers = new HttpHeaders();
     private final TestRestTemplate restTemplate = new TestRestTemplate();
     @Autowired
     ObjectMapper objectMapper;
-    CustomerDto customerDto;
+    @Autowired
+    CustomerRepository customerRepository;
     Customer customer;
-    Bank bank;
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private CustomerRepository customerRepository;
+    CustomerDto customerDto;
     @LocalServerPort
     private int port;
+    @Autowired
+    private BankRepository bankRepository;
 
     @BeforeEach
-    void setUp() throws IOException {
-        customerDto = objectMapper.readValue(new ClassPathResource("customerDto.json").getInputStream(), CustomerDto.class);
+    public void setUp() throws IOException {
         customer = objectMapper.readValue(new ClassPathResource("customer.json").getInputStream(), Customer.class);
-        bank = objectMapper.readValue(new ClassPathResource("bank.json").getInputStream(), Bank.class);
-    }
+        customerDto = objectMapper.readValue(new ClassPathResource("customerDto.json").getInputStream(), CustomerDto.class);
 
-    @AfterEach
-    void deleteEntities() {
-        customerRepository.deleteAll();
     }
 
     private String mapToJson(Object object) throws JsonProcessingException {
@@ -61,21 +59,47 @@ public class CustomerControllerIntegrationTest {
         return "http://localhost:" + port + uri;
     }
 
-    //    @PostMapping("/saveCustomer/{bankId}")
-//    public ResponseEntity<CustomerDto> saveCustomer(@Valid @RequestBody CustomerDto customerDto, @PathVariable Long bankId)
-//    {
-//        return ResponseEntity.ok( customerService.saveCustomer(customerDto,bankId));
-//
-//    }
+    //    @AfterEach
+//    void deleteEntities() {
+//        customerRepository.deleteAll();
+//    }L
     @Test
-    public void customerSaveIntegrationTest() throws JsonProcessingException {
-        String s = this.mapToJson(customerDto);
+    public void customerSaveIntegrationTest() {
 
-        String URIToSaveBank = "/saveCustomer/1";
+        String URIToSaveCustomer = "/saveCustomer/40";
         HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
-        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToSaveBank), HttpMethod.POST, entity, String.class);
-        String responseInJson = response.getBody();
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToSaveCustomer), HttpMethod.POST, entity, String.class);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void testForgetAllCustomer() {
+        String getAllCustomer = "/getAllCustomer";
+
+        String getCustomerResponse = restTemplate.getForObject(formFullURLWithPort(getAllCustomer), String.class);
+
+        assertNotNull(getCustomerResponse, "Response body should not be null");
+    }
+
+    @Test
+    public void getCustomerById() {
+
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(formFullURLWithPort("/getCustomerById/" + customerDto.getCustomerId()), String.class);
+        assertNotNull(responseEntity, "Response body should not be null");
+    }
+
+    @Test
+    public void updateCustomerById() {
+        HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/customer/43"), HttpMethod.PUT, entity, String.class);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void deleteCustomerIntegrationTest() {
+
+        Optional<Customer> customer1 = customerRepository.findById(customer.getCustomerId());
+        restTemplate.delete(formFullURLWithPort("/deleteCustomerById/44"));
     }
 
 

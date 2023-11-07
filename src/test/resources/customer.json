@@ -1,5 +1,5 @@
 {
-  "customerId": 1,
+  "customerId": 41,
   "firstName": "Virat",
   "lastName": "Kohli",
   "contactNumber": 9876786756,
@@ -7,7 +7,7 @@
   "email": "mrunalnyaykhor@gmail.com",
   "aadhaarNumber": "565556656656",
   "panCardNumber": "AAAA4567N",
-  "dateOfBirth": "1996--9-24",
+  "dateOfBirth": "1996-09-24",
   "address": "Mohadi",
-  "bankId": 1
+  "bankId": 39
 }

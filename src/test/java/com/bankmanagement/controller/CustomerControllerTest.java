@@ -57,7 +57,7 @@ public class CustomerControllerTest {
 
     @Test
     public void updateCustomerAPITest() {
-        ResponseEntity<CustomerDto> customerDtoResponseEntity =customerController.updateCustomerDto(customerDto, customerDto.getBankId());
+        ResponseEntity<CustomerDto> customerDtoResponseEntity = customerController.updateCustomerDto(customerDto, customerDto.getBankId());
         assertEquals(HttpStatus.OK, customerDtoResponseEntity.getStatusCode());
     }
 
@@ -69,7 +69,7 @@ public class CustomerControllerTest {
 
     @Test
     public void getCustomerByIdAPITest() {
-        ResponseEntity<List<CustomerDto>> customerDtoResponseEntity =customerController.getCustomerById(customerDto.getCustomerId());
+        ResponseEntity<CustomerDto> customerDtoResponseEntity =customerController.getCustomerById(customerDto.getCustomerId());
         assertEquals(HttpStatus.OK, customerDtoResponseEntity.getStatusCode());
     }
     @Test

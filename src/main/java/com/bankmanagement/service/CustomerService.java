@@ -10,7 +10,7 @@ public interface CustomerService {
 
     List<CustomerDto> getAllCustomer();
 
-    List<CustomerDto> customerFindById(Long customerId);
+    CustomerDto customerFindById(Long customerId);
 
     String deleteCustomerById(Long customerId);
 

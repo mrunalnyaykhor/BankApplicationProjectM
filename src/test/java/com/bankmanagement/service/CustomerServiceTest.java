@@ -50,7 +50,7 @@ public class CustomerServiceTest {
     @Test
     public void getCustomerById() {
         Mockito.when(customerRepository.findById(1L)).thenReturn(Optional.of(customer1)); //Optional.of return empty
-        assertEquals(1, customerService.customerFindById(1L).size());
+        assertEquals(1, customerService.customerFindById(1L));
     }
 
     @DisplayName("JUnit test for deleteCustomerTest method")
