@@ -1,16 +1,16 @@
 {
   "accountId": 1,
-  "firstName": "Rajesh",
-  "lastName": "Thakrey",
-  "contactNumber": 9042351021,
+  "firstName": "Virat",
+  "lastName": "Kohli",
+  "contactNumber": 9876567836,
   "amount": 60000.00,
   "age": 25,
   "aadhaarNumber": 667764534354,
-  "panCardNumber": "BNZAB2318J",
-  "dateOfBirth": "1996-09-23",
+  "panCardNumber": "AAA4565K",
+  "dateOfBirth": "1996-09-25",
   "accountNumber": 45456655,
   "isBlocked": false,
-  "email": "rajeshthakrey@gmail.com",
+  "email": "viratkohli@gmail.com",
   "customerId": 41,
-  "bankId": 10
+  "bankId": 12
 }

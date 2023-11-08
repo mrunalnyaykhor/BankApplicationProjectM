@@ -197,8 +197,8 @@ public class AccountServiceTest {
     @Test
     public void getBalanceTest() throws AccountException {
         Mockito.when(accountRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(account));
-        List<Double> balance = accountService.getBalance(account.getAccountId());
-        assertEquals(1, balance.stream().count());
+        Double balance = accountService.getBalance(account.getAccountId());
+        assertEquals(1, balance);
     }
 
     @Test

@@ -88,7 +88,7 @@ public class AccountControllerTest {
 
     @Test
     public void balanceCheckAPITest() throws AccountException {
-        ResponseEntity<List<Double>> listResponseEntity = accountController.balanceCheck(account.getAccountId());
+        ResponseEntity <Double> listResponseEntity = accountController.balanceCheck(account.getAccountId());
 
     }
 

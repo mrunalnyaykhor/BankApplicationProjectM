@@ -8,6 +8,7 @@ import javax.security.auth.login.AccountException;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+
 @RestController
 public class AccountController {
     @Autowired
@@ -23,6 +24,11 @@ public class AccountController {
     public ResponseEntity<List<AccountDto>> getAllAccountDetails() throws AccountException {
         return ResponseEntity.ok(accountService.getAllAccount());
     }
+    @GetMapping("/getAccountById/{accountId}")
+    public ResponseEntity<AccountDto> getAccountById(@PathVariable Long accountId) throws AccountException {
+        return ResponseEntity.ok(accountService.getAccountById(accountId));
+    }
+
     @PutMapping("/accounts/{accountId}")
     public ResponseEntity<String> updateAccountDto(@Valid @RequestBody AccountDto accountDto, @PathVariable("accountId") Long accountId) throws AccountException {
 
@@ -35,11 +41,11 @@ public class AccountController {
     }
 
     @GetMapping("/checkAmountById/{accountId}")
-    public ResponseEntity<List<Double>> balanceCheck(@PathVariable Long accountId) throws AccountException {
+    public ResponseEntity<Double> balanceCheck(@PathVariable Long accountId) throws AccountException {
         return ResponseEntity.ok(accountService.getBalance(accountId));
     }
 
-    @PostMapping("/{accountId}/deposit")
+    @PostMapping("/deposit/{accountId}")
     public ResponseEntity<String> depositAmount(@PathVariable Long accountId, @RequestBody Map<String, Double> request) throws AccountException {
         Double amount = request.get("amount");
 

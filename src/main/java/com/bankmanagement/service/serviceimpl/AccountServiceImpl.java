@@ -1,6 +1,7 @@
 package com.bankmanagement.service.serviceimpl;
 
 import com.bankmanagement.dto.AccountDto;
+import com.bankmanagement.dto.CustomerDto;
 import com.bankmanagement.entity.Account;
 import com.bankmanagement.entity.Bank;
 import com.bankmanagement.entity.Customer;
@@ -13,11 +14,8 @@ import com.bankmanagement.service.AccountService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import javax.persistence.Tuple;
 import javax.security.auth.login.AccountException;
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
@@ -112,12 +110,14 @@ public class AccountServiceImpl implements AccountService {
         });
         return "Account Id :%d deleted successfully....!!".formatted(accountId);}
     @Override
-    public List<Double> getBalance(Long accountId) throws AccountException {
+    public Double getBalance(Long accountId) throws AccountException {
         Optional<Account> optionalAccount1 = accountRepository.findById(accountId);
         if (optionalAccount1.isEmpty()) {
             throw new AccountException("Account not exist");
         }
-        return optionalAccount1.stream().filter(Objects::nonNull).map(Account::getAmount).collect(Collectors.toList());
+        double amount = optionalAccount1.get().getAmount();
+        return amount;
+      //  return optionalAccount1.stream().filter(Objects::nonNull).map(Account::getAmount).collect(Collectors.toList());
 
     }
 
@@ -184,4 +184,17 @@ public class AccountServiceImpl implements AccountService {
         }
         return "account is blocked :".formatted(account.isBlocked());
     }
+
+    @Override
+    public AccountDto getAccountById(Long accountId) throws AccountException {
+        Optional<Account> accountOptional = accountRepository.findById(accountId);
+        AccountDto accountDto = new AccountDto();
+        Account account = new Account();
+        BeanUtils.copyProperties(account, accountDto);
+        if(accountOptional.isPresent()){
+            Account account2 = accountOptional.get();
+            BeanUtils.copyProperties(account2, accountDto);
+        }
+        return accountDto;
+}
 }

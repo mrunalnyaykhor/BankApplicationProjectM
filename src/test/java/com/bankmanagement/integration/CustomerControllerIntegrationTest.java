@@ -66,7 +66,7 @@ public class CustomerControllerIntegrationTest {
     @Test
     public void customerSaveIntegrationTest() {
 
-        String URIToSaveCustomer = "/saveCustomer/40";
+        String URIToSaveCustomer = "/saveCustomer/12";
         HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
         ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToSaveCustomer), HttpMethod.POST, entity, String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -74,6 +74,10 @@ public class CustomerControllerIntegrationTest {
 
     @Test
     public void testForgetAllCustomer() {
+        String URIToSaveCustomer = "/saveCustomer/12";
+        HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToSaveCustomer), HttpMethod.POST, entity, String.class);
+       // Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         String getAllCustomer = "/getAllCustomer";
 
         String getCustomerResponse = restTemplate.getForObject(formFullURLWithPort(getAllCustomer), String.class);
@@ -99,7 +103,7 @@ public class CustomerControllerIntegrationTest {
     public void deleteCustomerIntegrationTest() {
 
         Optional<Customer> customer1 = customerRepository.findById(customer.getCustomerId());
-        restTemplate.delete(formFullURLWithPort("/deleteCustomerById/44"));
+        restTemplate.delete(formFullURLWithPort("/deleteCustomerById/42"));
     }
 
 
