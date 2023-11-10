@@ -1,6 +1,7 @@
 package com.bankmanagement.integration;
 
 import com.bankmanagement.BankManagementApplication;
+import com.bankmanagement.config.TestConfig;
 import com.bankmanagement.dto.CustomerDto;
 import com.bankmanagement.entity.Customer;
 import com.bankmanagement.repository.BankRepository;
@@ -23,6 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.io.IOException;
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
@@ -59,17 +61,16 @@ public class CustomerControllerIntegrationTest {
         return "http://localhost:" + port + uri;
     }
 
-    //    @AfterEach
-//    void deleteEntities() {
-//        customerRepository.deleteAll();
-//    }L
-    @Test
-    public void customerSaveIntegrationTest() {
 
-        String URIToSaveCustomer = "/saveCustomer/12";
+    @Test
+    public void customerSaveIntegrationTest() throws JsonProcessingException {
+
+        String URIToSaveCustomer = "/saveCustomer/2";
+        String inputJson = this.mapToJson(customerDto);
         HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
         ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToSaveCustomer), HttpMethod.POST, entity, String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
     }
 
     @Test
@@ -86,10 +87,16 @@ public class CustomerControllerIntegrationTest {
     }
 
     @Test
-    public void getCustomerById() {
-
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(formFullURLWithPort("/getCustomerById/" + customerDto.getCustomerId()), String.class);
+    public void getCustomerById() throws JsonProcessingException {
+        String URIToSaveCustomer = "/saveCustomer/1";
+        String inputJson = this.mapToJson(customerDto);
+        HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToSaveCustomer), HttpMethod.POST, entity, String.class);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        String URIToGetCustomer = "/getCustomerById/1";
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(formFullURLWithPort(URIToGetCustomer), String.class);
         assertNotNull(responseEntity, "Response body should not be null");
+
     }
 
     @Test

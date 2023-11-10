@@ -1,8 +1,8 @@
 
 {
-  "bankId": 40,
+"bankId": 1,
   "bankName": "SBI",
-  "branchName": "HBIMohadi",
-  "ifscCode": "HDFC0080697",
-  "address": "Mohadi"
+  "branchName": "SBINPardi",
+  "ifscCode": "SBIN0080097",
+  "address": "pardi_Ngp"
 }

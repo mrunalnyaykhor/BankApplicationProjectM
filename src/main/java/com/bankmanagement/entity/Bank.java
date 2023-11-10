@@ -14,6 +14,7 @@ import javax.persistence.*;
 public class Bank {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+
     private Long bankId;
     @Column(name = "bankName")
     private String bankName;

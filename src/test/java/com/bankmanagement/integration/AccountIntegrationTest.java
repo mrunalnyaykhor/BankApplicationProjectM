@@ -87,20 +87,20 @@ public class AccountIntegrationTest {
 
     @Test
     public void getAccountById() {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(formFullURLWithPort("/getAccountById/45/"), String.class);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(formFullURLWithPort("/getAccountById/"+account.getAccountId()), String.class);
         assertNotNull(responseEntity, "Response body should not be null");
     }
     @Test
     public void updateAccountById() {
         HttpEntity<AccountDto> entity = new HttpEntity<>(accountDto, headers);
-        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/accounts/45"), HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/accounts/"+account.getAccountId()), HttpMethod.PUT, entity, String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
     @Test
     public void deleteAccountIntegrationTest() {
 
         Optional<Account> customer1 = accountRepository.findById(account.getAccountId());
-        restTemplate.delete(formFullURLWithPort("/deleteAccountIdById/45"));
+        restTemplate.delete(formFullURLWithPort("/deleteAccountIdById/"+account.getAccountId()));
     }
     @Test
     public void balanceCheckAccountId(){

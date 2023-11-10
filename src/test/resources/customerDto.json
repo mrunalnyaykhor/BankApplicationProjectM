@@ -1,13 +1,13 @@
 {
-  "customerId": 41,
+  "customerId": 1,
   "firstName": "Virat123",
   "lastName": "patil123",
   "contactNumber": 9876786756,
   "age": 26,
   "email": "mrunalnyaykhor@gmail.com",
-  "aadhaarNumber": "564556856658",
+  "aadhaarNumber": "264900950658",
   "panCardNumber": "LNZCB2338O",
   "dateOfBirth": "1996-09-24",
   "address": "Mohadi",
-  "bankId": 39
+  "bankId": 2
 }
