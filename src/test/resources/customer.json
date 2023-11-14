@@ -1,13 +1,13 @@
 {
-  "customerId": 41,
+  "customerId": 1,
   "firstName": "Virat",
   "lastName": "Kohli",
-  "contactNumber": 9876786756,
-  "age": 26,
-  "email": "mrunalnyaykhor@gmail.com",
-  "aadhaarNumber": "565556656656",
-  "panCardNumber": "AAAA4567N",
-  "dateOfBirth": "1996-09-24",
+  "contactNumber": 9876785435,
+  "age": 37,
+  "email": "rohitsharma@gmail.com",
+  "aadhaarNumber": "555677787765",
+  "panCardNumber": "BNZAB2318J",
+  "dateOfBirth": "1987-08-25",
   "address": "Mohadi",
-  "bankId": 39
+  "bankId": 1
 }

@@ -3,6 +3,7 @@ package com.bankmanagement.service.serviceimpl;
 import com.bankmanagement.dto.CustomerDto;
 import com.bankmanagement.entity.Bank;
 import com.bankmanagement.entity.Customer;
+import com.bankmanagement.exception.BankException;
 import com.bankmanagement.exception.CustomerException;
 import com.bankmanagement.repository.AccountRepository;
 import com.bankmanagement.repository.BankRepository;
@@ -37,16 +38,14 @@ public class CustomerServiceImpl implements CustomerService {
         long l = customerDto.getContactNumber();
         String s = Long.toString(l);
         Optional<Bank> bank = bankRepository.findById(bankId);
-        if (s.length() == 10) {
-            if (s.startsWith("9") || s.startsWith("8") || s.startsWith("7") || s.startsWith("6")) {
-                Customer customer = new Customer();
-                BeanUtils.copyProperties(customerDto, customer);
-                customer.setBank(customer.getBank());
-               // customerDto.setBankId(bank.get().getBankId());
-                customerRepository.save(customer);
-            } else {
-                throw new CustomerException("Contact Number should be start with 6,7,8,9 digits");
-            }
+        if (s.length() == 10 && (s.startsWith("9") || s.startsWith("8") || s.startsWith("7") || s.startsWith("6"))) {
+
+            Customer customer = new Customer();
+            BeanUtils.copyProperties(customerDto, customer);
+            customer.setBank(customer.getBank());
+            // customerDto.setBankId(bank.get().getBankId());
+            Customer save = customerRepository.save(customer);
+            customerDto.setCustomerId(save.getCustomerId());
         } else {
             throw new CustomerException("Invalid Contact Number");
         }
@@ -58,8 +57,15 @@ public class CustomerServiceImpl implements CustomerService {
     public List<CustomerDto> getAllCustomer() {
         if (customerRepository.findAll().isEmpty())
             throw new CustomerException("customers Data not present in Database");
+        if (bankRepository.findAll().isEmpty())
+            throw new BankException("Bank Data not present in Database");
+
         List<CustomerDto> collect = customerRepository.findAll().stream().filter(Objects::nonNull).map(customer -> {
-            CustomerDto dto = CustomerDto.builder().bankId(customer.getBank().getBankId()).build();
+            CustomerDto dto = new CustomerDto();
+            Bank bank = new Bank();
+            dto.setBankId(bank.getBankId());
+            //.builder().bankId(customer.getBank().getBankId()).build();
+
             BeanUtils.copyProperties(customer, dto);
             return dto;
 

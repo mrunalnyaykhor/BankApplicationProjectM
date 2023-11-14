@@ -72,7 +72,7 @@ public static void init(){
     }
 
     @Test
-    public void testForSaveBank() throws JsonProcessingException {
+    public void testForSaveBank() {
         String URIToSaveBank = "/saveBank";
         HttpEntity<BankDto> entity = new HttpEntity<>(bankDto, headers);
         ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToSaveBank), HttpMethod.POST, entity, String.class);
@@ -81,7 +81,7 @@ public static void init(){
 
     }
     @Test
-    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (2, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')"
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (2, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Lakhni')"
 ,executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM BANK WHERE BANK_NAME ='SBIMohadi'",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     public void testForgetAllBank()  {

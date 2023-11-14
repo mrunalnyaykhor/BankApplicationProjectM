@@ -1,8 +1,7 @@
-
 {
-"bankId": 1,
+  "bankId": 1,
   "bankName": "SBI",
   "branchName": "SBINPardi",
-  "ifscCode": "SBIN0080097",
+  "ifscCode": "SBIN0060707",
   "address": "pardi_Ngp"
 }
