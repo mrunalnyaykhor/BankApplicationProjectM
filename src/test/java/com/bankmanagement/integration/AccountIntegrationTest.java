@@ -27,7 +27,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,17 +37,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(classes = BankManagementApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
 public class AccountIntegrationTest {
-     AccountDto accountDto;
-    Account account;
-     Bank bank;
-     Customer customer;
-     CustomerDto customerDto;
-     BankDto bankDto;
-
-
     private static Map deposit;
+    private static Map withdrawal;
     private final HttpHeaders headers = new HttpHeaders();
     private final TestRestTemplate restTemplate = new TestRestTemplate();
+    AccountDto accountDto;
+    Account account;
+    Bank bank;
+    Customer customer;
+    CustomerDto customerDto;
+    BankDto bankDto;
     @Autowired
     ObjectMapper objectMapper;
 
@@ -59,9 +57,11 @@ public class AccountIntegrationTest {
 
     @BeforeEach
     public void setUp() throws IOException {
+
         account = objectMapper.readValue(new ClassPathResource("account.json").getInputStream(), Account.class);
         accountDto = objectMapper.readValue(new ClassPathResource("accountDto.json").getInputStream(), AccountDto.class);
-        customerDto= objectMapper.readValue(new ClassPathResource("customerDto.json").getInputStream(),CustomerDto.class);
+        customerDto = objectMapper.readValue(new ClassPathResource("customerDto.json").getInputStream(), CustomerDto.class);
+        withdrawal = objectMapper.readValue(new ClassPathResource("withdrawal.json").getInputStream(), Map.class);
         deposit = objectMapper.readValue(new ClassPathResource("deposit.json").getInputStream(), Map.class);
         customer = objectMapper.readValue(new ClassPathResource("customer.json").getInputStream(), Customer.class);
         bank = objectMapper.readValue(new ClassPathResource("bank.json").getInputStream(), Bank.class);
@@ -91,17 +91,17 @@ public class AccountIntegrationTest {
         Long customerId = response.getBody().getCustomerId();
 
 
-
         HttpEntity<AccountDto> entity2 = new HttpEntity<>(accountDto, headers);
-        ResponseEntity<String> response2 = restTemplate.exchange(formFullURLWithPort("/saveAccount/"+customerId+"/"+bankId), HttpMethod.POST, entity2, String.class);
+        ResponseEntity<String> response2 = restTemplate.exchange(formFullURLWithPort("/saveAccount/" + customerId + "/" + bankId), HttpMethod.POST, entity2, String.class);
         Assertions.assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(statements ="INSERT INTO Account(ACCOUNT_ID,FIRST_NAME,LAST_NAME,AADHAAR_NUM,AGE,BLOCKED,CONTACT_NUMBER,AMOUNT,ACCOUNT_NUMBER,PAN_CARD_NUMBER,EMAIL)VALUES(1,'Aman','SHARMA',555677787765,36,false,9876785435,'1987-08-25',500000,546765,'BNZAA2318J','rohitsharma@gmail.com')" )
-    @Sql(statements = "DELETE FROM Customer WHERE FIRST_NAME ='Aman'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Account(ACCOUNT_ID,AADHAAR_NUM,ACCOUNT_NUMBER,AGE,AMOUNT,FIRST_NAME,LAST_NAME,BLOCKED,CONTACT_NUMBER,PAN_CARD_NUMBER,DATE_OF_BIRTH,EMAIL,BANK_ID,CUSTOMER_ID)VALUES(1,555677787765,546765,36,500000,'Aman','SHARMA',false,9876785435,'BNZAA2318J','1987-08-25','rohitsharma@gmail.com',1,1)")
+    @Sql(statements = "DELETE FROM Account WHERE FIRST_NAME ='Aman'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+
     public void getAllAccountTest() {
         String getAllAccount = "/getAllAccount";
 
@@ -113,46 +113,76 @@ public class AccountIntegrationTest {
 
 
     @Test
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Account(ACCOUNT_ID,AADHAAR_NUM,ACCOUNT_NUMBER,AGE,AMOUNT,FIRST_NAME,LAST_NAME,BLOCKED,CONTACT_NUMBER,PAN_CARD_NUMBER,DATE_OF_BIRTH,EMAIL,BANK_ID,CUSTOMER_ID)VALUES(1,555677787765,546765,36,500000,'Aman','SHARMA',false,9876785435,'BNZAA2318J','1987-08-25','rohitsharma@gmail.com',1,1)")
+    @Sql(statements = "DELETE FROM Account WHERE FIRST_NAME ='Aman'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getAccountById() {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(formFullURLWithPort("/getAccountById/" + account.getAccountId()), String.class);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(formFullURLWithPort("/getAccountById/1"), String.class);
         assertNotNull(responseEntity, "Response body should not be null");
     }
 
     @Test
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Account(ACCOUNT_ID,AADHAAR_NUM,ACCOUNT_NUMBER,AGE,AMOUNT,FIRST_NAME,LAST_NAME,BLOCKED,CONTACT_NUMBER,PAN_CARD_NUMBER,DATE_OF_BIRTH,EMAIL,BANK_ID,CUSTOMER_ID)VALUES(1,555677787765,546765,36,500000,'Aman','SHARMA',false,9876785435,'BNZAA2318J','1987-08-25','rohitsharma@gmail.com',1,1)")
+    @Sql(statements = "DELETE FROM Account WHERE FIRST_NAME ='Aman'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateAccountById() {
         HttpEntity<AccountDto> entity = new HttpEntity<>(accountDto, headers);
-        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/accounts/" + account.getAccountId()), HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/accounts/1"), HttpMethod.PUT, entity, String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Account(ACCOUNT_ID,AADHAAR_NUM,ACCOUNT_NUMBER,AGE,AMOUNT,FIRST_NAME,LAST_NAME,BLOCKED,CONTACT_NUMBER,PAN_CARD_NUMBER,DATE_OF_BIRTH,EMAIL,BANK_ID,CUSTOMER_ID)VALUES(1,555677787765,546765,36,500000,'Aman','SHARMA',false,9876785435,'BNZAA2318J','1987-08-25','rohitsharma@gmail.com',1,1)")
+    @Sql(statements = "DELETE FROM Account WHERE FIRST_NAME ='Aman'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void deleteAccountIntegrationTest() {
 
-        Optional<Account> customer1 = accountRepository.findById(account.getAccountId());
-        restTemplate.delete(formFullURLWithPort("/deleteAccountIdById/" + account.getAccountId()));
+
+        restTemplate.delete(formFullURLWithPort("/deleteAccountIdById/1"), HttpMethod.DELETE, String.class);
     }
 
     @Test
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi'),(2, 'SBI', 'SBIMohadi', 'SBIN0035962', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1),(2, 'Rohit', 'SHARMA', 555677787764, 33, 8876785435, '1985-08-25' ,'rohitsharmag@gmail.com', 'BNZAB2318H', 'Mohadi',2)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Account(ACCOUNT_ID,AADHAAR_NUM,ACCOUNT_NUMBER,AGE,AMOUNT,FIRST_NAME,LAST_NAME,BLOCKED,CONTACT_NUMBER,PAN_CARD_NUMBER,DATE_OF_BIRTH,EMAIL,BANK_ID,CUSTOMER_ID)VALUES(1,555677787765,44440,36,50090,'Aman','SHARMA',false,9876785435,'BNZAB2318J','1987-08-25','rohitsharma@gmail.com',1,1), (2,555677787764,44441,33,50091,'Rohit','SHARMA',false,8876785435,'BNZAB2318H','1985-08-25','rohitsharmag@gmail.com',2,2)")
+    @Sql(statements = "DELETE FROM Account WHERE FIRST_NAME ='Aman'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void balanceCheckAccountId() {
-        Optional<Account> byId = accountRepository.findById(account.getAccountId());
-        ResponseEntity<String> response = restTemplate.getForEntity(formFullURLWithPort("/checkAmountById/45/"), String.class);
+
+        ResponseEntity<Double> response = restTemplate.getForEntity(formFullURLWithPort("/checkAmountById/1"), Double.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     }
 
 
     @Test
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi'),(2, 'SBI', 'SBIMohadi', 'SBIN0035962', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1),(2, 'Rohit', 'SHARMA', 555677787764, 33, 8876785435, '1985-08-25' ,'rohitsharmag@gmail.com', 'BNZAB2318H', 'Mohadi',2)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Account(ACCOUNT_ID,AADHAAR_NUM,ACCOUNT_NUMBER,AGE,AMOUNT,FIRST_NAME,LAST_NAME,BLOCKED,CONTACT_NUMBER,PAN_CARD_NUMBER,DATE_OF_BIRTH,EMAIL,BANK_ID,CUSTOMER_ID)VALUES(1,555677787765,44440,36,50090,'Aman','SHARMA',false,9876785435,'BNZAB2318J','1987-08-25','rohitsharma@gmail.com',1,1), (2,555677787764,44441,33,50091,'Rohit','SHARMA',false,8876785435,'BNZAB2318H','1985-08-25','rohitsharmag@gmail.com',2,2)")
     public void depositAmount() {
-
-        HttpEntity<Map> account1 = new HttpEntity<>(deposit, headers);
-        ResponseEntity<Map> response = restTemplate.exchange(formFullURLWithPort("/deposit/45"), HttpMethod.POST, account1, Map.class);
+        HttpEntity<Map<String, Account>> account1 = new HttpEntity<>(deposit, headers);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/deposit/1"), HttpMethod.POST, account1, String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi'),(2, 'SBI', 'SBIMohadi', 'SBIN0035962', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1),(2, 'Rohit', 'SHARMA', 555677787764, 33, 8876785435, '1985-08-25' ,'rohitsharmag@gmail.com', 'BNZAB2318H', 'Mohadi',2)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Account(ACCOUNT_ID,AADHAAR_NUM,ACCOUNT_NUMBER,AGE,AMOUNT,FIRST_NAME,LAST_NAME,BLOCKED,CONTACT_NUMBER,PAN_CARD_NUMBER,DATE_OF_BIRTH,EMAIL,BANK_ID,CUSTOMER_ID)VALUES(1,555677787765,44440,36,50090,'Aman','SHARMA',false,9876785435,'BNZAB2318J','1987-08-25','rohitsharma@gmail.com',1,1), (2,555677787764,44441,33,50091,'Rohit','SHARMA',false,8876785435,'BNZAB2318H','1985-08-25','rohitsharmag@gmail.com',2,2)")
+    public void withdrawalAmountIntegrationTest() {
+        HttpEntity<Map<String, Account>> account2 = new HttpEntity<>(withdrawal, headers);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/1/withdrawalAmount"), HttpMethod.POST, account2, String.class);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi'),(2, 'SBI', 'SBIMohadi', 'SBIN0035962', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1),(2, 'Rohit', 'SHARMA', 555677787764, 33, 8876785435, '1985-08-25' ,'rohitsharmag@gmail.com', 'BNZAB2318H', 'Mohadi',2)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Account(ACCOUNT_ID,AADHAAR_NUM,ACCOUNT_NUMBER,AGE,AMOUNT,FIRST_NAME,LAST_NAME,BLOCKED,CONTACT_NUMBER,PAN_CARD_NUMBER,DATE_OF_BIRTH,EMAIL,BANK_ID,CUSTOMER_ID)VALUES(1,555677787765,44440,36,50090,'Aman','SHARMA',false,9876785435,'BNZAB2318J','1987-08-25','rohitsharma@gmail.com',1,1), (2,555677787764,44441,33,50091,'Rohit','SHARMA',false,8876785435,'BNZAB2318H','1985-08-25','rohitsharmag@gmail.com',2,2)")
     public void blockAccountOrNotCheck() {
-        Optional<Account> byId = accountRepository.findById(account.getAccountId());
-        ResponseEntity<String> response = restTemplate.getForEntity(formFullURLWithPort("/blockAccountOrNot/45/"), String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(formFullURLWithPort("/blockAccountOrNot/1"), String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     }

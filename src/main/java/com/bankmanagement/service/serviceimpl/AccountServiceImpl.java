@@ -104,10 +104,10 @@ public class AccountServiceImpl implements AccountService {
     public String deleteAccountById(Long accountId) throws AccountException {
         Optional<Account> accountOptional = accountRepository.findById(accountId);
         if (accountOptional.isEmpty())
-        {throw new AccountException("Account Id does not exist");}
-        accountOptional.ifPresent(account -> {
+        {
+            throw new AccountException("Account Id does not exist");
+        }
             accountRepository.deleteById(accountId);
-        });
         return "Account Id :%d deleted successfully....!!".formatted(accountId);}
     @Override
     public Double getBalance(Long accountId) throws AccountException {

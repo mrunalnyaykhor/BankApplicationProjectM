@@ -1,7 +1,6 @@
 package com.bankmanagement.integration;
 
 import com.bankmanagement.BankManagementApplication;
-import com.bankmanagement.config.TestConfig;
 import com.bankmanagement.dto.BankDto;
 import com.bankmanagement.dto.CustomerDto;
 import com.bankmanagement.entity.Bank;
@@ -20,7 +19,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
@@ -30,8 +28,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
@@ -73,14 +71,14 @@ public class CustomerControllerIntegrationTest {
 
 
     @Test
-    public void customerSaveIntegrationTest() throws JsonProcessingException {
+    public void customerSaveIntegrationTest() {
 
         String URIToSaveCustomer = "/saveCustomer/1";
         HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
         ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToSaveCustomer), HttpMethod.POST, entity, String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertEquals(1,customerRepository.findAll().size());
+        assertEquals(1, customerRepository.findAll().size());
 
     }
 
@@ -96,11 +94,12 @@ public class CustomerControllerIntegrationTest {
         assertEquals(1, customerList.size());
 
     }
+
     @Test
     @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "INSERT INTO CUSTOMER(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS, BANK_ID) VALUES (1, 'ROHIT', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi', 1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM CUSTOMER WHERE FIRST_NAME ='ROHIT'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    public void getCustomerById()  {
+    public void getCustomerById() {
 
         String URIToGetCustomer = "/getCustomerById/1";
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(formFullURLWithPort(URIToGetCustomer), String.class);
@@ -129,8 +128,6 @@ public class CustomerControllerIntegrationTest {
         restTemplate.delete(formFullURLWithPort("/deleteCustomerById/1"));
 
     }
-
-
 
 
 }

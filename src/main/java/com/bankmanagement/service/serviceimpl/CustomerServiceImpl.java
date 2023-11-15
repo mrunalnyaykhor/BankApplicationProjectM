@@ -42,6 +42,7 @@ public class CustomerServiceImpl implements CustomerService {
 
             Customer customer = new Customer();
             BeanUtils.copyProperties(customerDto, customer);
+
             customer.setBank(customer.getBank());
             // customerDto.setBankId(bank.get().getBankId());
             Customer save = customerRepository.save(customer);
