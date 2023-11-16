@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.security.auth.login.AccountException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,6 +62,7 @@ public class AccountServiceTest {
         assertEquals("Virat", accountDto.getFirstName());
 
     }
+
     @Test
     public void neverSaveAccountWhenCustomerFieldNotMatchTest() throws AccountException {
         Optional<Customer> customer = Optional.ofNullable(Customer.builder().customerId(1L).
@@ -71,33 +73,30 @@ public class AccountServiceTest {
         when(bankRepository.findById(1L)).thenReturn(bank);
         when(customerRepository.findById(1L)).thenReturn(customer);
 
-        accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
-
         assertThrows(AccountException.class, () -> {
             accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
 
         });
     }
-        @Test
-        public void neverSaveAccountWhenCustomerFieldLastNameNotMatchTest() throws AccountException {
-            Optional<Customer> customer11 = Optional.ofNullable(Customer.builder().customerId(1L).
-                    firstName("Virat").lastName("sharma").age(32).email("viratkohli@gmail.com")
-                    .aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai")
-                    .panCardNumber("AAAS234KKL").dateOfBirth("1987-09-20").build());
 
-            when(bankRepository.findById(1L)).thenReturn(bank);
-            when(customerRepository.findById(1L)).thenReturn(customer11);
+    @Test
+    public void neverSaveAccountWhenCustomerFieldLastNameNotMatchTest() throws AccountException {
+        Optional<Customer> customer11 = Optional.ofNullable(Customer.builder().customerId(1L).
+                firstName("Virat").lastName("sharma").age(32).email("viratkohli@gmail.com")
+                .aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai")
+                .panCardNumber("AAAS234KKL").dateOfBirth("1987-09-20").build());
 
+        when(bankRepository.findById(1L)).thenReturn(bank);
+        when(customerRepository.findById(1L)).thenReturn(customer11);
+
+        assertThrows(AccountException.class, () -> {
             accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
 
-            assertThrows(AccountException.class, () -> {
-                accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
-
-            });
-
+        });
 
 
     }
+
     @Test
     public void neverSaveAccountWhenCustomerField_PanCard_NotMatchTest() throws AccountException {
         Optional<Customer> customer11 = Optional.ofNullable(Customer.builder().customerId(1L).
@@ -108,13 +107,12 @@ public class AccountServiceTest {
         when(bankRepository.findById(1L)).thenReturn(bank);
         when(customerRepository.findById(1L)).thenReturn(customer11);
 
-        accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
-
         assertThrows(AccountException.class, () -> {
             accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
 
         });
     }
+
     @Test
     public void neverSaveAccountWhenCustomerField_ContactNumber_NotMatchTest() throws AccountException {
         Optional<Customer> customer11 = Optional.ofNullable(Customer.builder().customerId(1L).
@@ -125,13 +123,12 @@ public class AccountServiceTest {
         when(bankRepository.findById(1L)).thenReturn(bank);
         when(customerRepository.findById(1L)).thenReturn(customer11);
 
-        accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
-
         assertThrows(AccountException.class, () -> {
             accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
 
         });
     }
+
     @Test
     public void neverSaveAccountWhenCustomerField_DateOfBirth_NotMatchTest() throws AccountException {
         Optional<Customer> customer11 = Optional.ofNullable(Customer.builder().customerId(1L).
@@ -142,18 +139,13 @@ public class AccountServiceTest {
         when(bankRepository.findById(1L)).thenReturn(bank);
         when(customerRepository.findById(1L)).thenReturn(customer11);
 
-        accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
-
         assertThrows(AccountException.class, () -> {
             accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
 
         });
 
 
-
     }
-
-
 
 
     @DisplayName("JUnit test for getAllAccount method")
@@ -287,6 +279,7 @@ public class AccountServiceTest {
         assertFalse(account.isBlocked()); //  isBlocked() method returns a boolean
 
     }
+
     @Test
     public void blockedAmountTest() throws AccountException {
         Account account = Account.builder().customerId(1L).bankId(1L).accountId(1L)
@@ -313,7 +306,6 @@ public class AccountServiceTest {
 //            }
 //        }
 //        return "account is blocked :".formatted(account.isBlocked());
-
 
 
 }

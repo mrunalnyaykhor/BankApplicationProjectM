@@ -56,17 +56,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     public List<CustomerDto> getAllCustomer() {
-        if (customerRepository.findAll().isEmpty())
-            throw new CustomerException("customers Data not present in Database");
         if (bankRepository.findAll().isEmpty())
             throw new BankException("Bank Data not present in Database");
+
+        if (customerRepository.findAll().isEmpty())
+            throw new CustomerException("customers Data not present in Database");
 
         List<CustomerDto> collect = customerRepository.findAll().stream().filter(Objects::nonNull).map(customer -> {
             CustomerDto dto = new CustomerDto();
             Bank bank = new Bank();
             dto.setBankId(bank.getBankId());
-            //.builder().bankId(customer.getBank().getBankId()).build();
-
             BeanUtils.copyProperties(customer, dto);
             return dto;
 

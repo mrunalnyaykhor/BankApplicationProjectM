@@ -33,9 +33,10 @@ public class BankController {
         return ResponseEntity.ok(bankservice.updateBankById(bankDto,bankId));
     }
     @DeleteMapping("/deleteBank/{bankId}")
-    public void deleteBank(@PathVariable Long bankId)
+    public ResponseEntity<String> deleteBank(@PathVariable Long bankId)
     {
-        bankservice.deleteBankById(bankId);
+
+        return ResponseEntity.ok(bankservice.deleteBankById(bankId));
     }
 
 }

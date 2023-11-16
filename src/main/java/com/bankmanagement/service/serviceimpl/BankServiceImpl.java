@@ -47,6 +47,10 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public Bank getBankById(Long bankId) {
+        if(bankRepository.findById(bankId).isEmpty())
+        {
+            throw new BankException("Bank not present");
+        }
         return bankRepository.findById(bankId).get();
     }
 
@@ -55,21 +59,23 @@ public class BankServiceImpl implements BankService {
     {
         Bank bank = bankRepository.findById(bankId).orElseThrow(() -> new BankException("Bank Not Available"));
         if (bankRepository.existsByIfscCode(bankDto.getIfscCode())) {
-            throw new BankException("A bank with IFSC code %s already exists.".formatted(bankDto.getIfscCode()));
-        } else {
-            BeanUtils.copyProperties(bankDto, bank);
+            throw new BankException("A bank with IFSC code %s already exists");
+        }
+        BeanUtils.copyProperties(bankDto, bank);
             bankRepository.save(bank);
             return bankDto;
 
-        }
 
     }
 
     @Override
-    public void deleteBankById(Long bankId) {
+    public String deleteBankById(Long bankId) {
         Optional<Bank> bankOptional = bankRepository.findById(bankId);
-        if (bankOptional.isEmpty()) {throw new BankException("Bank Not Available");
+        if (bankOptional.isEmpty())
+        {throw new BankException("Bank Not Available");
         }
         bankOptional.ifPresent(bank -> bankRepository.deleteById(bankId));
+        return "bank deleted succssfully";
     }
+
 }

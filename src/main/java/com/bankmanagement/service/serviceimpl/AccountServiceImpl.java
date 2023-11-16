@@ -35,9 +35,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto saveAccount(AccountDto accountdto, Long customerId, Long bankId) throws AccountException {
-
-        var customerOptional = customerRepository.findById(customerId).orElseThrow(() -> new CustomerException("customer not present & Cannot create Account"));
         var bankOptional = bankRepository.findById(bankId).orElseThrow(() -> new BankException("Bank not Present & Cannot create Account"));
+        var customerOptional = customerRepository.findById(customerId).orElseThrow(() -> new CustomerException("customer not present & Cannot create Account"));
+
 
         Account account = new Account();
         Optional<Customer> customer = customerRepository.findById(customerId);
@@ -84,7 +84,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<AccountDto> getAllAccount() throws AccountException {
-        if (accountRepository.findAll().isEmpty()) throw new AccountException("customers Data not present in Database");
+        if (accountRepository.findAll().isEmpty())
+        {
+            throw new AccountException("Accounts not present in Database");
+        }
         return accountRepository.findAll().stream().filter(Objects::nonNull).map(account -> {
             AccountDto accountDto = new AccountDto();
             BeanUtils.copyProperties(account, accountDto);

@@ -14,5 +14,5 @@ public interface BankService {
 
     BankDto updateBankById(BankDto bankDto, Long bankId);
 
-    void deleteBankById(Long bankId);
+    String deleteBankById(Long bankId);
 }

@@ -8,6 +8,7 @@ import com.bankmanagement.entity.Bank;
 import com.bankmanagement.entity.Customer;
 import com.bankmanagement.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,8 +18,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -42,8 +42,11 @@ public class AccountControllerTest {
     Customer customer;
     BankDto bankDto;
     Bank bank;
+    private static Map deposit;
+    private static Map withdrawal;
     CustomerDto customerDto;
     private MockMvc mvc;
+    private final HttpHeaders headers = new HttpHeaders();
     @InjectMocks
     private AccountController accountController;
     @Mock
@@ -57,7 +60,8 @@ public class AccountControllerTest {
         customer = objectMapper.readValue(new ClassPathResource("customer.json").getInputStream(), Customer.class);
         bankDto = objectMapper.readValue(new ClassPathResource("bankDto.json").getInputStream(), BankDto.class);
         bank = objectMapper.readValue(new ClassPathResource("bank.json").getInputStream(), Bank.class);
-
+        withdrawal = objectMapper.readValue(new ClassPathResource("withdrawal.json").getInputStream(), Map.class);
+        deposit = objectMapper.readValue(new ClassPathResource("deposit.json").getInputStream(), Map.class);
     }
 
     @Test
@@ -88,37 +92,37 @@ public class AccountControllerTest {
 
     @Test
     public void balanceCheckAPITest() throws AccountException {
-        ResponseEntity <Double> listResponseEntity = accountController.balanceCheck(account.getAccountId());
-
+        ResponseEntity <Double> responseEntity = accountController.balanceCheck(account.getAccountId());
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     public void depositAmountAPITest() throws AccountException {
-        Map<String, Double> request = new HashMap<>();
-        ResponseEntity<String> listResponseEntity = accountController.depositAmount(account.getAccountId(), request);
 
+        ResponseEntity<String> stringResponseEntity = accountController.depositAmount(account.getAccountId(), deposit);
+        Assertions.assertThat(stringResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
 
     @Test
     public void withdrawalAmountAPITest() throws AccountException {
-        Map<String, Double> request = new HashMap<>();
-        ResponseEntity<String> stringResponseEntity = accountController.withdrawalAmount(account.getAccountId(), request);
 
+        ResponseEntity<String> stringResponseEntity = accountController.withdrawalAmount(account.getAccountId(), withdrawal);
+        Assertions.assertThat(stringResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
 
     @Test
     public void blockAmountCheck() throws AccountException {
         ResponseEntity<String> stringResponseEntity = accountController.blockAccountCheck(account.getAccountId());
-
+        Assertions.assertThat(stringResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     public void depositAmountTest() throws AccountException {
-        Map<String, Double> request = new HashMap<>();
 
-        ResponseEntity<String> stringResponseEntity = accountController.depositAmount(account.getAccountId(), request);
+        ResponseEntity<String> stringResponseEntity = accountController.depositAmount(account.getAccountId(), deposit);
+        Assertions.assertThat(stringResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
 

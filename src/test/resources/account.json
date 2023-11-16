@@ -1,18 +1,5 @@
 {
-  "accountId": 1,
-  "firstName": "Virat",
-  "lastName": "Kohli",
-  "contactNumber": 9876785435,
-  "amount": 60000.00,
-  "age": 25,
-  "aadhaarNumber": 555677787765,
-  "panCardNumber": "BNZAB2318J",
-  "dateOfBirth": "1987-08-25",
-  "accountNumber": 45456655,
-  "isBlocked": false,
-  "email": "rohitsharma@gmail.com",
-  "customerId": 1,
-  "bankId": 1
+
 
 }
 
