@@ -93,7 +93,8 @@ public class BankIntegrationTestClass {
     @Test
     public void testForgetAllBankFailureTest() {
        // Note Bank.json file set null all fields
-        HttpEntity<Bank> entity = new HttpEntity<>(bank, headers);
+        Bank bank1 = new Bank();
+        HttpEntity<Bank> entity = new HttpEntity<>(bank1, headers);
         ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/getAllBank"),HttpMethod.GET,entity, String.class);
 
         assertEquals(400, response.getStatusCodeValue());

@@ -46,7 +46,8 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setBank(customer.getBank());
             // customerDto.setBankId(bank.get().getBankId());
             Customer save = customerRepository.save(customer);
-            customerDto.setCustomerId(save.getCustomerId());
+
+            //customerDto.setCustomerId(save.getCustomerId());
         } else {
             throw new CustomerException("Invalid Contact Number");
         }

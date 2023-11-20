@@ -1,5 +1,6 @@
 package com.bankmanagement.controller;
 
+import com.bankmanagement.constant.UrlConstant;
 import com.bankmanagement.dto.TransactionDto;
 import com.bankmanagement.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class MiniStatementController {
     @Autowired
     private TransactionService transactionService;
 
-    @GetMapping("/statement/{accountNumber}/{days}")
+    @GetMapping(UrlConstant.MINI_STATEMENT_DAY_WISE)
     public ResponseEntity<List<TransactionDto>> getMiniStatement(@PathVariable Long accountNumber, @PathVariable long days) {
 
       return  ResponseEntity.ok(transactionService.findTransaction(accountNumber,days));

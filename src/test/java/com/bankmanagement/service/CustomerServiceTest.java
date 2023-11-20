@@ -31,7 +31,7 @@ public class CustomerServiceTest {
     Bank bank = Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi").ifscCode("SBIN123").address("Mohadi").build();
     Customer customer1 = Customer.builder().bank(bank).customerId(1L).firstName("Virat").lastName("Kohli").age(32).email("viratkohli@gmail.com").aadhaarNumber("222233444450l").contactNumber(9876543238L).address("MOhadi").panCardNumber("AAAS254KKL").dateOfBirth("1987-09-20").build();
     Optional<Bank> bankOptional = Optional.ofNullable(Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi").ifscCode("SBIN123").address("Mohadi").build());
-    CustomerDto customerdto = CustomerDto.builder().bankId(1L).firstName("Virat").lastName("Kohli").age(32).email("viratkohli@gmail.com").aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai").panCardNumber("AAAS234KKL").dateOfBirth("1987-09-20").build();
+    CustomerDto customerdto = CustomerDto.builder().customerId(1l).bankId(1L).firstName("Virat").lastName("Kohli").age(32).email("viratkohli@gmail.com").aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai").panCardNumber("AAAS234KKL").dateOfBirth("1987-09-20").build();
     @InjectMocks
     private CustomerServiceImpl customerService;
     @Mock
@@ -78,7 +78,7 @@ public class CustomerServiceTest {
         Mockito.when(customerRepository.existsByAadhaarNumber("233333333333l")).thenReturn(false);
         when(bankRepository.findById(1L)).thenReturn(bankOptional);
         customerService.saveCustomer(customerdto, bankOptional.get().getBankId());
-        assertEquals("Virat", customerdto.getFirstName());
+        assertThat(customerdto.getFirstName()).isEqualTo("Virat");
     }
 
     @DisplayName("JUnit test for saveCustomer method which throws exception")

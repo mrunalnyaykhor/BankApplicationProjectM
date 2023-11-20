@@ -25,7 +25,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -172,6 +171,7 @@ ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(getA
     public void getAccountById() {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(formFullURLWithPort("/getAccountById/1"), String.class);
         assertNotNull(responseEntity, "Response body should not be null");
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
@@ -218,6 +218,16 @@ ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(getA
         ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/deposit/1"), HttpMethod.POST, account1, String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+    @Test
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi'),(2, 'SBI', 'SBIMohadi', 'SBIN0035962', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1),(2, 'Rohit', 'SHARMA', 555677787764, 33, 8876785435, '1985-08-25' ,'rohitsharmag@gmail.com', 'BNZAB2318H', 'Mohadi',2)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Account(ACCOUNT_ID,AADHAAR_NUM,ACCOUNT_NUMBER,AGE,AMOUNT,FIRST_NAME,LAST_NAME,BLOCKED,CONTACT_NUMBER,PAN_CARD_NUMBER,DATE_OF_BIRTH,EMAIL,BANK_ID,CUSTOMER_ID)VALUES(1,555677787765,44440,36,50090,'Aman','SHARMA',false,9876785435,'BNZAB2318J','1987-08-25','rohitsharma@gmail.com',1,1), (2,555677787764,44441,33,50091,'Rohit','SHARMA',false,8876785435,'BNZAB2318H','1985-08-25','rohitsharmag@gmail.com',2,2)")
+    public void depositAmount_Failure_When_AmountLess() {
+
+        HttpEntity<Map<String, Account>> account1 = new HttpEntity<>(deposit, headers);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/deposit/1"), HttpMethod.POST, account1, String.class);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
 
     @Test
     @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi'),(2, 'SBI', 'SBIMohadi', 'SBIN0035962', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -236,6 +246,15 @@ ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(getA
     public void blockAccountOrNotCheck() {
         ResponseEntity<String> response = restTemplate.getForEntity(formFullURLWithPort("/blockAccountOrNot/1"), String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    }
+    @Test
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi'),(2, 'SBI', 'SBIMohadi', 'SBIN0035962', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1),(2, 'Rohit', 'SHARMA', 555677787764, 33, 8876785435, '1985-08-25' ,'rohitsharmag@gmail.com', 'BNZAB2318H', 'Mohadi',2)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Account(ACCOUNT_ID,AADHAAR_NUM,ACCOUNT_NUMBER,AGE,AMOUNT,FIRST_NAME,LAST_NAME,BLOCKED,CONTACT_NUMBER,PAN_CARD_NUMBER,DATE_OF_BIRTH,EMAIL,BANK_ID,CUSTOMER_ID)VALUES(1,555677787765,44440,36,50090,'Aman','SHARMA',false,9876785435,'BNZAB2318J','1987-08-25','rohitsharma@gmail.com',1,1), (2,555677787764,44441,33,50091,'Rohit','SHARMA',false,8876785435,'BNZAB2318H','1985-08-25','rohitsharmag@gmail.com',2,2)")
+    public void blockAccountOrNotCheck_Failure_WhenAccountNotPresent() {
+        ResponseEntity<String> response = restTemplate.getForEntity(formFullURLWithPort("/blockAccountOrNot/44"), String.class);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 

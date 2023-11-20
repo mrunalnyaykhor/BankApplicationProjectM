@@ -1,5 +1,6 @@
 package com.bankmanagement.service.serviceimpl;
 
+import com.bankmanagement.constant.ApplicationConstant;
 import com.bankmanagement.dto.AccountDto;
 import com.bankmanagement.dto.CustomerDto;
 import com.bankmanagement.entity.Account;
@@ -120,7 +121,6 @@ public class AccountServiceImpl implements AccountService {
         }
         double amount = optionalAccount1.get().getAmount();
         return amount;
-      //  return optionalAccount1.stream().filter(Objects::nonNull).map(Account::getAmount).collect(Collectors.toList());
 
     }
 
@@ -129,7 +129,7 @@ public class AccountServiceImpl implements AccountService {
 
         Optional<Account> account = accountRepository.findById(accountId);
         if (account.isEmpty()) {
-            throw new AccountException("Account not present");
+            throw new AccountException(ApplicationConstant.ACCOUNT_NOT_FOUND);
         }if (account.isPresent()) {
             account1 = account.get();
             account.stream().filter(amt -> amount >= 500 && amt.getAmount() >= 2000).forEach(account2 -> {
@@ -189,7 +189,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto getAccountById(Long accountId) throws AccountException {
+    public AccountDto getAccountById(Long accountId) {
         Optional<Account> accountOptional = accountRepository.findById(accountId);
         AccountDto accountDto = new AccountDto();
         Account account = new Account();

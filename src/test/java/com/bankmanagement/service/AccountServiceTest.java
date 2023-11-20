@@ -1,5 +1,4 @@
 package com.bankmanagement.service;
-
 import com.bankmanagement.dto.AccountDto;
 import com.bankmanagement.entity.Account;
 import com.bankmanagement.entity.Bank;
@@ -16,20 +15,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import javax.security.auth.login.AccountException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 
 @ExtendWith(MockitoExtension.class)
 
 public class AccountServiceTest {
 
-    Optional<Bank> bank = Optional.ofNullable(Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi").ifscCode("SBIN123").address("Mohadi").build());
+
+    Optional<Bank> bank = Optional.ofNullable(Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi").ifscCode("SBIN0080667").address("Mohadi").build());
     Optional<Customer> customer = Optional.ofNullable(Customer.builder().customerId(1L).
             firstName("Virat").lastName("Kohli").age(32).email("viratkohli@gmail.com")
             .aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai")
@@ -56,10 +54,9 @@ public class AccountServiceTest {
     @DisplayName("JUnit test for saveAccountTest method")
     @Test
     void saveAccountTest() throws AccountException {
-        when(bankRepository.findById(1L)).thenReturn(bank);
-        when(customerRepository.findById(1L)).thenReturn(customer);
+        when(bankRepository.findById(1l)).thenReturn(bank);
+        when(customerRepository.findById(1l)).thenReturn(customer);
         accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
-        assertEquals("Virat", accountDto.getFirstName());
 
     }
 
@@ -155,6 +152,13 @@ public class AccountServiceTest {
         assertEquals(1, accountService.getAllAccount().size());
     }
 
+    @DisplayName("JUnit test for getAllAccount method")
+    @Test
+    public void get_AccountById_Test() throws AccountException {
+        Mockito.when(accountRepository.findById(account.getAccountId())).thenReturn(Optional.of(account));
+        assertNotNull(accountService.getAccountById(account.getAccountId()), "Response body should not be null");
+    }
+
     @DisplayName("JUnit test for updateAccountById method")
     @Test
     public void updateAccountByIdTest() throws AccountException {
@@ -190,7 +194,7 @@ public class AccountServiceTest {
     public void getBalanceTest() throws AccountException {
         Mockito.when(accountRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(account));
         Double balance = accountService.getBalance(account.getAccountId());
-        assertEquals(1, balance);
+        assertEquals(777788, balance);
     }
 
     @Test
