@@ -25,6 +25,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -155,10 +156,10 @@ public class AccountIntegrationTest {
     public void getAllAccountTest_failureWhen_Account_Not_Exist() {
         String getAllAccount = "/getAllAccount";
 
-HttpEntity<Account> entity= new HttpEntity<>(account,headers);
-       //List<String> accountList = Collections.singletonList(restTemplate.getForObject(formFullURLWithPort(getAllAccount), String.class));
-ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(getAllAccount),HttpMethod.GET,entity,String.class);
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+            HttpEntity<Account> entity= new HttpEntity<>(account,headers);
+    //      List<String> accountList = Collections.singletonList(restTemplate.getForObject(formFullURLWithPort(getAllAccount), String.class));
+            ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(getAllAccount),HttpMethod.GET,entity,String.class);
+            Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 

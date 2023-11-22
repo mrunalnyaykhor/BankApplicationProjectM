@@ -12,6 +12,7 @@ import com.bankmanagement.repository.AccountRepository;
 import com.bankmanagement.repository.BankRepository;
 import com.bankmanagement.repository.CustomerRepository;
 import com.bankmanagement.service.AccountService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AccountServiceImpl implements AccountService {
     Account account1 = null;
     @Autowired
@@ -36,16 +38,16 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto saveAccount(AccountDto accountdto, Long customerId, Long bankId) throws AccountException {
-        var bankOptional = bankRepository.findById(bankId).orElseThrow(() -> new BankException("Bank not Present & Cannot create Account"));
-        var customerOptional = customerRepository.findById(customerId).orElseThrow(() -> new CustomerException("customer not present & Cannot create Account"));
-
+         bankRepository.findById(bankId).orElseThrow(() -> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
+         customerRepository.findById(customerId).orElseThrow(() -> new CustomerException(ApplicationConstant.CUSTOMER_NOT_PRESENT));
+        log.info("Bank and customer present in database");
 
         Account account = new Account();
         Optional<Customer> customer = customerRepository.findById(customerId);
         Optional<Bank> bank = bankRepository.findById(bankId);
         Random random = new Random();
-        Long accNo = random.nextLong(44);
-        Long sAccNum = accNo;
+        long accNo = random.nextLong(44);
+        long sAccNum = accNo;
         BigInteger accountNo = new BigInteger("444" + sAccNum);
         accountdto.setAccountNumber(Long.parseLong(accountNo.toString()));
         accountdto.getAccountNumber();
@@ -57,19 +59,19 @@ public class AccountServiceImpl implements AccountService {
             boolean contact = customer1.getContactNumber().equals(accountdto.getContactNumber());
             boolean dob = customer1.getDateOfBirth().equals(accountdto.getDateOfBirth());
             if ((!firstName)) {
-                throw new AccountException("Cannot create Account Customer name is incorrect");
+                throw new AccountException(ApplicationConstant.NAME_INCORRECT);
             }
             if ((!lastName)) {
-                throw new AccountException("Cannot create Account Customer Last Name is incorrect");
+                throw new AccountException(ApplicationConstant.LAST_NAME_INCORRECT);
             }
             if ((!panCard)) {
-                throw new AccountException("Cannot create Account Customer panCardNumber is incorrect");
+                throw new AccountException(ApplicationConstant.PANCARD_INCORRECT);
             }
             if ((!contact)) {
-                throw new AccountException("Cannot create Account Customer ContactNumber is incorrect");
+                throw new AccountException(ApplicationConstant.CONTACT_INCORRECT);
             }
             if ((!dob)) {
-                throw new AccountException("Cannot create Account Customer dateOfBirth is incorrect");
+                throw new AccountException(ApplicationConstant.DATE_OF_BIRTH_INCORRECT);
             }
 
         }
@@ -87,7 +89,7 @@ public class AccountServiceImpl implements AccountService {
     public List<AccountDto> getAllAccount() throws AccountException {
         if (accountRepository.findAll().isEmpty())
         {
-            throw new AccountException("Accounts not present in Database");
+            throw new AccountException(ApplicationConstant.ACCOUNT_NOT_FOUND);
         }
         return accountRepository.findAll().stream().filter(Objects::nonNull).map(account -> {
             AccountDto accountDto = new AccountDto();
@@ -117,10 +119,9 @@ public class AccountServiceImpl implements AccountService {
     public Double getBalance(Long accountId) throws AccountException {
         Optional<Account> optionalAccount1 = accountRepository.findById(accountId);
         if (optionalAccount1.isEmpty()) {
-            throw new AccountException("Account not exist");
+            throw new AccountException(ApplicationConstant.ACCOUNT_NOT_FOUND);
         }
-        double amount = optionalAccount1.get().getAmount();
-        return amount;
+        return optionalAccount1.get().getAmount();
 
     }
 
@@ -139,20 +140,16 @@ public class AccountServiceImpl implements AccountService {
 
         if (amount <= 500) {
 
-            throw new AccountException("Enter more than 500 rs for withdrawal");
+            throw new AccountException(ApplicationConstant.MORE_THAN_FIVE_HUNDRED);
 
         } else if (account1.getAmount() <= 2000) {
 
-            throw new AccountException("Insufficient Balance");
+            throw new AccountException(ApplicationConstant.INSUFFICIENT_BALANCE);
+
 
         }
-        else {
 
-            System.out.println("some problem");
-        }
-
-
-        return "Amount withdrawal successfully %.2f && Required Balance is %.2f".formatted(amount, account1.getAmount());
+        return ApplicationConstant.AMOUNT_WITHDRAWAL_SUCCESSFULLY.formatted(amount, account1.getAmount());
 
     }
     @Override
@@ -164,16 +161,16 @@ public class AccountServiceImpl implements AccountService {
             accountRepository.save(account2);
         }
         if (amount <= 100) {
-            throw new AccountException("Please Enter More than 100 rs");
+            throw new AccountException(ApplicationConstant.ENTER_MORE_THAN_HUNDRED_RUPEES);
 
         }
-        return "amount deposited successfully...!!";
+        return ApplicationConstant.AMOUNT_DEPOSITED_SUCCESSFULLY;
     }
 
 
     @Override
     public String isBlocked(Long accountId) throws AccountException {
-        var account = accountRepository.findById(accountId).orElseThrow(() -> new AccountException("Account not present"));
+        var account = accountRepository.findById(accountId).orElseThrow(() -> new AccountException(ApplicationConstant.ACCOUNT_NOT_FOUND));
         if (accountRepository.findById(accountId).isPresent()) {
 
             double amount = account.getAmount();
@@ -185,7 +182,7 @@ public class AccountServiceImpl implements AccountService {
                 accountRepository.save(account);
             }
         }
-        return "account is blocked :".formatted(account.isBlocked());
+        return ApplicationConstant.ACCOUNT_STATUS.formatted(account.isBlocked());
     }
 
     @Override

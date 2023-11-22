@@ -8,6 +8,7 @@ import com.bankmanagement.entity.Bank;
 import com.bankmanagement.entity.Customer;
 import com.bankmanagement.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
@@ -33,8 +36,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-
+@Slf4j
 public class AccountControllerTest {
+
     @Autowired
     ObjectMapper objectMapper;
     AccountDto accountDto;
@@ -66,6 +70,7 @@ public class AccountControllerTest {
 
     @Test
     public void createAccountAPITest() throws AccountException {
+        log.info("createAccountAPITest");
         Mockito.when(accountService.saveAccount(accountDto, customer.getCustomerId(), bank.getBankId())).thenReturn(accountDto);
         ResponseEntity<AccountDto> customerDtoResponseEntity = accountController.saveAccount(accountDto, customerDto.getCustomerId(), bankDto.getBankId());
         assertEquals(HttpStatus.OK, customerDtoResponseEntity.getStatusCode());
@@ -75,6 +80,12 @@ public class AccountControllerTest {
     public void getAllAccountAPITest() throws AccountException {
 
         ResponseEntity<List<AccountDto>> accountDtoDtoResponseEntity = accountController.getAllAccountDetails();
+        assertEquals(HttpStatus.OK, accountDtoDtoResponseEntity.getStatusCode());
+    }
+    @Test
+    public void get_AccountById_APITest() throws AccountException {
+
+        ResponseEntity<AccountDto> accountDtoDtoResponseEntity = accountController.getAccountById(account.getAccountId());
         assertEquals(HttpStatus.OK, accountDtoDtoResponseEntity.getStatusCode());
     }
 

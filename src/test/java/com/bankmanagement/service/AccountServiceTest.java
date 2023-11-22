@@ -61,7 +61,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void neverSaveAccountWhenCustomerFieldNotMatchTest() throws AccountException {
+    public void neverSaveAccountWhenCustomerFieldNotMatchTest()  {
         Optional<Customer> customer = Optional.ofNullable(Customer.builder().customerId(1L).
                 firstName("Viratss").lastName("Kohli").age(32).email("viratkohli@gmail.com")
                 .aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai")
@@ -77,7 +77,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void neverSaveAccountWhenCustomerFieldLastNameNotMatchTest() throws AccountException {
+    public void neverSaveAccountWhenCustomerFieldLastNameNotMatchTest() {
         Optional<Customer> customer11 = Optional.ofNullable(Customer.builder().customerId(1L).
                 firstName("Virat").lastName("sharma").age(32).email("viratkohli@gmail.com")
                 .aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai")
@@ -95,7 +95,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void neverSaveAccountWhenCustomerField_PanCard_NotMatchTest() throws AccountException {
+    public void neverSaveAccountWhenCustomerField_PanCard_NotMatchTest()  {
         Optional<Customer> customer11 = Optional.ofNullable(Customer.builder().customerId(1L).
                 firstName("Virat").lastName("Kohli").age(32).email("viratkohli@gmail.com")
                 .aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai")
@@ -111,7 +111,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void neverSaveAccountWhenCustomerField_ContactNumber_NotMatchTest() throws AccountException {
+    public void neverSaveAccountWhenCustomerField_ContactNumber_NotMatchTest()  {
         Optional<Customer> customer11 = Optional.ofNullable(Customer.builder().customerId(1L).
                 firstName("Virat").lastName("Kohli").age(32).email("viratkohli@gmail.com")
                 .aadhaarNumber("233333333333l").contactNumber(9876543237L).address("Mumbai")
@@ -127,7 +127,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void neverSaveAccountWhenCustomerField_DateOfBirth_NotMatchTest() throws AccountException {
+    public void neverSaveAccountWhenCustomerField_DateOfBirth_NotMatchTest() {
         Optional<Customer> customer11 = Optional.ofNullable(Customer.builder().customerId(1L).
                 firstName("Virat").lastName("Kohli").age(32).email("viratkohli@gmail.com")
                 .aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai")
@@ -154,7 +154,7 @@ public class AccountServiceTest {
 
     @DisplayName("JUnit test for getAllAccount method")
     @Test
-    public void get_AccountById_Test() throws AccountException {
+    public void get_AccountById_Test()  {
         Mockito.when(accountRepository.findById(account.getAccountId())).thenReturn(Optional.of(account));
         assertNotNull(accountService.getAccountById(account.getAccountId()), "Response body should not be null");
     }

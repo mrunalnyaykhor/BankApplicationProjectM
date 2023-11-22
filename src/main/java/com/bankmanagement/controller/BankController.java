@@ -4,6 +4,8 @@ import com.bankmanagement.constant.UrlConstant;
 import com.bankmanagement.dto.BankDto;
 import com.bankmanagement.entity.Bank;
 import com.bankmanagement.service.BankService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +15,17 @@ import java.util.List;
 
 @RestController
 public class BankController {
+    Logger logger = LoggerFactory.getLogger(BankController.class);
     @Autowired
     private BankService bankservice;
     @PostMapping(UrlConstant.SAVE_BANK)
     public ResponseEntity<BankDto> saveBanks(@RequestBody BankDto bankDto){
+        logger.info("save Bank");
         return ResponseEntity.ok(bankservice.saveBank(bankDto));
     }
     @GetMapping(UrlConstant.GET_ALL_BANK)
     public ResponseEntity<List<BankDto>> getAllBank(){
+        logger.info("ge all Bank");
 
         return ResponseEntity.ok(bankservice.getAllBank());
     }

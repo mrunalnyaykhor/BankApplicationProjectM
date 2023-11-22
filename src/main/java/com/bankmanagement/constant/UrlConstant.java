@@ -1,7 +1,6 @@
 package com.bankmanagement.constant;
 
 public class UrlConstant {
-    public static final String CUSTOMER_URL = "customer";
     public static final String SAVE_CUSTOMER = "/saveCustomer/{bankId}";
     public static final String GET_BY_ID_OR_NAME_OR_MOBILENO_OR_EMAILID = "/getBy/{content}";
     public static final String GET_ALL_CUSTOMER = "/getAllCustomer";
