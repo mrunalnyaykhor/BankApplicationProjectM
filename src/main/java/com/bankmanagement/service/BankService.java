@@ -10,9 +10,9 @@ public interface BankService {
 
     List<BankDto> getAllBank();
 
-    Bank getBankById(Long bankId);
+    String getBankById(Long bankId);
 
-    BankDto updateBankById(BankDto bankDto, Long bankId);
+    BankDto updateBankById(BankDto bankDto);
 
     String deleteBankById(Long bankId);
 }

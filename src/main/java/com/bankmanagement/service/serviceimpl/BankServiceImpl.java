@@ -10,10 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,14 +23,14 @@ public class BankServiceImpl implements BankService {
     @Override
     public BankDto saveBank(BankDto bankDto) {
         if (bankRepository.existsByIfscCode(bankDto.getIfscCode())) {
-            log.error("A bank with IFSC code %s already exists");
+            log.error(ApplicationConstant.IFSC_CODE_ALREADY_EXIST);
             throw new BankException(ApplicationConstant.IFSC_CODE_ALREADY_EXIST);
 
         } else {
             Bank bank = new Bank();
             BeanUtils.copyProperties(bankDto, bank);
             bankRepository.save(bank);
-            log.info("bank save successfully");
+            log.info(ApplicationConstant.BANK_SAVE_SUCCESSFULLY);
 
         }
         return bankDto;
@@ -40,11 +38,8 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public List<BankDto> getAllBank() {
-        if (bankRepository.findAll().isEmpty()) {
-            log.error("Bank Not Available");
-            throw new BankException(ApplicationConstant.BANK_NOT_AVAILABLE);
-        }
-        log.info("get bank successfully");
+        bankRepository.findAll().stream().findAny().orElseThrow(()-> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
+        log.info(ApplicationConstant.BANKS_GET_SUCCESSFULLY);
         return bankRepository.findAll().stream().filter(Objects::nonNull)
                 .map(bank -> {
                     BankDto bankDto = new BankDto();
@@ -56,39 +51,31 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public Bank getBankById(Long bankId) {
-        if(bankRepository.findById(bankId).isEmpty())
-        {
-            throw new BankException(ApplicationConstant.BANK_NOT_AVAILABLE);
-        }
-        log.info("bank Id get successfully");
-        return bankRepository.findById(bankId).get();
+    public String getBankById(Long bankId) {
+
+            Bank bank = bankRepository.findById(bankId)
+                    .orElseThrow(() -> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
+             return String.format(ApplicationConstant.BANK_GET_SUCCESSFULLY).formatted(bank.getBankId());
+
     }
 
     @Override
-    public BankDto updateBankById(BankDto bankDto, Long bankId)
+    public BankDto updateBankById(BankDto bankDto)
     {
-        Bank bank = bankRepository.findById(bankId).orElseThrow(() -> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
-        if (bankRepository.existsByIfscCode(bankDto.getIfscCode())) {
-            log.info("A bank with IFSC code %s already exists");
-            throw new BankException(ApplicationConstant.IFSC_CODE_ALREADY_EXIST);
-        }
+        Bank bank = bankRepository.findById(bankDto.getBankId())
+                .orElseThrow(() -> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
         BeanUtils.copyProperties(bankDto, bank);
             bankRepository.save(bank);
-            log.info("bank update successfully");
+            log.info(ApplicationConstant.BANK_UPDATE);
             return bankDto;
-
-
     }
 
     @Override
     public String deleteBankById(Long bankId) {
-        Optional<Bank> bankOptional = bankRepository.findById(bankId);
-        if (bankOptional.isEmpty())
-        {throw new BankException(ApplicationConstant.BANK_NOT_AVAILABLE);
-        }
-        bankOptional.ifPresent(bank -> bankRepository.deleteById(bankId));
-        log.info("bank deleted successfully");
+        bankRepository.findById(bankId).orElseThrow(()-> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
+
+        bankRepository.deleteById(bankId);
+        log.info(ApplicationConstant.BANK_DELETE);
         return ApplicationConstant.BANK_DELETE;
     }
 

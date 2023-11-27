@@ -5,34 +5,54 @@ import com.bankmanagement.dto.CustomerDto;
 import com.bankmanagement.entity.Customer;
 
 public class ApplicationConstant {
-    static BankDto bankDto;
-    static CustomerDto customerDto;
-    private static Customer customerId;
-    public static final String MINIMUM_BALANCE_FOR = "Minimum Balance for";
-    public static final String IFSC_CODE_ALREADY_EXIST = "A bank with IFSC code %s already exists.".formatted(bankDto.getIfscCode());
+
+    public static final String BANK_SAVE_SUCCESSFULLY = "Bank save successfully";
+    public static final String IFSC_CODE_ALREADY_EXIST = "A bank with IFSC code %s already exists.";
     public static final String BANK_NOT_AVAILABLE = "Bank not Available ";
     public static final String ACCOUNT_NOT_FOUND = "Account is not present";
+    public static final String ACCOUNT_ALREADY_PRESENT = "Account already present";
     public static final String BANK_DELETE = "Bank Deleted Successfully";
+    public static final String BANK_UPDATE = "bank update successfully";
+    public static final String BANKS_GET_SUCCESSFULLY = "Banks get Successfully ";
+    public static final String BANK_GET_SUCCESSFULLY = "The Bank Id  get Successfully";
 
 
     public static final String CUSTOMER_SAVE = "customer Save successfully";
-    public static final String AADHAAR_NUMBER_ALREADY_EXIST = "A Customer of AadhaarNumber Number %s already exists.".formatted(customerDto.getAadhaarNumber());
+    public static final String CUSTOMER_ID_GET_SUCCESSFULLY = "customer id get successfully";
+    public static final String CUSTOMER_ALREADY_PRESENT = "Customer Already present";
+    public static final String AADHAAR_NUMBER_ALREADY_EXIST = "A Customer of AadhaarNumber Number  already exists.";
+    public static final String EMAIL_ALREADY_EXIST = "A Customer of EmailId  already exists.";
+
+    public static final String AADHAAR_NUMBER_SHOULD_BE_PROPER = "Aadhaar Number should be proper format 12 DIGIT";
     public static final String CONTACT_NUMBER_NOT_PROPER = "Customer contactNumber not proper format";
     public static final String CUSTOMER_NOT_PRESENT = "Customer not present in DataBase";
+    public static final String CUSTOMER_NAME_INCORRECT = "Customer name incorrect";
     public static final String CUSTOMER_DELETE = "Customer Id :%d deleted successfully....!!";
     public static final String UPDATE_CUSTOMER_SUCCESSFULLY = "update customer successfully";
 
-    public static final String NAME_INCORRECT = "Cannot create Account Customer name is incorrect";
-    public static final String LAST_NAME_INCORRECT = "Cannot create Account Customer Last Name is incorrect";
+    public static final String BANK_AND_CUSTOMER_PRESENT = "Bank and customer present";
 
-    public static final String PANCARD_INCORRECT = "Cannot create Account Customer panCardNumber is incorrect";
-    public static final String CONTACT_INCORRECT = "Contact Incorrect";
-    public static final String DATE_OF_BIRTH_INCORRECT = "Cannot create Account Customer dateOfBirth is incorrect";
-    public static final String MORE_THAN_FIVE_HUNDRED = "Enter more than 500 rs for withdrawal";
+    public static final String ACCOUNT_IS_CREATED = "Account is created and The Account type status %s";
+    public static final String WITHDRAWAL_AMOUNT_MORE_THAN_FIVE_HUNDRED = "Enter more than 500 rs for withdrawal";
     public static final String INSUFFICIENT_BALANCE = "Insufficient Balance";
     public static final String AMOUNT_WITHDRAWAL_SUCCESSFULLY = "Amount withdrawal successfully %.2f && Required Balance is %.2f";
     public static final String ENTER_MORE_THAN_HUNDRED_RUPEES = "Please Enter More than 100 rs";
-    public static final String AMOUNT_DEPOSITED_SUCCESSFULLY = "Please Enter More than 100 rs";
-    public static final String ACCOUNT_STATUS = "account status";
+    public static final String AMOUNT_DEPOSITED_SUCCESSFULLY = "amount deposited successfully";
+    public static final String ACCOUNT_STATUS = "account status is %s";
+    public static final String ACCOUNT_TYPE_STATUS = "The Account type status %s";
 
+    public static final String ERROR_OCCURRED_WHILE_SAVING_INTO_THE_DATA_BASE = "error occurred while saving into the database";
+    public static final String MINIMUM_BALANCE_FOR = "Minimum Balance for";
+    public static final String ACCOUNT_CREATE = "Account create";
+    public static final String CURRENT_ACCOUNT_IS_CREATED ="current Account is created";
+    public static final String TRANSACTION_SUCCESSFUL= "transaction successful";
+    public static final String ACCOUNT_ID_DELETED_SUCCESSFULLY ="account id deleted successfully";
+    public static final String ACCOUNT_IS_BLOCKED ="You cannot send Money Your Account is Blocked Please Deposit Money in your Account";
+    public static final String IFSC_CODE_INCORRECT= "Ifsc Code is incorrect";
+    public static final String BALANCE_IS_MINIMUM = "You Cannot Transfer Money Because Your Balance Amount is low ";
+    public static final String CONTACT_IS_CORRECT = "contact Number is correct";
+    public static final String GET_ALL_CUSTOMER = "get all customer";
+    public static final String ACCOUNT_ID_UPDATE_SUCCESSFULLY = "Account id update successfully";
+    public static final String ACCOUNT_ID_DOES_NOT_EXIST = "Account Id does not exist";
+    public static final String RESPONSE_SHOULD_NOT_NULL = "Response body should not be null";
 }

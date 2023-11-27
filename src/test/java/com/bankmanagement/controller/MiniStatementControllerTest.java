@@ -20,7 +20,7 @@ import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class MiniStateMentControllerTest {
+public class MiniStatementControllerTest {
     @Autowired
     ObjectMapper objectMapper;
     TransactionDto transactionDto;

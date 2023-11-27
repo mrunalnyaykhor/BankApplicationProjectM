@@ -50,14 +50,14 @@ public class CustomerControllerTest {
 
     @Test
     public void createCustomerAPITest() {
-        Mockito.when(customerService.saveCustomer(customerDto, bankdto.getBankId())).thenReturn(customerDto);
-         ResponseEntity<CustomerDto> customerDtoResponseEntity =customerController.saveCustomer(customerDto, bankdto.getBankId());
+        Mockito.when(customerService.saveCustomer(customerDto)).thenReturn(String.valueOf(customerDto));
+         ResponseEntity<String> customerDtoResponseEntity =customerController.saveCustomer(customerDto);
         assertEquals(HttpStatus.OK, customerDtoResponseEntity.getStatusCode());
     }
 
     @Test
     public void updateCustomerAPITest() {
-        ResponseEntity<CustomerDto> customerDtoResponseEntity = customerController.updateCustomerDto(customerDto, customerDto.getBankId());
+        ResponseEntity<CustomerDto> customerDtoResponseEntity = customerController.updateCustomerDto(customerDto);
         assertEquals(HttpStatus.OK, customerDtoResponseEntity.getStatusCode());
     }
 

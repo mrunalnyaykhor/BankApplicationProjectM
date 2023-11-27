@@ -1,5 +1,6 @@
 package com.bankmanagement.controller;
 
+import com.bankmanagement.constant.ApplicationConstant;
 import com.bankmanagement.constant.UrlConstant;
 import com.bankmanagement.dto.BankDto;
 import com.bankmanagement.entity.Bank;
@@ -20,23 +21,22 @@ public class BankController {
     private BankService bankservice;
     @PostMapping(UrlConstant.SAVE_BANK)
     public ResponseEntity<BankDto> saveBanks(@RequestBody BankDto bankDto){
-        logger.info("save Bank");
         return ResponseEntity.ok(bankservice.saveBank(bankDto));
     }
     @GetMapping(UrlConstant.GET_ALL_BANK)
     public ResponseEntity<List<BankDto>> getAllBank(){
-        logger.info("ge all Bank");
+        logger.info(ApplicationConstant.GET_ALL_CUSTOMER);
 
         return ResponseEntity.ok(bankservice.getAllBank());
     }
     @GetMapping(UrlConstant.GET_BANK)
-    public ResponseEntity<Bank> getBankId(@PathVariable Long bankId){
-        Bank bankId1 = bankservice.getBankById(bankId);
-        return ResponseEntity.ok(bankId1);
+    public ResponseEntity<String> getBankId(@PathVariable Long bankId){
+
+        return ResponseEntity.ok( bankservice.getBankById(bankId));
     }
     @PutMapping(UrlConstant.BANK_UPDATE)
-    public ResponseEntity<BankDto> updateBank(@Valid @RequestBody BankDto bankDto,@PathVariable Long bankId){
-        return ResponseEntity.ok(bankservice.updateBankById(bankDto,bankId));
+    public ResponseEntity<BankDto> updateBank(@Valid @RequestBody BankDto bankDto){
+        return ResponseEntity.ok(bankservice.updateBankById(bankDto));
     }
     @DeleteMapping(UrlConstant.BANK_DELETE)
     public ResponseEntity<String> deleteBank(@PathVariable Long bankId)

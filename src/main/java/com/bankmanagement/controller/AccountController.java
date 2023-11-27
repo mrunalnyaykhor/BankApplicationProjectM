@@ -1,14 +1,13 @@
 package com.bankmanagement.controller;
+
+import com.bankmanagement.constant.ApplicationConstant;
 import com.bankmanagement.constant.UrlConstant;
 import com.bankmanagement.dto.AccountDto;
 import com.bankmanagement.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.security.auth.login.AccountException;
 import javax.validation.Valid;
@@ -23,27 +22,28 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping(UrlConstant.SAVE_ACCOUNT)
-    public ResponseEntity<AccountDto> saveAccount(@Valid @RequestBody AccountDto accountdto, @PathVariable Long customerId, @PathVariable Long bankId) throws AccountException {
-        return ResponseEntity.ok(accountService.saveAccount(accountdto, customerId, bankId));
+    public ResponseEntity<String> saveAccount(@Valid @RequestBody AccountDto accountdto) {
+        return ResponseEntity.ok(accountService.saveAccount(accountdto));
 
     }
 
     @GetMapping(UrlConstant.GATE_ALL_ACCOUNT)
     public ResponseEntity<List<AccountDto>> getAllAccountDetails() throws AccountException {
-        log.info("get all Account");
         return ResponseEntity.ok(accountService.getAllAccount());
 
     }
+
     @GetMapping(UrlConstant.GATE_ACCOUNT_BY_ID)
     public ResponseEntity<AccountDto> getAccountById(@PathVariable Long accountId) throws AccountException {
-        log.info("get  Account By Id");
+
+
         return ResponseEntity.ok(accountService.getAccountById(accountId));
     }
 
     @PutMapping(UrlConstant.UPDATE_ACCOUNT_BY_ID)
-    public ResponseEntity<String> updateAccountDto(@Valid @RequestBody AccountDto accountDto, @PathVariable("accountId") Long accountId) throws AccountException {
-        log.info("update Account");
-        return ResponseEntity.ok(accountService.updateAccountById(accountDto, accountId));
+    public ResponseEntity<String> updateAccountDto(@Valid @RequestBody AccountDto accountDto) throws AccountException {
+        log.info(ApplicationConstant.ACCOUNT_ID_UPDATE_SUCCESSFULLY);
+        return ResponseEntity.ok(accountService.updateAccountById(accountDto));
     }
 
     @DeleteMapping(UrlConstant.DELETE_ACCOUNT)
@@ -69,9 +69,14 @@ public class AccountController {
         return ResponseEntity.ok(accountService.withdrawalAmountById(accountId, amount));
 
     }
+
     @GetMapping(UrlConstant.ACCOUNT_BLOCK_UNBLOCK_CHECK)
     public ResponseEntity<String> blockAccountCheck(@PathVariable Long accountId) throws AccountException {
         return ResponseEntity.ok(accountService.isBlocked(accountId));
+    }
+    @GetMapping(UrlConstant.ACCOUNT_TYPE)
+    public ResponseEntity<String> savingOrCurrentAccount(@PathVariable Long accountId)throws AccountException{
+        return ResponseEntity.ok(accountService.accountStatus(accountId));
     }
 
 

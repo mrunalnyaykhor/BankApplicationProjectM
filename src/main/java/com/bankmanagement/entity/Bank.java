@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class Bank {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-
+    @Column(name = "bankId")
     private Long bankId;
     @Column(name = "bankName")
     private String bankName;

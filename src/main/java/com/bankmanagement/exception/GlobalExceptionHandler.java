@@ -1,5 +1,5 @@
 package com.bankmanagement.exception;
-import com.bankmanagement.entity.Bank;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
         ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.BAD_REQUEST);
 
-        return  ResponseEntity.badRequest().body(errorDetails);
+        return ResponseEntity.badRequest().body(errorDetails);
     }
 
     @ExceptionHandler(value = {AccountException.class})
@@ -32,19 +32,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {BankException.class})
     public ResponseEntity<ErrorDetails> handleResourceNotFoundException(BankException exception) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.BAD_REQUEST);
-         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body( errorDetails);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(errorDetails);
     }
-    @ExceptionHandler(value={TransactionException.class})
-    public ResponseEntity<ErrorDetails> handleUserTransactionException(TransactionException exception){
-       ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.BAD_REQUEST);
+
+    @ExceptionHandler(value = {TransactionException.class})
+    public ResponseEntity<ErrorDetails> handleUserTransactionException(TransactionException exception) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.BAD_REQUEST);
 
         return ResponseEntity.badRequest().body(errorDetails);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex
-                                                                  ) {
+    ) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
@@ -54,7 +55,7 @@ public class GlobalExceptionHandler {
 
         ErrorDetails errorDetails = new ErrorDetails(new Date(), errors, HttpStatus.BAD_REQUEST);
 
-        return  ResponseEntity.badRequest().body(errorDetails);
+        return ResponseEntity.badRequest().body(errorDetails);
     }
 
 }

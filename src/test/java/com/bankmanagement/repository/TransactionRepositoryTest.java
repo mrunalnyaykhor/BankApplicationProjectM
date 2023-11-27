@@ -34,9 +34,7 @@ public class TransactionRepositoryTest {
         Transaction transaction = Transaction.builder().accountNumberFrom(4567888L).accountNumberTo(4567889L).transactionDate(date).name("Virat").amount(777788.00).description("Hello").ifscCode("SBIN1234N").build();
         Account account = Account.builder().customerId(1L).bankId(1L).accountId(1L)
                 .accountNumber(4567888).amount(777788.00)
-                .isBlocked(false).aadhaarNumber(233333333333L).age(32).contactNumber(9876543234L)
-                .email("redmi@gmail.com")
-                .dateOfBirth("1987-09-20").firstName("Virat").lastName("Kohli").panCardNumber("AAAS234KKL").build();
+                .isBlocked(false).build();
 
         Mockito.when(transactionRepository.findAllByAccountNumberToOrAccountNumberFromAndTransactionDateBetween(ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(List.of(transaction));
 

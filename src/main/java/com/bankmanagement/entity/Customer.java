@@ -4,7 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 @Setter
 @Getter
@@ -27,6 +27,9 @@ public class Customer {
     @Column(name = "email")
     private String email;
     @Column(name = "aadhaarNumber")
+    @NotNull(message = "Aadhaar Number should be 12 digit")
+    @Digits(message="AadhaarNumber should contain 12 digits.", fraction = 0, integer = 12)
+
     private String aadhaarNumber;
     @Column(name = "panCardNumber")
     private String panCardNumber;
@@ -37,6 +40,9 @@ public class Customer {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bankId", referencedColumnName = "bankId")
     private Bank bank;
+    @Column(insertable =  false, updatable = false)
+    private Long bankId;
+
 
 
 }

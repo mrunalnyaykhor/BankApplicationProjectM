@@ -1,37 +1,21 @@
-#
-#server:
-#  port: 8080
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.jdbc.Driver
-#    password: root
-#    url: jdbc:mysql://localhost:3306/bankManagement
-#    username: root
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#      generate-ddl: true
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.MySQL5Dialect
-#    show-sql: true
-#
-#
-#    driver-class-name: org.h2.Driver
-#    password: password
-#    url: jdbc:h2:mem:testdb
-#    username: sa
-#    h2:
-#      console:
-#        path:/h2
-#    jpa:
-#      database-platform: org.hibernate.dialect.H2Dialect
 
-#
 server:
   port: 8080
 spring:
   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: root
+    url: jdbc:mysql://localhost:3306/bankmmrunal
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+      generate-ddl: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
+
 
     driver-class-name: org.h2.Driver
     password: password
@@ -42,14 +26,30 @@ spring:
         path:/h2
     jpa:
       database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: update
-      generate-ddl: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5Dialect
-        show-sql: true
-        logging:
-          file:
-            path=logs/:
 
+
+#server:
+#  port: 8080
+#spring:
+#  datasource:
+#
+#    driver-class-name: org.h2.Driver
+#    password: password
+#    url: jdbc:h2:mem:testdb
+#    username: sa
+#    h2:
+#      console:
+#        path:/h2
+#    jpa:
+#      database-platform: org.hibernate.dialect.H2Dialect
+#    hibernate:
+#      ddl-auto: update
+#      generate-ddl: true
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL5Dialect
+#        show-sql: true
+#        logging:
+#          file:
+#            path=logs/:
+#

@@ -1,12 +1,11 @@
 package com.bankmanagement.service;
 
 import com.bankmanagement.dto.CustomerDto;
-import com.bankmanagement.dto.TransactionDto;
 
 import java.util.List;
 
 public interface CustomerService {
-    CustomerDto saveCustomer(CustomerDto customerDto,Long bankId) ;
+    String saveCustomer(CustomerDto customerDto) ;
 
     List<CustomerDto> getAllCustomer();
 
@@ -14,7 +13,7 @@ public interface CustomerService {
 
     String deleteCustomerById(Long customerId);
 
-    CustomerDto updateCustomer(CustomerDto customerDto,Long customerId);
+    CustomerDto updateCustomer(CustomerDto customerDto);
 
 
 }

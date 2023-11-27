@@ -24,9 +24,7 @@ public class AccountRepositoryTest {
     public void saveUserFailureWhenIfscCodeExistTest() {
         Account account = Account.builder().customerId(1L).bankId(1L).accountId(1L)
                 .accountNumber(4567888).amount(777788.00)
-                .isBlocked(false).aadhaarNumber(233333333333L).age(32).contactNumber(9876543234L)
-                .email("redmi@gmail.com")
-                .dateOfBirth("1987-09-20").firstName("Virat").lastName("Kohli").panCardNumber("AAAS234KKL").build();
+                .isBlocked(false).build();
 
         Mockito.when(accountRepository.findByAccountNumber(account.getAccountNumber())).thenReturn(account); // Specify
         Account byAccountNumber = accountRepository.findByAccountNumber(account.getAccountNumber());

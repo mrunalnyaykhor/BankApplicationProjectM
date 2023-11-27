@@ -34,7 +34,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class BankControllerTest {
     BankDto bankDto;
     Bank bank;
-    BankDto bankDtoList1;
     @InjectMocks
     private BankController bankController;
     @Mock
@@ -45,9 +44,10 @@ public class BankControllerTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        bankDto = objectMapper.readValue(new ClassPathResource("bankDto.json").getInputStream(), BankDto.class);
-        bank = objectMapper.readValue(new ClassPathResource("bank.json").getInputStream(), Bank.class);
-      //  bankDtoList1 = objectMapper.readValue(new ClassPathResource("bankDtoList.json").getInputStream(), BankDto.class);
+        bankDto = objectMapper.readValue(new ClassPathResource("bankDto.json")
+                .getInputStream(), BankDto.class);
+        bank = objectMapper.readValue(new ClassPathResource("bank.json")
+                .getInputStream(), Bank.class);
     }
 
     @DisplayName("Junit test case for save Bank")
@@ -70,17 +70,15 @@ public class BankControllerTest {
     @DisplayName("Junit test case  getBankById")
     @Test
     public void getAllBankById() {
-        Bank bank = Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi").ifscCode("SBIN123").address("Mohadi").build();
-
-//        ResponseEntity<List<BankDto>> bankById = bankController.getBankById(bank.getBankId());
-//        assertEquals(HttpStatus.OK, bankById.getStatusCode());
-
+        Bank bank = Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi")
+                .ifscCode("SBIN123").address("Mohadi").build();
     }
 
     @DisplayName("Junit test case for deleteBankById")
     @Test
     public void deleteBankById() {
-        Bank bank = Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi").ifscCode("SBIN123").address("Mohadi").build();
+        Bank bank = Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi")
+                .ifscCode("SBIN123").address("Mohadi").build();
         bankController.deleteBank(bank.getBankId());
 
 
@@ -89,7 +87,7 @@ public class BankControllerTest {
     @DisplayName("Junit test case for updateBankById")
     @Test
     public void updateBankById() {
-        ResponseEntity<BankDto> bankDtoResponseEntity = bankController.updateBank(bankDto, 1L);
+        ResponseEntity<BankDto> bankDtoResponseEntity = bankController.updateBank(bankDto);
         assertEquals(HttpStatus.OK, bankDtoResponseEntity.getStatusCode());
 
 

@@ -13,9 +13,9 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping(UrlConstant.SAVE_CUSTOMER)
-    public ResponseEntity<CustomerDto> saveCustomer(@Valid @RequestBody CustomerDto customerDto, @PathVariable Long bankId)
+    public ResponseEntity<String> saveCustomer(@Valid @RequestBody CustomerDto customerDto)
     {
-        return ResponseEntity.ok( customerService.saveCustomer(customerDto,bankId));
+        return ResponseEntity.ok( customerService.saveCustomer(customerDto));
 
     }
     @GetMapping(UrlConstant.GET_ALL_CUSTOMER)
@@ -27,9 +27,9 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.customerFindById(customerId));
     }
     @PutMapping(UrlConstant.UPDATE_CUSTOMER)
-    public ResponseEntity<CustomerDto> updateCustomerDto(@Valid @RequestBody CustomerDto customerDto, @PathVariable("customerId") Long customerId) {
+    public ResponseEntity<CustomerDto> updateCustomerDto(@Valid @RequestBody CustomerDto customerDto) {
 
-        return ResponseEntity.ok(customerService.updateCustomer(customerDto, customerId));
+        return ResponseEntity.ok(customerService.updateCustomer(customerDto));
     }
     @DeleteMapping(UrlConstant.DELETE_CUSTOMER)
     public String deleteCustomerById(@PathVariable Long customerId)

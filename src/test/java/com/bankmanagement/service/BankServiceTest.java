@@ -25,8 +25,10 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 public class BankServiceTest {
-    Bank bank = Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi").ifscCode("SBIN123").address("Mohadi").build();
-    Bank bank1 = Bank.builder().bankId(2L).bankName("HDFC").branchName("HDFCMOhadi").ifscCode("HDFC123").address("Mohadi").build();
+    Bank bank = Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi")
+            .ifscCode("SBIN123").address("Mohadi").build();
+    Bank bank1 = Bank.builder().bankId(2L).bankName("HDFC").branchName("HDFCMOhadi")
+            .ifscCode("HDFC123").address("Mohadi").build();
     BankDto bankdto = BankDto.builder().bankId(1L).bankName("SBI").branchName("SBIMohadi")
             .ifscCode("SBIN1234")
             .address("Mohadi").build();
@@ -84,17 +86,16 @@ public class BankServiceTest {
     public void getBankByIdTest() {
         Long id = bank.getBankId();
         Mockito.when(bankRepository.findById(id)).thenReturn(Optional.of(bank)); //Optional.ofNullable throw NoSuchElement
-        Bank response = bankService.getBankById(id);
-        assertThat(response).isNotNull();
-
-        Assertions.assertThat(response.getBankId()).isEqualTo(1);
+         bankService.getBankById(id);
+        Assertions.assertThat(bankService.getBankById(id)).isEqualTo(1);
     }
 
     @DisplayName("Junit Test for getBankById is empty method")
     @Test
     public void getBankByIdNullTest() {
 
-        Mockito.when(bankRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty()); //Optional.ofNullable throw NoSuchElement
+        Mockito.when(bankRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty()); //Optional.ofNullable throw NoSuchElement
         assertThrows(BankException.class, () -> {
             bankService.getBankById(ArgumentMatchers.anyLong());
 
@@ -118,12 +119,13 @@ public class BankServiceTest {
 
         Mockito.when(bankRepository.existsByIfscCode(bankdto.getIfscCode())).thenReturn(false);
         Mockito.when(bankRepository.findById(bank.getBankId())).thenReturn(Optional.of(bank));
-        BankDto bankDto = bankService.updateBankById(bankdto, bank.getBankId());
+        BankDto bankDto = bankService.updateBankById(bankdto);
         assertThat(bankDto).isNotNull();
         assertThat(bankDto.getBankId()).isEqualTo(1L);
-        Mockito.doReturn(true).when(bankRepository).existsByIfscCode(ArgumentMatchers.anyString());
+        Mockito.doReturn(true).when(bankRepository)
+                .existsByIfscCode(ArgumentMatchers.anyString());
         assertThrows(BankException.class, () -> {
-            bankService.updateBankById(bankdto, bank.getBankId());
+            bankService.updateBankById(bankdto);
         });
 
     }

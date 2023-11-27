@@ -1,4 +1,6 @@
 package com.bankmanagement.service;
+
+import com.bankmanagement.constant.ApplicationConstant;
 import com.bankmanagement.dto.AccountDto;
 import com.bankmanagement.entity.Account;
 import com.bankmanagement.entity.Bank;
@@ -15,9 +17,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import javax.security.auth.login.AccountException;
 import java.util.List;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -27,21 +31,17 @@ import static org.mockito.Mockito.*;
 public class AccountServiceTest {
 
 
-    Optional<Bank> bank = Optional.ofNullable(Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi").ifscCode("SBIN0080667").address("Mohadi").build());
-    Optional<Customer> customer = Optional.ofNullable(Customer.builder().customerId(1L).
+    Bank bank = Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi").ifscCode("SBIN0080667").address("Mohadi").build();
+    Customer customer = Customer.builder().customerId(1L).
             firstName("Virat").lastName("Kohli").age(32).email("viratkohli@gmail.com")
             .aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai")
-            .panCardNumber("AAAS234KKL").dateOfBirth("1987-09-20").build());
-    AccountDto accountDto = AccountDto.builder().bankId(1L).customerId(1L).accountId(1L)
+            .panCardNumber("AAAS234KKL").dateOfBirth("1987-09-20").build();
+    AccountDto accountDto = AccountDto.builder().bankId(1L).customerId(1L)
             .accountNumber(4567888)
-            .isBlocked(false).aadhaarNumber(233333333333L).age(32).contactNumber(9876543234L)
-            .email("redmi@gmail.com")
-            .amount(777788.00).dateOfBirth("1987-09-20").firstName("Virat").lastName("Kohli").panCardNumber("AAAS234KKL").build();
+            .isBlocked(false).build();
     Account account = Account.builder().customerId(1L).bankId(1L).accountId(1L)
             .accountNumber(4567888).amount(777788.00)
-            .isBlocked(false).aadhaarNumber(233333333333L).age(32).contactNumber(9876543234L)
-            .email("redmi@gmail.com")
-            .dateOfBirth("1987-09-20").firstName("Virat").lastName("Kohli").panCardNumber("AAAS234KKL").build();
+            .isBlocked(false).build();
     @InjectMocks
     private AccountServiceImpl accountService;
     @Mock
@@ -53,101 +53,34 @@ public class AccountServiceTest {
 
     @DisplayName("JUnit test for saveAccountTest method")
     @Test
-    void saveAccountTest() throws AccountException {
-        when(bankRepository.findById(1l)).thenReturn(bank);
-        when(customerRepository.findById(1l)).thenReturn(customer);
-        accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
+    void saveAccountTest(){
+        when(bankRepository.findById(1)).thenReturn(Optional.ofNullable(bank));
+        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        accountService.saveAccount(accountDto);
 
     }
 
     @Test
-    public void neverSaveAccountWhenCustomerFieldNotMatchTest()  {
-        Optional<Customer> customer = Optional.ofNullable(Customer.builder().customerId(1L).
+    public void neverSaveAccountWhenCustomerFieldNotMatchTest() {
+        Customer customer = Customer.builder().customerId(1L).
                 firstName("Viratss").lastName("Kohli").age(32).email("viratkohli@gmail.com")
                 .aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai")
-                .panCardNumber("AAAS234KKL").dateOfBirth("1987-09-20").build());
+                .panCardNumber("AAAS234KKL").dateOfBirth("1987-09-20").build();
 
-        when(bankRepository.findById(1L)).thenReturn(bank);
-        when(customerRepository.findById(1L)).thenReturn(customer);
+        when(bankRepository.findById(1L)).thenReturn(Optional.ofNullable(bank));
+        when(customerRepository.findById(1L)).thenReturn(Optional.ofNullable(customer));
 
         assertThrows(AccountException.class, () -> {
-            accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
+
+            assert customer != null;
+            accountService.saveAccount(accountDto);
 
         });
     }
-
-    @Test
-    public void neverSaveAccountWhenCustomerFieldLastNameNotMatchTest() {
-        Optional<Customer> customer11 = Optional.ofNullable(Customer.builder().customerId(1L).
-                firstName("Virat").lastName("sharma").age(32).email("viratkohli@gmail.com")
-                .aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai")
-                .panCardNumber("AAAS234KKL").dateOfBirth("1987-09-20").build());
-
-        when(bankRepository.findById(1L)).thenReturn(bank);
-        when(customerRepository.findById(1L)).thenReturn(customer11);
-
-        assertThrows(AccountException.class, () -> {
-            accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
-
-        });
-
-
-    }
-
-    @Test
-    public void neverSaveAccountWhenCustomerField_PanCard_NotMatchTest()  {
-        Optional<Customer> customer11 = Optional.ofNullable(Customer.builder().customerId(1L).
-                firstName("Virat").lastName("Kohli").age(32).email("viratkohli@gmail.com")
-                .aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai")
-                .panCardNumber("AAAS234KK").dateOfBirth("1987-09-20").build());
-
-        when(bankRepository.findById(1L)).thenReturn(bank);
-        when(customerRepository.findById(1L)).thenReturn(customer11);
-
-        assertThrows(AccountException.class, () -> {
-            accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
-
-        });
-    }
-
-    @Test
-    public void neverSaveAccountWhenCustomerField_ContactNumber_NotMatchTest()  {
-        Optional<Customer> customer11 = Optional.ofNullable(Customer.builder().customerId(1L).
-                firstName("Virat").lastName("Kohli").age(32).email("viratkohli@gmail.com")
-                .aadhaarNumber("233333333333l").contactNumber(9876543237L).address("Mumbai")
-                .panCardNumber("AAAS234KKL").dateOfBirth("1987-09-20").build());
-
-        when(bankRepository.findById(1L)).thenReturn(bank);
-        when(customerRepository.findById(1L)).thenReturn(customer11);
-
-        assertThrows(AccountException.class, () -> {
-            accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
-
-        });
-    }
-
-    @Test
-    public void neverSaveAccountWhenCustomerField_DateOfBirth_NotMatchTest() {
-        Optional<Customer> customer11 = Optional.ofNullable(Customer.builder().customerId(1L).
-                firstName("Virat").lastName("Kohli").age(32).email("viratkohli@gmail.com")
-                .aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai")
-                .panCardNumber("AAAS234KKL").dateOfBirth("1988-09-20").build());
-
-        when(bankRepository.findById(1L)).thenReturn(bank);
-        when(customerRepository.findById(1L)).thenReturn(customer11);
-
-        assertThrows(AccountException.class, () -> {
-            accountService.saveAccount(accountDto, customer.get().getCustomerId(), bank.get().getBankId());
-
-        });
-
-
-    }
-
 
     @DisplayName("JUnit test for getAllAccount method")
     @Test
-    public void getAllAccountTest() throws AccountException {
+    public void getAllAccountTest(){
         Mockito.when(accountRepository.findAll()).thenReturn(List.of(account));
         assertEquals(1, accountService.getAllAccount().size());
     }
@@ -156,49 +89,48 @@ public class AccountServiceTest {
     @Test
     public void get_AccountById_Test()  {
         Mockito.when(accountRepository.findById(account.getAccountId())).thenReturn(Optional.of(account));
-        assertNotNull(accountService.getAccountById(account.getAccountId()), "Response body should not be null");
+        assertNotNull(accountService.getAccountById(account.getAccountId()), ApplicationConstant.RESPONSE_SHOULD_NOT_NULL);
     }
 
     @DisplayName("JUnit test for updateAccountById method")
     @Test
-    public void updateAccountByIdTest() throws AccountException {
+    public void updateAccountByIdTest() {
         Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.ofNullable(account));
-
-        String s = accountService.updateAccountById(accountDto, account.getAccountId());
-        verify(accountRepository, times(1)).findById(accountDto.getAccountId());
+        accountService.updateAccountById(accountDto);
+        verify(accountRepository.findById(account.getAccountId()), times(1));
     }
 
     @DisplayName("Junit test for deleteAccountById method")
     @Test
-    public void deleteAccountByIdTest() throws AccountException {
+    public void deleteAccountByIdTest() {
         Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.ofNullable(account));
-        String result = accountService.deleteAccountById(accountDto.getAccountId());
+        String result = accountService.deleteAccountById(account.getAccountId());
         assertEquals("Account Id :1 deleted successfully....!!", result);
-        verify(accountRepository, times(1)).deleteById(accountDto.getAccountId());
+        verify(accountRepository, times(1)).deleteById(account.getAccountId());
 
     }
 
     @Test
     public void testDeleteAccountByIdAccountNotFound() {
-        when(accountRepository.findById(accountDto.getAccountId())).thenReturn(Optional.empty());
+        when(accountRepository.findById(account.getAccountId())).thenReturn(Optional.empty());
         AccountException exception = assertThrows(AccountException.class, () -> {
-            accountService.deleteAccountById(accountDto.getAccountId());
+            accountService.deleteAccountById(account.getAccountId());
 
         });
 
-        assertEquals("Account Id does not exist", exception.getMessage());
+        assertEquals(ApplicationConstant.ACCOUNT_ID_DOES_NOT_EXIST, exception.getMessage());
         verify(accountRepository, never()).deleteById(anyLong());
     }
 
     @Test
-    public void getBalanceTest() throws AccountException {
+    public void getBalanceTest(){
         Mockito.when(accountRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(account));
         Double balance = accountService.getBalance(account.getAccountId());
         assertEquals(777788, balance);
     }
 
     @Test
-    public void getBalanceFailureWhenAccountNotPresentTest() throws AccountException {
+    public void getBalanceFailureWhenAccountNotPresentTest() {
 
         Mockito.when(accountRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
         assertThrows(AccountException.class, () -> {
@@ -208,15 +140,15 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void withdrawalAmountByIdTest() throws AccountException {
+    public void withdrawalAmountByIdTest(){
         Mockito.when(accountRepository.findById(account.getAccountId())).thenReturn(Optional.ofNullable(account));
-        String s = accountService.withdrawalAmountById(account.getAccountId(), 1000.00);
+        accountService.withdrawalAmountById(account.getAccountId(), 1000.00);
         verify(accountRepository, times(1)).findById(eq(account.getAccountId()));
 
     }
 
     @Test
-    public void FailureWithdrawalAmountByIdWhenAccountIsNotPresentTest() throws AccountException {
+    public void FailureWithdrawalAmountByIdWhenAccountIsNotPresentTest() {
         Mockito.when(accountRepository.findById(account.getAccountId())).thenReturn(Optional.empty());
         assertThrows(AccountException.class, () -> {
             accountService.withdrawalAmountById(account.getAccountId(), 1000.00);
@@ -225,12 +157,10 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void FailureWithdrawalAmountLessThanFiveHundredTest() throws AccountException {
+    public void FailureWithdrawalAmountLessThanFiveHundredTest() {
         Account account = Account.builder().customerId(1L).bankId(1L).accountId(1L)
                 .accountNumber(4567888).amount(788777.00)
-                .isBlocked(false).aadhaarNumber(233333333333L).age(32).contactNumber(9876543234L)
-                .email("redmi@gmail.com")
-                .dateOfBirth("1987-09-20").firstName("Virat").lastName("Kohli").panCardNumber("AAAS234KKL").build();
+                .isBlocked(false).build();
         Mockito.when(accountRepository.findById(account.getAccountId())).thenReturn(Optional.of(account));
         assertThrows(AccountException.class, () -> {
             accountService.withdrawalAmountById(account.getAccountId(), 100.00);
@@ -238,12 +168,11 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void FailureWithdrawalWhenAccountAmountLessThanTwoThousandTest() throws AccountException {
+    public void FailureWithdrawalWhenAccountAmountLessThanTwoThousandTest() {
         Account account = Account.builder().customerId(1L).bankId(1L).accountId(1L)
                 .accountNumber(4567888).amount(788.00)
-                .isBlocked(false).aadhaarNumber(233333333333L).age(32).contactNumber(9876543234L)
-                .email("redmi@gmail.com")
-                .dateOfBirth("1987-09-20").firstName("Virat").lastName("Kohli").panCardNumber("AAAS234KKL").build();
+                .isBlocked(false)
+                .build();
         Mockito.when(accountRepository.findById(account.getAccountId())).thenReturn(Optional.of(account));
         assertThrows(AccountException.class, () -> {
             accountService.withdrawalAmountById(account.getAccountId(), 5000.00);
@@ -253,7 +182,7 @@ public class AccountServiceTest {
 
     @DisplayName("Junit test for DepositAmountTest")
     @Test
-    public void depositAmountTest() throws AccountException {
+    public void depositAmountTest() {
         when(accountRepository.findById(any())).thenReturn(Optional.of(account));
         accountService.deposit(account.getAccountId(), 2000.00);
         verify(accountRepository, times(1)).findById(eq(account.getAccountId()));
@@ -262,12 +191,10 @@ public class AccountServiceTest {
 
     @DisplayName("Junit test failureDepositAmountTest")
     @Test
-    public void depositAmountFailureTest() throws AccountException {
+    public void depositAmountFailureTest()  {
         Account account = Account.builder().customerId(1L).bankId(1L).accountId(1L)
                 .accountNumber(4567888).amount(88777.00)
-                .isBlocked(false).aadhaarNumber(233333333333L).age(32).contactNumber(9876543234L)
-                .email("redmi@gmail.com")
-                .dateOfBirth("1987-09-20").firstName("Virat").lastName("Kohli").panCardNumber("AAAS234KKL").build();
+                .isBlocked(false).build();
         when(accountRepository.findById(any())).thenReturn(Optional.of(account));
 
         assertThrows(AccountException.class, () -> {
@@ -277,39 +204,31 @@ public class AccountServiceTest {
 
     @DisplayName("Junit test for blockedAccountTest")
     @Test
-    public void blockedTest() throws AccountException {
+    public void blockedTest() {
         Mockito.when(accountRepository.findById(account.getAccountId())).thenReturn(Optional.of(account));
-        String blocked = accountService.isBlocked(account.getAccountId());
+        accountService.isBlocked(account.getAccountId());
         assertFalse(account.isBlocked()); //  isBlocked() method returns a boolean
+
+    }
+    @DisplayName("Junit test for blockedAccountTest")
+    @Test
+    public void checkAccountStatus(){
+        Mockito.when(accountRepository.findById(account.getAccountId())).thenReturn(Optional.of(account));
+        accountService.accountStatus(account.getAccountId());
+
 
     }
 
     @Test
-    public void blockedAmountTest() throws AccountException {
+    public void blockedAmountTest(){
         Account account = Account.builder().customerId(1L).bankId(1L).accountId(1L)
                 .accountNumber(4567888).amount(777.00)
-                .isBlocked(false).aadhaarNumber(233333333333L).age(32).contactNumber(9876543234L)
-                .email("redmi@gmail.com")
-                .dateOfBirth("1987-09-20").firstName("Virat").lastName("Kohli").panCardNumber("AAAS234KKL").build();
+                .isBlocked(false).build();
         Mockito.when(accountRepository.findById(account.getAccountId())).thenReturn(Optional.of(account));
-        String blocked = accountService.isBlocked(account.getAccountId());
+        accountService.isBlocked(account.getAccountId());
         assertTrue(account.isBlocked()); //  isBlocked() method returns a boolean
 
     }
-//    public String isBlocked(Long accountId) throws AccountException {
-//        var account = accountRepository.findById(accountId).orElseThrow(() -> new AccountException("Account not present"));
-//        if (accountRepository.findById(accountId).isPresent()) {
-//
-//            double amount = account.getAmount();
-//            if (amount <= 2000) {
-//                account.setBlocked(true);
-//                accountRepository.save(account);
-//            } else {
-//                account.setBlocked(false);
-//                accountRepository.save(account);
-//            }
-//        }
-//        return "account is blocked :".formatted(account.isBlocked());
 
 
 }

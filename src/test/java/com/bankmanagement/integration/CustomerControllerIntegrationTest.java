@@ -5,9 +5,7 @@ import com.bankmanagement.dto.BankDto;
 import com.bankmanagement.dto.CustomerDto;
 import com.bankmanagement.entity.Bank;
 import com.bankmanagement.entity.Customer;
-import com.bankmanagement.repository.BankRepository;
 import com.bankmanagement.repository.CustomerRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,8 +45,7 @@ public class CustomerControllerIntegrationTest {
     Bank bank;
     @LocalServerPort
     private int port;
-    @Autowired
-    private BankRepository bankRepository;
+
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -57,11 +54,6 @@ public class CustomerControllerIntegrationTest {
         bank = objectMapper.readValue(new ClassPathResource("bank.json").getInputStream(), Bank.class);
         bankDto = objectMapper.readValue(new ClassPathResource("bankDto.json").getInputStream(), BankDto.class);
 
-    }
-
-    private String mapToJson(Object object) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(object);
     }
 
     private String formFullURLWithPort(String uri) {
@@ -116,7 +108,7 @@ public class CustomerControllerIntegrationTest {
     @Sql(statements = "DELETE FROM Customer WHERE FIRST_NAME ='ROHIT'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getAllCustomerTest() {
 
-        List<Customer> customerList = restTemplate.getForObject(formFullURLWithPort("/getAllCustomer"), List.class);
+        List customerList = restTemplate.getForObject(formFullURLWithPort("/getAllCustomer"), List.class);
         assertNotNull(customerList);
         assertEquals(1, customerList.size());
 
@@ -124,8 +116,6 @@ public class CustomerControllerIntegrationTest {
 
     @Test
     @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-//    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-//    @Sql(statements = "DELETE FROM Customer WHERE FIRST_NAME ='ROHIT'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void failureWhen_CustomerData_NotPresent_getAllCustomerTest() {
 
         HttpEntity<Customer> entity = new HttpEntity<>(customer, headers);
@@ -136,9 +126,6 @@ public class CustomerControllerIntegrationTest {
     }
 
     @Test
-//    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-//    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-//    @Sql(statements = "DELETE FROM Customer WHERE FIRST_NAME ='ROHIT'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void failureWhen_Bank_Data_NotPresent_getAllCustomerTest() {
 
         HttpEntity<Customer> entity = new HttpEntity<>(customer, headers);
@@ -180,7 +167,7 @@ public class CustomerControllerIntegrationTest {
     @Sql(statements = "DELETE FROM CUSTOMER WHERE FIRST_NAME ='ROHIT'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateCustomerById() {
         HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
-        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/customer/1"), HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/updateCustomer"), HttpMethod.PUT, entity, String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 

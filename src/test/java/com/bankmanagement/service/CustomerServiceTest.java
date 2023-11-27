@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +76,7 @@ public class CustomerServiceTest {
     public void saveCustomer() {
         Mockito.when(customerRepository.existsByAadhaarNumber("233333333333l")).thenReturn(false);
         when(bankRepository.findById(1L)).thenReturn(bankOptional);
-        customerService.saveCustomer(customerdto, bankOptional.get().getBankId());
+        customerService.saveCustomer(customerdto);
         assertThat(customerdto.getFirstName()).isEqualTo("Virat");
     }
 
@@ -88,7 +87,7 @@ public class CustomerServiceTest {
         Mockito.doReturn(false).when(customerRepository).existsByAadhaarNumber(ArgumentMatchers.anyString());
 
         CustomerException exception = assertThrows(CustomerException.class, () -> {
-            CustomerDto customerDto = customerService.saveCustomer(customerdto, bankOptional.get().getBankId());
+             customerService.saveCustomer(customerdto);
         });
         assertEquals(exception.getMessage(), "Invalid Contact Number");
     }
@@ -98,24 +97,16 @@ public class CustomerServiceTest {
         when(customerRepository.findById(customer1.getCustomerId())).thenReturn(Optional.of(customer1));
         customerdto.setEmail("ram@gmail.com");
         customerdto.setFirstName("Vivek");
-        customerService.updateCustomer(customerdto, customer1.getBank().getBankId());
+        customerService.updateCustomer(customerdto);
         assertThat(customerdto.getEmail()).isEqualTo("ram@gmail.com");
         assertThat(customerdto.getFirstName()).isEqualTo("Vivek");
-        customerService.updateCustomer(customerdto, customer1.getCustomerId());
+        customerService.updateCustomer(customerdto);
     }
-//    @Test
-//    public void updateCustomerIFPresentTest() {
-//        when(customerRepository.findById(customer1.getCustomerId())).thenReturn(Optional.of(customer1));
-//
-//        customerService.updateCustomer(customerdto, customer1.getBank().getBankId());
-//
-//        customerService.updateCustomer(customerdto, customer1.getCustomerId());
-//    }
     @Test
     public void testAadhaarNumberExist() {
         Mockito.when(customerRepository.existsByAadhaarNumber("233333333333l")).thenReturn(true);
         assertThrows(CustomerException.class, () -> {
-            customerService.saveCustomer(customerdto, bankOptional.get().getBankId());
+            customerService.saveCustomer(customerdto);
         });
     }
 
@@ -144,7 +135,7 @@ public class CustomerServiceTest {
         Mockito.when(customerRepository.existsByAadhaarNumber("233333333333l")).thenReturn(false);
         when(bankRepository.findById(1L)).thenReturn(bankOptional);
         assertThrows(CustomerException.class, () -> {
-            customerService.saveCustomer(customerdto, bankOptional.get().getBankId());
+            customerService.saveCustomer(customerdto);
         });
 
 
@@ -156,7 +147,7 @@ public class CustomerServiceTest {
         Mockito.when(customerRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
 
         assertThrows(CustomerException.class, () -> {
-            customerService.updateCustomer(customerdto, customer1.getCustomerId());
+            customerService.updateCustomer(customerdto);
 
         });
     }

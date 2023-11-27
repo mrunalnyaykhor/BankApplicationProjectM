@@ -5,7 +5,6 @@ import com.bankmanagement.config.TestConfig;
 import com.bankmanagement.dto.BankDto;
 import com.bankmanagement.entity.Bank;
 import com.bankmanagement.repository.BankRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +21,6 @@ import org.springframework.http.*;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,8 +44,7 @@ public class BankIntegrationTestClass {
     private int port;
     @Autowired
     private BankRepository bankRepository;
-    @Autowired
-    private MockMvc mockMvc;
+
 
     @BeforeAll
     public static void init() {
@@ -61,10 +58,6 @@ public class BankIntegrationTestClass {
 
     }
 
-    private String mapToJson(Object object) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(object);
-    }
 
     private String formFullURLWithPort(String uri) {
         return "http://localhost:" + port + uri;
@@ -85,7 +78,7 @@ public class BankIntegrationTestClass {
             , executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM BANK WHERE BANK_NAME ='SBIMohadi'", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     public void testForgetAllBank() {
-        List<Bank> bankList1 = restTemplate.getForObject(formFullURLWithPort("/getAllBank"), List.class);
+        List bankList1 = restTemplate.getForObject(formFullURLWithPort("/getAllBank"), List.class);
         assertEquals(1, bankRepository.findAll().size());
         assertEquals(1, bankList1.size());
     }

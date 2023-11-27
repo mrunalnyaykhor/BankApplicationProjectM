@@ -16,18 +16,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
 
 import javax.security.auth.login.AccountException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,8 +45,7 @@ public class AccountControllerTest {
     private static Map deposit;
     private static Map withdrawal;
     CustomerDto customerDto;
-    private MockMvc mvc;
-    private final HttpHeaders headers = new HttpHeaders();
+
     @InjectMocks
     private AccountController accountController;
     @Mock
@@ -69,10 +64,10 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void createAccountAPITest() throws AccountException {
+    public void createAccountAPITest(){
         log.info("createAccountAPITest");
-        Mockito.when(accountService.saveAccount(accountDto, customer.getCustomerId(), bank.getBankId())).thenReturn(accountDto);
-        ResponseEntity<AccountDto> customerDtoResponseEntity = accountController.saveAccount(accountDto, customerDto.getCustomerId(), bankDto.getBankId());
+        Mockito.when(accountService.saveAccount(accountDto)).thenReturn(accountDto.toString());
+        ResponseEntity<String> customerDtoResponseEntity = accountController.saveAccount(accountDto);
         assertEquals(HttpStatus.OK, customerDtoResponseEntity.getStatusCode());
     }
 
@@ -91,13 +86,13 @@ public class AccountControllerTest {
 
     @Test
     public void updateAccountByIdAPITest() throws AccountException {
-        ResponseEntity<String> accountDtoResponseEntity = accountController.updateAccountDto(accountDto, account.getAccountId());
+        ResponseEntity<String> accountDtoResponseEntity = accountController.updateAccountDto(accountDto);
         assertEquals(HttpStatus.OK, accountDtoResponseEntity.getStatusCode());
     }
 
     @Test
     public void deleteAccountByIdAPITest() throws AccountException {
-        accountController.deleteAccountById(accountDto.getAccountId());
+        accountController.deleteAccountById(account.getAccountId());
 
     }
 
