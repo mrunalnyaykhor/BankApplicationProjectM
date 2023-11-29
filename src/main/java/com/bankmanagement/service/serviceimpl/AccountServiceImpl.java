@@ -17,9 +17,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -36,6 +36,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String saveAccount(AccountDto accountdto) {
+//        Optional<Account> accountId = accountRepository.findById(accountdto.getAccountId());
+//        if(accountId.isPresent()){
+//            throw new AccountException(ApplicationConstant.ACCOUNT_ALREADY_PRESENT);
+//        }
         Bank bank = bankRepository.findById(accountdto.getBankId())
                 .orElseThrow(() -> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
         Customer customer = customerRepository.findById(accountdto.getCustomerId())
@@ -92,11 +96,13 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public String updateAccountById(AccountDto accountDto) throws AccountException {
-        Account account = accountRepository.findById(accountDto.getAccountId())
-                .orElseThrow(() -> new AccountException(ApplicationConstant.ACCOUNT_NOT_FOUND));
+    public String updateAccountById(AccountDto accountDto) {
+        Account account = accountRepository.findById(accountDto.getAccountId()).orElseThrow(
+                () -> new AccountException(ApplicationConstant.ACCOUNT_NOT_FOUND));
+
         BeanUtils.copyProperties(accountDto, account);
         accountRepository.save(account);
+
         return ApplicationConstant.ACCOUNT_ID_UPDATE_SUCCESSFULLY;
     }
 
@@ -187,7 +193,7 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new AccountException(ApplicationConstant.ACCOUNT_NOT_FOUND));
         AccountDto accountDto = new AccountDto();
         BeanUtils.copyProperties(account, accountDto);
-        BeanUtils.copyProperties(account, accountDto);
+
         return accountDto;
     }
 

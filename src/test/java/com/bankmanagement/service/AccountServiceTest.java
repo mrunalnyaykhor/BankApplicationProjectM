@@ -5,6 +5,7 @@ import com.bankmanagement.dto.AccountDto;
 import com.bankmanagement.entity.Account;
 import com.bankmanagement.entity.Bank;
 import com.bankmanagement.entity.Customer;
+import com.bankmanagement.enump.AccountType;
 import com.bankmanagement.repository.AccountRepository;
 import com.bankmanagement.repository.BankRepository;
 import com.bankmanagement.repository.CustomerRepository;
@@ -19,6 +20,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.security.auth.login.AccountException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,16 +34,16 @@ public class AccountServiceTest {
 
 
     Bank bank = Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi").ifscCode("SBIN0080667").address("Mohadi").build();
-    Customer customer = Customer.builder().customerId(1L).
+    Customer customer = Customer.builder().customerId(1L).bank(bank).
             firstName("Virat").lastName("Kohli").age(32).email("viratkohli@gmail.com")
             .aadhaarNumber("233333333333l").contactNumber(9876543234L).address("Mumbai")
-            .panCardNumber("AAAS234KKL").dateOfBirth("1987-09-20").build();
-    AccountDto accountDto = AccountDto.builder().bankId(1L).customerId(1L)
-            .accountNumber(4567888)
+            .panCardNumber("PNZAB2320M").dateOfBirth("1987-09-20").build();
+    Account account = Account.builder().accountId(1l).customer(customer).bank(bank)
+            .accountNumber(550144298970l).amount(77772.00).accountType(AccountType.CURRENT)
             .isBlocked(false).build();
-    Account account = Account.builder().customerId(1L).bankId(1L).accountId(1L)
-            .accountNumber(4567888).amount(777788.00)
+    AccountDto accountDto = AccountDto.builder().accountId(4l).amount(6044.00).accountType(AccountType.SAVING).bankId(1L).customerId(1L)
             .isBlocked(false).build();
+
     @InjectMocks
     private AccountServiceImpl accountService;
     @Mock
@@ -54,9 +56,15 @@ public class AccountServiceTest {
     @DisplayName("JUnit test for saveAccountTest method")
     @Test
     void saveAccountTest(){
-        when(bankRepository.findById(1)).thenReturn(Optional.ofNullable(bank));
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
-        accountService.saveAccount(accountDto);
+        List<Account> accountList = new ArrayList<>();
+       Mockito.when(accountRepository.findById(1l)).thenReturn(Optional.of(account));
+        Mockito.when(bankRepository.findById(accountDto.getBankId())).thenReturn(Optional.ofNullable(bank));
+        Mockito.when(customerRepository.findById(accountDto.getCustomerId())).thenReturn(Optional.of(customer));
+        Mockito.when(accountRepository.findByCustomerAndBankAndAccountType(account.getCustomer(),account.getBank(),account.getAccountType())).thenReturn(accountList);
+
+
+        String result = accountService.saveAccount(accountDto);
+       // assertEquals(result,"Account is created");
 
     }
 

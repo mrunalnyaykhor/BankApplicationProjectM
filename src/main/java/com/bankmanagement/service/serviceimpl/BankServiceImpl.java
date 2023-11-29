@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,10 +23,16 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public BankDto saveBank(BankDto bankDto) {
+        Optional<Bank> bankId = bankRepository.findById(bankDto.getBankId());
+        if(bankId.isPresent()){
+            throw new BankException(ApplicationConstant.BANK_ID_ALREADY_PRESENT);
+        }
         if (bankRepository.existsByIfscCode(bankDto.getIfscCode())) {
             log.error(ApplicationConstant.IFSC_CODE_ALREADY_EXIST);
             throw new BankException(ApplicationConstant.IFSC_CODE_ALREADY_EXIST);
 
+        } else if (bankDto.getIfscCode().length()!=11) {
+            throw new BankException(ApplicationConstant.IFSC_CODE_LENGTH_NOT_PROPER);
         } else {
             Bank bank = new Bank();
             BeanUtils.copyProperties(bankDto, bank);

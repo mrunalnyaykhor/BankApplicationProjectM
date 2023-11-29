@@ -3,6 +3,9 @@ package com.bankmanagement.dto;
 import com.bankmanagement.enump.AccountType;
 import lombok.*;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 
@@ -12,27 +15,24 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountDto {
-
-
-private Long accountId;
-    @NotNull(message = "amount should be mandatory")
+    @NotNull(message = "accountId is mandatory")
+    private Long accountId;
+    @DecimalMin(value = "0.01", message = "Amount must be greater than zero")
     private double amount;
     @NotNull(message = "accountNumber should be mandatory")
 
-    private long accountNumber; //Randomly generate account no.
+    @NotNull(message = "isBlocked must not be null")
+
     private boolean isBlocked = false;
+    @NotNull(message = "customerId should be mandatory")
 
     private Long customerId;
+    @NotNull(message = "bankId should be mandatory")
 
     private Long bankId;
-    private AccountType accountType ;
 
-
-
-
-
-
-
-
+    @NotNull(message = "Account type must not be null")
+    @Enumerated(EnumType.STRING)
+    private AccountType accountType;
 
 }

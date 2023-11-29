@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,21 +29,32 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public String saveCustomer(CustomerDto customerDto) {
+        Optional<Customer> customerId = customerRepository.findById(customerDto.getCustomerId());
+        if(customerId.isPresent()){
+            throw new CustomerException(ApplicationConstant.CUSTOMER_ID_ALREADY_PRESENT);
+        }
         Bank bank = bankRepository.findById(customerDto.getBankId()).orElseThrow(() ->
                 new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
 
         long contactNumber = customerDto.getContactNumber();
         String aadhaarNumber = customerDto.getAadhaarNumber();
+        String panCardNumber = customerDto.getPanCardNumber();
+        int age = customerDto.getAge();
+        if (age<=10 || age >=100) {
+            throw new CustomerException(ApplicationConstant.NOT_VALID_AGE);
+        }
+        if(panCardNumber.length() !=10){
+           throw new CustomerException(ApplicationConstant.PANCARD_NUMBER_SHOULD_BE_VALID);
+       }
         if (aadhaarNumber.length() != 12) {
-            throw new CustomerException(ApplicationConstant.AADHAAR_NUMBER_SHOULD_BE_PROPER);
+            throw new CustomerException(ApplicationConstant.AADHAAR_NUMBER_SHOULD_BE_VALID);
         }
         String contactLength = Long.toString(contactNumber);
-        if (contactLength.length() != 10 && !(contactLength.startsWith("9")
+        if (contactLength.length() == 10 && (contactLength.startsWith("9")
                 || contactLength.startsWith("8")
                 || contactLength.startsWith("7") || contactLength.startsWith("6"))) {
 
-            throw new CustomerException(ApplicationConstant.CONTACT_NUMBER_NOT_PROPER);
-        }
+
             log.info(ApplicationConstant.CONTACT_IS_CORRECT);
             List<Customer> byBankAndCustomer = customerRepository.findByBankAndAadhaarNumberOrEmail(bank, customerDto.getAadhaarNumber(), customerDto.getEmail());
             if (byBankAndCustomer != null )
@@ -61,16 +73,14 @@ public class CustomerServiceImpl implements CustomerService {
             }else{
                 throw new CustomerException(ApplicationConstant.CUSTOMER_ALREADY_PRESENT);
             }
+        }else {
 
-
-
-
-
+            throw new CustomerException(ApplicationConstant.CONTACT_NUMBER_INVALID);
+        }
     }
 
     public List<CustomerDto> getAllCustomer() {
-        bankRepository.findAll().stream().findAny().orElseThrow(() ->
-                new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
+
         customerRepository.findAll().stream().findAny().orElseThrow(() ->
                 new CustomerException(ApplicationConstant.CUSTOMER_NOT_PRESENT));
         return customerRepository.findAll().stream().filter(Objects::nonNull).map(customer -> {
@@ -105,9 +115,17 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDto updateCustomer(CustomerDto customerDto) {
         customerRepository.findById(customerDto.getCustomerId()).orElseThrow(
                 () -> new CustomerException(ApplicationConstant.CUSTOMER_NOT_PRESENT));
+       Bank bank  = bankRepository.findById(customerDto.getBankId()).orElseThrow(
+                ()->new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
         Customer customer = new Customer();
+
         BeanUtils.copyProperties(customerDto, customer);
+
+
+        customer.setBank(bank);
+
         customerRepository.save(customer);
+
         log.info(ApplicationConstant.UPDATE_CUSTOMER_SUCCESSFULLY);
         return customerDto;
     }

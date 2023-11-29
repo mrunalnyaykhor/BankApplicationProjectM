@@ -172,7 +172,7 @@ public class AccountIntegrationTest {
     @Test
     @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(statements = "INSERT INTO Account(ACCOUNT_ID,AADHAAR_NUM,ACCOUNT_NUMBER,AGE,AMOUNT,FIRST_NAME,LAST_NAME,BLOCKED,CONTACT_NUMBER,PAN_CARD_NUMBER,DATE_OF_BIRTH,EMAIL,BANK_ID,CUSTOMER_ID)VALUES(1,555677787765,546765,36,500000,'Aman','SHARMA',false,9876785435,'BNZAA2318J','1987-08-25','rohitsharma@gmail.com',1,1)")
+    @Sql(statements = "INSERT INTO Account(ACCOUNT_ID,AADHAAR_NUM,AGE,AMOUNT,FIRST_NAME,LAST_NAME,BLOCKED,CONTACT_NUMBER,PAN_CARD_NUMBER,DATE_OF_BIRTH,EMAIL,BANK_ID,CUSTOMER_ID)VALUES(1,555677787765,36,500000,'Aman','SHARMA',false,9876785435,'BNZAA2318J','1987-08-25','rohitsharma@gmail.com',1,1)")
     @Sql(statements = "DELETE FROM Account WHERE FIRST_NAME ='Aman'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateAccountById() {
         HttpEntity<AccountDto> entity = new HttpEntity<>(accountDto, headers);

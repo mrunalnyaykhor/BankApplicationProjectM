@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "customerId")
     private Long customerId;
     @Column(name = "firstName")
     private String firstName;
@@ -27,9 +27,6 @@ public class Customer {
     @Column(name = "email")
     private String email;
     @Column(name = "aadhaarNumber")
-    @NotNull(message = "Aadhaar Number should be 12 digit")
-    @Digits(message="AadhaarNumber should contain 12 digits.", fraction = 0, integer = 12)
-
     private String aadhaarNumber;
     @Column(name = "panCardNumber")
     private String panCardNumber;
@@ -40,7 +37,7 @@ public class Customer {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bankId", referencedColumnName = "bankId")
     private Bank bank;
-    @Column(insertable =  false, updatable = false)
+  @Column(insertable =  false, updatable = false)
     private Long bankId;
 
 

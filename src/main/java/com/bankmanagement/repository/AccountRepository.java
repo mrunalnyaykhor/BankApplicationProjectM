@@ -16,4 +16,5 @@ public interface AccountRepository extends JpaRepository<Account, Serializable> 
     Account findByAccountNumber(Long accountNumberTo);
     List<Account> findByCustomerAndBankAndAccountType(Customer customer, Bank bank, AccountType accountType);
 
+    boolean existsByAccountNumber(long accountNumber);
 }

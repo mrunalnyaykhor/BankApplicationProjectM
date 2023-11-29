@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransactionDto {
-    @NotNull
+    @NotNull(message = "Amount should not be null")
     private double amount;
     @NotNull(message = "accountNumberFrom is Mandatory")
     private Long accountNumberFrom;
@@ -24,9 +24,9 @@ public class TransactionDto {
      @NotBlank(message = "Description is required")
     private String description;
 
-    @NotBlank(message = "ifsc code is mandatory")
+    @NotBlank(message = "toAccount Bank ifsc code is mandatory")
     private String ifscCode;
-    @NotBlank(message = "name is mandatory")
+    @NotBlank(message = "toAccount Name is mandatory")
     private String name;
 
 }

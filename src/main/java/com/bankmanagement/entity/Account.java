@@ -14,7 +14,6 @@ import javax.persistence.*;
 @Entity
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long accountId;
     @Column(name = "amount")
     private double amount;
@@ -32,5 +31,6 @@ public class Account {
     private Long customerId;
     @Column(insertable =  false, updatable = false)
     private Long bankId;
+    @Column(name = "accountType")
     private AccountType accountType;
 }

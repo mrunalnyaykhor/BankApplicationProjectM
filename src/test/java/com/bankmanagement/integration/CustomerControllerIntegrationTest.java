@@ -64,7 +64,7 @@ public class CustomerControllerIntegrationTest {
     @Test
     public void customerSaveIntegrationTest() {
 
-        String URIToSaveCustomer = "/saveCustomer/1";
+        String URIToSaveCustomer = "/saveCustomer";
         HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
         ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToSaveCustomer), HttpMethod.POST, entity, String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
