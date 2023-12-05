@@ -3,8 +3,6 @@ package com.bankmanagement.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
 
 @Setter
 @Getter
@@ -37,9 +35,8 @@ public class Customer {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bankId", referencedColumnName = "bankId")
     private Bank bank;
-  @Column(insertable =  false, updatable = false)
+    @Column(insertable = false, updatable = false)
     private Long bankId;
-
 
 
 }

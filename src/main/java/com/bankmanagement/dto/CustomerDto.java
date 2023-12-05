@@ -3,7 +3,10 @@ package com.bankmanagement.dto;
 
 import lombok.*;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Setter
 @Getter
@@ -29,11 +32,11 @@ public class CustomerDto {
     @Pattern(regexp = "^\\d{12}$", message = "aadhaarNumber should be 12 digit")
     private String aadhaarNumber;
     @NotNull(message = "PanCard Number is Mandatory")
-    @Pattern(regexp = "[A-Z]{5}[0-9]{4}[A-Z]{1}", message = "panCardNumber should be 10 digit")
+    @Pattern(regexp = "[A-Z]{5}[0-9]{4}[A-Z]{1}", message = "panCardNumber is INVALID")
     private String panCardNumber;
 
     @NotBlank(message = "date Of Birth is Mandatory")
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Date of birth should be in YYYY-MM-DD pattern" )
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Date of birth should be in YYYY-MM-DD pattern")
     private String dateOfBirth;
 
     @NotBlank(message = "Address should be mandatory")

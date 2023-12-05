@@ -31,9 +31,9 @@ public class CustomerController {
 
         return ResponseEntity.ok(customerService.updateCustomer(customerDto));
     }
+
     @DeleteMapping(UrlConstant.DELETE_CUSTOMER)
-    public String deleteCustomerById(@PathVariable Long customerId)
-    {
+    public String deleteCustomerById(@PathVariable Long customerId) {
         return customerService.deleteCustomerById(customerId);
     }
 

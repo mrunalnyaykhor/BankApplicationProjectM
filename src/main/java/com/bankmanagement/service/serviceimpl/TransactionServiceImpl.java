@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -92,12 +93,18 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionDto> findTransaction(Long accountNumber, long days) {
+        List<Transaction> byAccountNumberTo = transactionRepository.findByAccountNumberTo(accountNumber);
+        List<Transaction> byAccountNumberFrom = transactionRepository.findByAccountNumberFrom(accountNumber);
+        if(CollectionUtils.isEmpty(byAccountNumberTo) ||CollectionUtils.isEmpty(byAccountNumberFrom)){
+            throw new TransactionException(ApplicationConstant.ACCOUNT_NOT_EXIST);
+        }
+
         TransactionDto transactionDto = new TransactionDto();
         LocalDate toDate = LocalDate.now();
         LocalDate fromDate = toDate.minusDays(days);
+
         List<Transaction> transaction = transactionRepository.findAllByAccountNumberToOrAccountNumberFromAndTransactionDateBetween(accountNumber, accountNumber, fromDate, toDate);
         return transaction.stream().filter(Objects::nonNull).map(transaction1 -> {
-
             BeanUtils.copyProperties(transaction1, transactionDto);
             return transactionDto;
         }).collect(Collectors.toList());

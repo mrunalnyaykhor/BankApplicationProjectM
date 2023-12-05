@@ -1,6 +1,7 @@
 package com.bankmanagement.integration;
 
 import com.bankmanagement.BankManagementApplication;
+import com.bankmanagement.constant.ApplicationConstant;
 import com.bankmanagement.dto.BankDto;
 import com.bankmanagement.dto.CustomerDto;
 import com.bankmanagement.entity.Bank;
@@ -60,13 +61,12 @@ public class CustomerControllerIntegrationTest {
         return "http://localhost:" + port + uri;
     }
 
-
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     public void customerSaveIntegrationTest() {
 
-        String URIToSaveCustomer = "/saveCustomer";
         HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
-        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToSaveCustomer), HttpMethod.POST, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(ApplicationConstant.CUSTOMER_SAVE), HttpMethod.POST, entity, String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertEquals(1, customerRepository.findAll().size());
@@ -75,13 +75,36 @@ public class CustomerControllerIntegrationTest {
 
     @Test
     @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (2, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "DELETE FROM Customer WHERE FIRST_NAME ='ROHIT'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void failureCustomerSaveIntegrationTest_WhenPANCARDCardNumberExist() {
+
+        HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(ApplicationConstant.CUSTOMER_SAVE), HttpMethod.POST, entity, String.class);
+        Assertions.assertThat(response.getStatusCodeValue()).isEqualTo(400);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+    @Test
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (2, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318K', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM Customer WHERE FIRST_NAME ='ROHIT'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void failureCustomerSaveIntegrationTest_WhenAadhaarCardNumberExist() {
 
-        String URIToSaveCustomer = "/saveCustomer/1";
         HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
-        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToSaveCustomer), HttpMethod.POST, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(ApplicationConstant.CUSTOMER_SAVE), HttpMethod.POST, entity, String.class);
+        Assertions.assertThat(response.getStatusCodeValue()).isEqualTo(400);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+    @Test
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318K', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "DELETE FROM Customer WHERE FIRST_NAME ='ROHIT'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void failureCustomerSaveIntegrationTest_WhenCustomerId_Already_Exist() {
+
+        HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(ApplicationConstant.CUSTOMER_SAVE), HttpMethod.POST, entity, String.class);
         Assertions.assertThat(response.getStatusCodeValue()).isEqualTo(400);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
@@ -89,13 +112,11 @@ public class CustomerControllerIntegrationTest {
 
     @Test
     @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035962', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555674487765, 36, 2876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (2, 'Aman', 'SHARMA', 555675485765, 36, 3876785435, '1987-08-25' ,'rohitgharma@gmail.com', 'BNZAB2518J', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM Customer WHERE FIRST_NAME ='ROHIT'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void failureCustomerSaveIntegrationTest_WhenContactNotValid() {
-
-        String URIToSaveCustomer = "/saveCustomer/1";
         HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
-        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToSaveCustomer), HttpMethod.POST, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(ApplicationConstant.CUSTOMER_SAVE), HttpMethod.POST, entity, String.class);
         assertThat(response.getStatusCodeValue()).isEqualTo(400);
 
 
@@ -105,10 +126,10 @@ public class CustomerControllerIntegrationTest {
     @Test
     @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "INSERT INTO Customer(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS,BANK_ID) VALUES (1, 'Aman', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi',1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(statements = "DELETE FROM Customer WHERE FIRST_NAME ='ROHIT'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(statements = "DELETE FROM Customer WHERE FIRST_NAME ='Aman'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getAllCustomerTest() {
 
-        List customerList = restTemplate.getForObject(formFullURLWithPort("/getAllCustomer"), List.class);
+        List customerList = restTemplate.getForObject(formFullURLWithPort(ApplicationConstant.GET_ALL_CUSTOMER),  List.class);
         assertNotNull(customerList);
         assertEquals(1, customerList.size());
 
@@ -120,21 +141,10 @@ public class CustomerControllerIntegrationTest {
 
         HttpEntity<Customer> entity = new HttpEntity<>(customer, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/getAllCustomer"), HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(ApplicationConstant.GET_ALL_CUSTOMER), HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCodeValue()).isEqualTo(400);
 
     }
-
-    @Test
-    public void failureWhen_Bank_Data_NotPresent_getAllCustomerTest() {
-
-        HttpEntity<Customer> entity = new HttpEntity<>(customer, headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/getAllCustomer"), HttpMethod.GET, entity, String.class);
-        assertThat(response.getStatusCodeValue()).isEqualTo(400);
-
-    }
-
     @Test
     @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "INSERT INTO CUSTOMER(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS, BANK_ID) VALUES (1, 'ROHIT', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi', 1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -165,7 +175,7 @@ public class CustomerControllerIntegrationTest {
     @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "INSERT INTO CUSTOMER(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS, BANK_ID) VALUES (1, 'ROHIT', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi', 1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM CUSTOMER WHERE FIRST_NAME ='ROHIT'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    public void updateCustomerById() {
+    public void updateCustomer() {
         HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
         ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/updateCustomer"), HttpMethod.PUT, entity, String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -173,11 +183,11 @@ public class CustomerControllerIntegrationTest {
 
     @Test
     @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(statements = "INSERT INTO CUSTOMER(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS, BANK_ID) VALUES (1, 'ROHIT', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi', 1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO CUSTOMER(CUSTOMER_ID, FIRST_NAME, LAST_NAME, AADHAAR_NUMBER, AGE, CONTACT_NUMBER, DATE_OF_BIRTH, EMAIL, PAN_CARD_NUMBER, ADDRESS, BANK_ID) VALUES (3, 'ROHIT', 'SHARMA', 555677787765, 36, 9876785435, '1987-08-25' ,'rohitsharma@gmail.com', 'BNZAB2318J', 'Mohadi', 1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM CUSTOMER WHERE FIRST_NAME ='ROHIT'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void failure_WhenCustomerId_Not_Present_updateCustomerById() {
         HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
-        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/customer/13"), HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort("/updateCustomer"), HttpMethod.PUT, entity, String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class BankController {
@@ -24,7 +25,7 @@ public class BankController {
         return ResponseEntity.ok(bankservice.saveBank(bankDto));
     }
     @GetMapping(UrlConstant.GET_ALL_BANK)
-    public ResponseEntity<List<BankDto>> getAllBank(){
+    public ResponseEntity<List<BankDto>> getAllBank() throws ExecutionException, InterruptedException {
         logger.info(ApplicationConstant.GET_ALL_CUSTOMER);
 
         return ResponseEntity.ok(bankservice.getAllBank());

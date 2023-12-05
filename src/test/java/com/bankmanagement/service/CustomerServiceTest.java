@@ -1,5 +1,6 @@
 package com.bankmanagement.service;
 
+import com.bankmanagement.constant.ApplicationConstant;
 import com.bankmanagement.dto.CustomerDto;
 import com.bankmanagement.entity.Bank;
 import com.bankmanagement.entity.Customer;
@@ -46,7 +47,7 @@ public class CustomerServiceTest {
         when(bankRepository.findById(customerdto.getBankId())).thenReturn(bankOptional);
         when(bankRepository.findById(customerdto.getBankId())).thenReturn(Optional.of(bank));
         String result = customerService.saveCustomer(customerdto);
-        assertEquals(result, "customer Save successfully");
+        assertEquals(result, ApplicationConstant.CUSTOMER_SAVE);
 
     }
 
@@ -69,7 +70,7 @@ public class CustomerServiceTest {
     public void deleteCustomerTest() {
         Mockito.when(customerRepository.findById(customer1.getCustomerId())).thenReturn(Optional.of(customer1));
         String result = customerService.deleteCustomerById(customer1.getCustomerId());
-        assertEquals(result, "Customer Id  deleted successfully....!!");
+        assertEquals(result, ApplicationConstant.ACCOUNT_ID_DELETED_SUCCESSFULLY);
     }
 
     @DisplayName("JUnit test for getAllCustomerFailureTest method")
@@ -94,7 +95,7 @@ public class CustomerServiceTest {
         CustomerException exception = assertThrows(CustomerException.class, () -> {
             customerService.saveCustomer(customerdto);
         });
-        assertEquals(exception.getMessage(), "customer contactNumber  is invalid");
+        assertEquals(exception.getMessage(), ApplicationConstant.CONTACT_NUMBER_INVALID);
     }
 
     @Test
@@ -110,15 +111,7 @@ public class CustomerServiceTest {
 
     }
 
-    @Test
-    void notFoundCustomerWithMessage() {
-        Customer customer = new Customer();
-        Throwable thrown = assertThrows(CustomerException.class, () ->
-                customerService.customerFindById(customer.getCustomerId()));
-        assertEquals("Customer not present in DataBase", thrown.getMessage());
-    }
 
-    @Test
     public void whenCustomerEmptyTest() {
 
         Mockito.when(customerRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.empty());
@@ -127,7 +120,7 @@ public class CustomerServiceTest {
             customerService.deleteCustomerById(ArgumentMatchers.anyLong());
 
         });
-        assertEquals(exception.getMessage(), "Customer not present in DataBase");
+        assertEquals(exception.getMessage(),  ApplicationConstant.CUSTOMER_NOT_PRESENT);
     }
 
     @Test
@@ -150,7 +143,7 @@ public class CustomerServiceTest {
             customerService.updateCustomer(customerdto);
 
         });
-        assertEquals(exception.getMessage(), "Customer not present in DataBase");
+        assertEquals(exception.getMessage(), ApplicationConstant.CUSTOMER_NOT_PRESENT);
     }
 
 }

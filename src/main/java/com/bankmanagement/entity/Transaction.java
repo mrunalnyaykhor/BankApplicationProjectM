@@ -27,11 +27,9 @@ public class Transaction {
     @Column(name = "description")
     private String description;
     @Column(name = "ifscCode")
-    private  String ifscCode;
-    @Column(name="name")
+    private String ifscCode;
+    @Column(name = "name")
     private String name;
-
-
 
 
 }

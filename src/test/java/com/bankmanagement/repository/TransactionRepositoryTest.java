@@ -32,13 +32,12 @@ public class TransactionRepositoryTest {
         LocalDate date = LocalDate.now();
 
         Transaction transaction = Transaction.builder().accountNumberFrom(4567888L).accountNumberTo(4567889L).transactionDate(date).name("Virat").amount(777788.00).description("Hello").ifscCode("SBIN1234N").build();
-        Account account = Account.builder().customerId(1L).bankId(1L).accountId(1L)
-                .accountNumber(4567888).amount(777788.00)
-                .isBlocked(false).build();
+
 
         Mockito.when(transactionRepository.findAllByAccountNumberToOrAccountNumberFromAndTransactionDateBetween(ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(List.of(transaction));
 
-        transactionRepository.findAllByAccountNumberToOrAccountNumberFromAndTransactionDateBetween(ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.any(), ArgumentMatchers.any());
+        List<Transaction> transctionList  = transactionRepository.findAllByAccountNumberToOrAccountNumberFromAndTransactionDateBetween(ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong(), ArgumentMatchers.any(), ArgumentMatchers.any());
+        assertEquals(transctionList.size(),1);
 
 
     }

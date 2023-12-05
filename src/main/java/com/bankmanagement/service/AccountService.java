@@ -1,13 +1,16 @@
 package com.bankmanagement.service;
 
 import com.bankmanagement.dto.AccountDto;
+import com.bankmanagement.entity.Account;
+import com.bankmanagement.exception.AccountException;
 
-import javax.security.auth.login.AccountException;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 public interface AccountService {
 
-    String saveAccount(AccountDto accountdto) ;
+    String saveAccount(AccountDto accountdto) throws ExecutionException, InterruptedException;
 
     List<AccountDto> getAllAccount() throws AccountException;
 
@@ -26,4 +29,6 @@ public interface AccountService {
     AccountDto getAccountById(Long accountId) throws AccountException;
 
     String accountStatus(Long accountId) throws AccountException;
+
+    List<Account> getAllSavingAccount();
 }

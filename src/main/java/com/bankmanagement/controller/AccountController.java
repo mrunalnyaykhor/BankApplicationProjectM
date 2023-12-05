@@ -3,16 +3,19 @@ package com.bankmanagement.controller;
 import com.bankmanagement.constant.ApplicationConstant;
 import com.bankmanagement.constant.UrlConstant;
 import com.bankmanagement.dto.AccountDto;
+import com.bankmanagement.entity.Account;
+import com.bankmanagement.exception.AccountException;
 import com.bankmanagement.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.security.auth.login.AccountException;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @Slf4j
@@ -22,7 +25,7 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping(UrlConstant.SAVE_ACCOUNT)
-    public ResponseEntity<String> saveAccount(@Valid @RequestBody AccountDto accountdto) {
+    public ResponseEntity<String> saveAccount(@Valid @RequestBody AccountDto accountdto) throws ExecutionException, InterruptedException {
         return ResponseEntity.ok(accountService.saveAccount(accountdto));
 
     }
@@ -47,7 +50,7 @@ public class AccountController {
     }
 
     @DeleteMapping(UrlConstant.DELETE_ACCOUNT)
-    public String deleteAccountById(@PathVariable Long accountId) throws AccountException {
+    public String deleteAccountById(@PathVariable Long accountId)  {
         return accountService.deleteAccountById(accountId);
     }
 
@@ -77,6 +80,10 @@ public class AccountController {
     @GetMapping(UrlConstant.ACCOUNT_TYPE)
     public ResponseEntity<String> savingOrCurrentAccount(@PathVariable Long accountId)throws AccountException{
         return ResponseEntity.ok(accountService.accountStatus(accountId));
+    }
+    @GetMapping("/getAllSavingAccount")
+    public ResponseEntity<List<Account>> getAccountType(){
+        return ResponseEntity.ok(accountService.getAllSavingAccount());
     }
 
 

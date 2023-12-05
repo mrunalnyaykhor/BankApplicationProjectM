@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Optional;
+
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Serializable> {
@@ -15,9 +15,12 @@ public interface CustomerRepository extends JpaRepository<Customer, Serializable
     boolean existsByAadhaarNumber(String aadhaarNumber);
 
 
-    List<Customer> findByBankAndAadhaarNumberOrEmail(Bank bank, String customerId,String email);
+    List<Customer> findByBankAndAadhaarNumberOrEmail(Bank bank, String customerId, String email);
 
     boolean existsByEmail(String email);
 
 
+    boolean existsByPanCardNumber(String panCardNumber);
+
+    List<Customer> findByAadhaarNumberAndFirstNameAndPanCardNumber(String aadhaarNumber, String firstName, String panCardNumber);
 }

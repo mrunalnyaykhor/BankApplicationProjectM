@@ -1,9 +1,5 @@
 package com.bankmanagement.constant;
 
-import com.bankmanagement.dto.BankDto;
-import com.bankmanagement.dto.CustomerDto;
-import com.bankmanagement.entity.Customer;
-
 public class ApplicationConstant {
 
     public static final String BANK_SAVE_SUCCESSFULLY = "Bank save successfully";
@@ -21,18 +17,22 @@ public class ApplicationConstant {
     public static final String CUSTOMER_ID_ALREADY_PRESENT="Customer iD already present";
 
 
+
     public static final String CUSTOMER_SAVE = "customer Save successfully";
     public static final String CUSTOMER_ALREADY_PRESENT = "Customer Already present";
     public static final String AADHAAR_NUMBER_ALREADY_EXIST = "A Customer of AadhaarNumber Number  already exists.";
     public static final String EMAIL_ALREADY_EXIST = "A Customer of EmailId  already exists.";
 
     public static final String AADHAAR_NUMBER_SHOULD_BE_VALID = "Aadhaar Number should be  12 DIGIT";
-    public static final String PANCARD_NUMBER_SHOULD_BE_VALID= "PanCard Number should be  10 DIGIT";
-    public static final String NOT_VALID_AGE = "customer age is not valid \n Age should between 10 to 100 years old";
+    public static final String PAN_CARD_NUMBER_SHOULD_BE_VALID= "PanCard Number should be  10 DIGIT";
+
+    public static final String PAN_CARD_NUMBER_ALREADY_EXIST = "PanCard Number Already Exist";
+    public static final String NOT_VALID_AGE = "customer age is not valid & Age should between 10 to 100 years old";
     public static final String CONTACT_NUMBER_INVALID = "customer contactNumber  is invalid";
     public static final String CUSTOMER_NOT_PRESENT = "Customer not present in DataBase";
     public static final String CUSTOMER_DELETE = "Customer Id  deleted successfully....!!";
     public static final String UPDATE_CUSTOMER_SUCCESSFULLY = "update customer successfully";
+
 
     public static final String BANK_AND_CUSTOMER_PRESENT = "Bank and customer present";
     public static final String Account_ID_ALREADY_PRESENT="Account id already present";
@@ -47,9 +47,8 @@ public class ApplicationConstant {
     public static final String ACCOUNT_TYPE_STATUS = "The Account type status %s";
 
     public static final String ERROR_OCCURRED_WHILE_SAVING_INTO_THE_DATA_BASE = "error occurred while saving into the database";
-    public static final String MINIMUM_BALANCE_FOR = "Minimum Balance for";
-    public static final String ACCOUNT_CREATE = "Account create";
-    public static final String CURRENT_ACCOUNT_IS_CREATED ="current Account is created";
+    public static final String MINIMUM_BALANCE_FOR_SAVING_ACCOUNT = "Minimum Balance for saving Account 5000";
+    public static final String MINIMUM_BALANCE_FOR_CURRENT_ACCOUNT = "Minimum Balance for current account 10000";
     public static final String TRANSACTION_SUCCESSFUL= "transaction successful";
     public static final String ACCOUNT_ID_DELETED_SUCCESSFULLY ="account id deleted successfully";
     public static final String ACCOUNT_IS_BLOCKED ="You cannot send Money Your Account is Blocked Please Deposit Money in your Account";
@@ -58,8 +57,8 @@ public class ApplicationConstant {
     public static final String BALANCE_IS_MINIMUM = "You Cannot Transfer Money Because Your Balance Amount is low ";
     public static final String CONTACT_IS_CORRECT = "contact Number is correct";
     public static final String GET_ALL_CUSTOMER = "get all customer";
-    public static final String ACCOUNT_NUMBER_ALREADY_EXIST = "Account Number Already exist";
 
+    public static final String ACCOUNT_NOT_EXIST = "AccountNumber Does Not Exist";
     public static final String ACCOUNT_ID_UPDATE_SUCCESSFULLY = "Account id update successfully";
     public static final String ACCOUNT_ID_DOES_NOT_EXIST = "Account Id does not exist";
     public static final String RESPONSE_SHOULD_NOT_NULL = "Response body should not be null";

@@ -134,25 +134,25 @@ public class BankIntegrationTestClass {
     @Test
     @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0035961', 'Mohadi')"
             , executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(statements = "DELETE FROM BANK WHERE BANK_NAME ='SBIMohadi'", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "DELETE FROM BANK WHERE BANK_NAME ='SBIMohadi'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testForUpdateBank() {
 
-        String URIToUpdateBank = "/updateBank/1";
+        String URIToUpdateBank = "/updateBank";
         HttpEntity<BankDto> entity = new HttpEntity<>(bankDto, headers);
         ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToUpdateBank), HttpMethod.PUT, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
-    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBIM', 'SBIMohadi', 'SBIN0060703', 'Mohadi')"
+    @Sql(statements = "INSERT INTO Bank(BANK_ID, BANK_NAME, BRANCH_NAME, IFSC_CODE, ADDRESS) VALUES (1, 'SBI', 'SBIMohadi', 'SBIN0060703', 'Mohadi')"
             , executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(statements = "DELETE FROM BANK WHERE BANK_NAME ='SBIMohadi'", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    public void testForUpdateBankFailWhenIFSCCODEEXIST() {
+    @Sql(statements = "DELETE FROM BANK WHERE BANK_NAME ='SBIMohadi'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void testForSaveBankFailWhenIFSCCODEEXIST() {
 
-        String URIToUpdateBank = "/updateBank/1";
+        String URIToUpdateBank = "/saveBank";
         HttpEntity<BankDto> entity = new HttpEntity<>(bankDto, headers);
-        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToUpdateBank), HttpMethod.PUT, entity, String.class);
-        assertEquals(400, response.getStatusCodeValue()); // Change this to the expected status code
+        ResponseEntity<String> response = restTemplate.exchange(formFullURLWithPort(URIToUpdateBank), HttpMethod.POST, entity, String.class);
+        assertEquals(400, response.getStatusCodeValue());
 
 
     }

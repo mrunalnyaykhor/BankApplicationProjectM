@@ -22,10 +22,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.security.auth.login.AccountException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -64,7 +64,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void createAccountAPITest(){
+    public void createAccountAPITest() throws ExecutionException, InterruptedException {
         log.info("createAccountAPITest");
         Mockito.when(accountService.saveAccount(accountDto)).thenReturn(accountDto.toString());
         ResponseEntity<String> customerDtoResponseEntity = accountController.saveAccount(accountDto);
@@ -72,38 +72,38 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void getAllAccountAPITest() throws AccountException {
+    public void getAllAccountAPITest(){
 
         ResponseEntity<List<AccountDto>> accountDtoDtoResponseEntity = accountController.getAllAccountDetails();
         assertEquals(HttpStatus.OK, accountDtoDtoResponseEntity.getStatusCode());
     }
     @Test
-    public void get_AccountById_APITest() throws AccountException {
+    public void get_AccountById_APITest() {
 
         ResponseEntity<AccountDto> accountDtoDtoResponseEntity = accountController.getAccountById(account.getAccountId());
         assertEquals(HttpStatus.OK, accountDtoDtoResponseEntity.getStatusCode());
     }
 
     @Test
-    public void updateAccountByIdAPITest() throws AccountException {
+    public void updateAccountByIdAPITest()  {
         ResponseEntity<String> accountDtoResponseEntity = accountController.updateAccountDto(accountDto);
         assertEquals(HttpStatus.OK, accountDtoResponseEntity.getStatusCode());
     }
 
     @Test
-    public void deleteAccountByIdAPITest() throws AccountException {
+    public void deleteAccountByIdAPITest() {
         accountController.deleteAccountById(account.getAccountId());
 
     }
 
     @Test
-    public void balanceCheckAPITest() throws AccountException {
+    public void balanceCheckAPITest()  {
         ResponseEntity <Double> responseEntity = accountController.balanceCheck(account.getAccountId());
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
-    public void depositAmountAPITest() throws AccountException {
+    public void depositAmountAPITest()  {
 
         ResponseEntity<String> stringResponseEntity = accountController.depositAmount(account.getAccountId(), deposit);
         Assertions.assertThat(stringResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -111,7 +111,7 @@ public class AccountControllerTest {
 
 
     @Test
-    public void withdrawalAmountAPITest() throws AccountException {
+    public void withdrawalAmountAPITest() {
 
         ResponseEntity<String> stringResponseEntity = accountController.withdrawalAmount(account.getAccountId(), withdrawal);
         Assertions.assertThat(stringResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -119,13 +119,13 @@ public class AccountControllerTest {
 
 
     @Test
-    public void blockAmountCheck() throws AccountException {
+    public void blockAmountCheck()  {
         ResponseEntity<String> stringResponseEntity = accountController.blockAccountCheck(account.getAccountId());
         Assertions.assertThat(stringResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
-    public void depositAmountTest() throws AccountException {
+    public void depositAmountTest()  {
 
         ResponseEntity<String> stringResponseEntity = accountController.depositAmount(account.getAccountId(), deposit);
         Assertions.assertThat(stringResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);

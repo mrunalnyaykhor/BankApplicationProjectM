@@ -1,5 +1,6 @@
 package com.bankmanagement.service;
 
+import com.bankmanagement.constant.ApplicationConstant;
 import com.bankmanagement.dto.BankDto;
 import com.bankmanagement.entity.Bank;
 import com.bankmanagement.exception.BankException;
@@ -14,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 public class BankServiceTest {
-    Bank bank = Bank.builder().bankId(1L).bankName("SBI").branchName("SBIMOhadi")
+    Bank bank = Bank.builder().bankName("SBI").branchName("SBIMOhadi")
             .ifscCode("SBIN1233478").address("Mohadi").build();
     Bank bank1 = Bank.builder().bankId(2L).bankName("HDFC").branchName("HDFCMOhadi")
             .ifscCode("HDFC1234567").address("Mohadi").build();
@@ -77,7 +79,7 @@ public class BankServiceTest {
 
     @DisplayName("JUnit test for getAllBanks method")
     @Test
-    public void getBankList() {
+    public void getBankList() throws ExecutionException, InterruptedException {
 
         Mockito.when(bankRepository.findAll()).thenReturn(List.of(bank, bank1));
         List<BankDto> bankList = bankService.getAllBank();
@@ -90,9 +92,7 @@ public class BankServiceTest {
     public void getBankByIdTest() {
         Long id = bank.getBankId();
         Mockito.when(bankRepository.findById(id)).thenReturn(Optional.of(bank)); //Optional.ofNullable throw NoSuchElement
-        String result = bankService.getBankById(id);
-        String expectedStringValue = "The Bank Id  get Successfully";
-        assertEquals(expectedStringValue, result);
+        assertEquals(ApplicationConstant.BANK_GET_SUCCESSFULLY ,  bankService.getBankById(id));
 
 
     }
@@ -100,13 +100,10 @@ public class BankServiceTest {
     @DisplayName("Junit Test for getBankById is empty method")
     @Test
     public void getBankByIdNullTest() {
-        Mockito.when(bankRepository.findById(ArgumentMatchers.anyLong())).thenReturn(null);
+        Mockito.when(bankRepository.findById(Mockito.any())).thenReturn(Optional.empty());
         assertThrows(BankException.class, () -> {
             bankService.getBankById(ArgumentMatchers.anyLong());
-
         });
-
-
     }
 
     @DisplayName("Test case for DeleteBankByIdTest method")
@@ -122,12 +119,15 @@ public class BankServiceTest {
     @DisplayName("Test case for updateBankByIdTest method")
     @Test
     public void updateBankByIdTest() {
+        BankDto bankdto = BankDto.builder().bankId(3L).bankName("SBI").branchName("SBIMohadi")
+                .ifscCode("SBIN1273478")
+                .address("Mohadi").build();
 
         Mockito.when(bankRepository.findById(bankdto.getBankId())).thenReturn(Optional.of(bank));
         BankDto bankDto = bankService.updateBankById(bankdto);
 
-        assertThat(bankDto).isNotNull();
-        assertThat(bankDto.getBankId()).isEqualTo(1L);
+        assertThat(bankDto.getBankId()).isNotNull();
+        assertThat(bankDto.getBankId()).isEqualTo(3);
 
 
     }

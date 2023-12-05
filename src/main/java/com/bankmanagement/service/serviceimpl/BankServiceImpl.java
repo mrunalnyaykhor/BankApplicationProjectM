@@ -10,9 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +32,6 @@ public class BankServiceImpl implements BankService {
             throw new BankException(ApplicationConstant.BANK_ID_ALREADY_PRESENT);
         }
         if (bankRepository.existsByIfscCode(bankDto.getIfscCode())) {
-            log.error(ApplicationConstant.IFSC_CODE_ALREADY_EXIST);
             throw new BankException(ApplicationConstant.IFSC_CODE_ALREADY_EXIST);
 
         } else if (bankDto.getIfscCode().length()!=11) {
@@ -38,23 +41,21 @@ public class BankServiceImpl implements BankService {
             BeanUtils.copyProperties(bankDto, bank);
             bankRepository.save(bank);
             log.info(ApplicationConstant.BANK_SAVE_SUCCESSFULLY);
-
         }
         return bankDto;
     }
 
     @Override
-    public List<BankDto> getAllBank() {
-        bankRepository.findAll().stream().findAny().orElseThrow(()-> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
+    public List<BankDto> getAllBank() throws ExecutionException, InterruptedException {
+        CompletableFuture<List<Bank>> banksFuture = CompletableFuture.supplyAsync(() -> Collections.singletonList(bankRepository.findAll().stream().findAny().orElseThrow(() -> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE))));
+        List<Bank> banks = banksFuture.get();
+        CompletableFuture<List<BankDto>> bankDtoListFuture = CompletableFuture.supplyAsync(() -> banks.stream().filter(Objects::nonNull).map(bank -> {
+            BankDto bankDto = new BankDto();
+            BeanUtils.copyProperties(bank, bankDto);
+            return bankDto;
+        }).collect(Collectors.toList()));
         log.info(ApplicationConstant.BANKS_GET_SUCCESSFULLY);
-        return bankRepository.findAll().stream().filter(Objects::nonNull)
-                .map(bank -> {
-                    BankDto bankDto = new BankDto();
-                    BeanUtils.copyProperties(bank, bankDto);
-                    return bankDto;
-
-                }).collect(Collectors.toList());
-
+        return bankDtoListFuture.get();
     }
 
     @Override
@@ -80,7 +81,6 @@ public class BankServiceImpl implements BankService {
     @Override
     public String deleteBankById(Long bankId) {
         bankRepository.findById(bankId).orElseThrow(()-> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
-
         bankRepository.deleteById(bankId);
         log.info(ApplicationConstant.BANK_DELETE);
         return ApplicationConstant.BANK_DELETE;

@@ -19,7 +19,6 @@ public class MiniStatementController {
 
     @GetMapping(UrlConstant.MINI_STATEMENT_DAY_WISE)
     public ResponseEntity<List<TransactionDto>> getMiniStatement(@Valid @PathVariable Long accountNumber, @PathVariable long days) {
-
       return  ResponseEntity.ok(transactionService.findTransaction(accountNumber,days));
     }
 }

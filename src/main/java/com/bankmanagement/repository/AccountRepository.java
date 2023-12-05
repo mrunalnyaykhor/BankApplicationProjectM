@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Serializable> {
@@ -16,5 +17,7 @@ public interface AccountRepository extends JpaRepository<Account, Serializable> 
     Account findByAccountNumber(Long accountNumberTo);
     List<Account> findByCustomerAndBankAndAccountType(Customer customer, Bank bank, AccountType accountType);
 
-    boolean existsByAccountNumber(long accountNumber);
+    List<Account> findByAccountType(AccountType accountType);
+
+    Optional<Account> findByAccountId(Long accountId);
 }

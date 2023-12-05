@@ -33,6 +33,10 @@ public class CustomerServiceImpl implements CustomerService {
         if(customerId.isPresent()){
             throw new CustomerException(ApplicationConstant.CUSTOMER_ID_ALREADY_PRESENT);
         }
+        if (customerRepository.existsByPanCardNumber(customerDto.getPanCardNumber())) {
+            throw new BankException(ApplicationConstant.PAN_CARD_NUMBER_ALREADY_EXIST);
+
+        }
         Bank bank = bankRepository.findById(customerDto.getBankId()).orElseThrow(() ->
                 new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
 
@@ -44,13 +48,13 @@ public class CustomerServiceImpl implements CustomerService {
             throw new CustomerException(ApplicationConstant.NOT_VALID_AGE);
         }
         if(panCardNumber.length() !=10){
-           throw new CustomerException(ApplicationConstant.PANCARD_NUMBER_SHOULD_BE_VALID);
+           throw new CustomerException(ApplicationConstant.PAN_CARD_NUMBER_SHOULD_BE_VALID);
        }
         if (aadhaarNumber.length() != 12) {
             throw new CustomerException(ApplicationConstant.AADHAAR_NUMBER_SHOULD_BE_VALID);
         }
         String contactLength = Long.toString(contactNumber);
-        if (contactLength.length() == 10 && (contactLength.startsWith("9")
+        if (contactLength.length() == 10 && !(contactLength.startsWith("9")
                 || contactLength.startsWith("8")
                 || contactLength.startsWith("7") || contactLength.startsWith("6"))) {
 
@@ -115,10 +119,13 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDto updateCustomer(CustomerDto customerDto) {
         customerRepository.findById(customerDto.getCustomerId()).orElseThrow(
                 () -> new CustomerException(ApplicationConstant.CUSTOMER_NOT_PRESENT));
-       Bank bank  = bankRepository.findById(customerDto.getBankId()).orElseThrow(
-                ()->new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
+        Bank bank = bankRepository.findById(customerDto.getBankId()).orElseThrow(
+                () -> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
         Customer customer = new Customer();
-
+        List<Customer> customers = customerRepository.findByAadhaarNumberAndFirstNameAndPanCardNumber(customerDto.getAadhaarNumber(), customerDto.getFirstName(), customerDto.getPanCardNumber());
+        if (customers.size() > 1) {
+            throw new CustomerException(ApplicationConstant.CUSTOMER_ALREADY_PRESENT);
+        }
         BeanUtils.copyProperties(customerDto, customer);
 
 
