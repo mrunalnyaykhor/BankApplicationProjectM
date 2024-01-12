@@ -30,10 +30,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = {BankException.class})
-    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(BankException exception) {
+    public ResponseEntity<String> handleResourceNotFoundException(BankException exception) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), HttpStatus.BAD_REQUEST);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(errorDetails);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
     }
 
     @ExceptionHandler(value = {TransactionException.class})
@@ -57,5 +58,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(errorDetails);
     }
+
+
 
 }

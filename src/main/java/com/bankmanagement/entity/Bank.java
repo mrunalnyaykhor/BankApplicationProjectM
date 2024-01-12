@@ -2,9 +2,9 @@ package com.bankmanagement.entity;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+
+import static javax.persistence.GenerationType.AUTO;
 
 
 @Setter
@@ -15,6 +15,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 public class Bank {
     @Id
+    @GeneratedValue(strategy = AUTO)
     @Column(name = "bankId")
     private Long bankId;
     @Column(name = "bankName")

@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Entity
 public class Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
     private long transactionId;
     @Column(name = "accountNumberFrom")
     private Long accountNumberFrom;
@@ -30,6 +30,7 @@ public class Transaction {
     private String ifscCode;
     @Column(name = "name")
     private String name;
+
 
 
 }

@@ -14,24 +14,24 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @RestController
 @Slf4j
+@CrossOrigin(origins = { "http://localhost:4200/" })
 public class AccountController {
 
     @Autowired
     private AccountService accountService;
 
     @PostMapping(UrlConstant.SAVE_ACCOUNT)
-    public ResponseEntity<String> saveAccount(@Valid @RequestBody AccountDto accountdto) throws ExecutionException, InterruptedException {
+    public ResponseEntity<ResponseEntity<String>> saveAccount(@Valid @RequestBody AccountDto accountdto) throws ExecutionException, InterruptedException {
         return ResponseEntity.ok(accountService.saveAccount(accountdto));
 
     }
 
     @GetMapping(UrlConstant.GATE_ALL_ACCOUNT)
-    public ResponseEntity<List<AccountDto>> getAllAccountDetails() throws AccountException {
+    public ResponseEntity<List<Account>> getAllAccountDetails() throws AccountException {
         return ResponseEntity.ok(accountService.getAllAccount());
 
     }
@@ -44,9 +44,9 @@ public class AccountController {
     }
 
     @PutMapping(UrlConstant.UPDATE_ACCOUNT_BY_ID)
-    public ResponseEntity<String> updateAccountDto(@Valid @RequestBody AccountDto accountDto) throws AccountException {
+    public ResponseEntity<ResponseEntity<String>> updateAccountDto(@Valid @RequestBody Account account) throws AccountException {
         log.info(ApplicationConstant.ACCOUNT_ID_UPDATE_SUCCESSFULLY);
-        return ResponseEntity.ok(accountService.updateAccountById(accountDto));
+        return ResponseEntity.ok(accountService.updateAccountById(account));
     }
 
     @DeleteMapping(UrlConstant.DELETE_ACCOUNT)
@@ -73,17 +73,19 @@ public class AccountController {
 
     }
 
+
     @GetMapping(UrlConstant.ACCOUNT_BLOCK_UNBLOCK_CHECK)
     public ResponseEntity<String> blockAccountCheck(@PathVariable Long accountId) throws AccountException {
         return ResponseEntity.ok(accountService.isBlocked(accountId));
     }
-    @GetMapping(UrlConstant.ACCOUNT_TYPE)
-    public ResponseEntity<String> savingOrCurrentAccount(@PathVariable Long accountId)throws AccountException{
-        return ResponseEntity.ok(accountService.accountStatus(accountId));
-    }
+
     @GetMapping("/getAllSavingAccount")
     public ResponseEntity<List<Account>> getAccountType(){
         return ResponseEntity.ok(accountService.getAllSavingAccount());
+    }
+    @GetMapping("/myaccount/{accountNumber}")
+    public ResponseEntity<AccountDto> getMyAccountDetails(@PathVariable Long accountNumber){
+        return  ResponseEntity.ok(accountService.getMyAccountDetails( accountNumber));
     }
 
 

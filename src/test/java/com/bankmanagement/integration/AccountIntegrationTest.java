@@ -81,7 +81,7 @@ public class AccountIntegrationTest {
         HttpEntity<BankDto> entity4 = new HttpEntity<>(bankDto, headers);
         ResponseEntity<BankDto> response4 = restTemplate.exchange(formFullURLWithPort(URIToSaveBank), HttpMethod.POST, entity4, BankDto.class);
         assertThat(response4.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Long bankId = Objects.requireNonNull(response4.getBody()).getBankId();
+        BankDto bankId = Objects.requireNonNull(response4.getBody());
 
         HttpEntity<CustomerDto> entity = new HttpEntity<>(customerDto, headers);
         ResponseEntity<CustomerDto> response3 = restTemplate.exchange(formFullURLWithPort("/saveCustomer/" + bankId), HttpMethod.POST, entity, CustomerDto.class);

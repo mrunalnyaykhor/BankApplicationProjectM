@@ -3,7 +3,10 @@ package com.bankmanagement.entity;
 import com.bankmanagement.enump.AccountType;
 import lombok.*;
 
+
 import javax.persistence.*;
+
+import static javax.persistence.GenerationType.AUTO;
 
 
 @Setter
@@ -14,6 +17,7 @@ import javax.persistence.*;
 @Entity
 public class Account {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long accountId;
     @Column(name = "amount")
     private double amount;
@@ -21,10 +25,10 @@ public class Account {
     private boolean isBlocked = false;
     @Column(name = "accountNumber")
     private long accountNumber;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "bankId", referencedColumnName = "bankId")
     private Bank bank;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "customerId", referencedColumnName = "customerId")
     private Customer customer;
     @Column(insertable = false, updatable = false)
@@ -34,3 +38,6 @@ public class Account {
     @Column(name = "accountType")
     private AccountType accountType;
 }
+
+
+

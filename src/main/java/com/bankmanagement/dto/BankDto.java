@@ -12,8 +12,7 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @Builder
 public class BankDto {
-    @NotNull(message = "bank Id is mandatory")
-    private Long bankId;
+
     @NotBlank(message = "Bank Name is mandatory")
     private String bankName;
     @NotBlank(message = "BranchName is mandatory")

@@ -9,14 +9,13 @@ import com.bankmanagement.service.BankService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,64 +25,66 @@ public class BankServiceImpl implements BankService {
     public BankRepository bankRepository;
 
     @Override
-    public BankDto saveBank(BankDto bankDto) {
-        Optional<Bank> bankId = bankRepository.findById(bankDto.getBankId());
-        if(bankId.isPresent()){
-            throw new BankException(ApplicationConstant.BANK_ID_ALREADY_PRESENT);
-        }
+    public ResponseEntity<String> saveBank(BankDto bankDto) {
+
         if (bankRepository.existsByIfscCode(bankDto.getIfscCode())) {
-            throw new BankException(ApplicationConstant.IFSC_CODE_ALREADY_EXIST);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST).body(ApplicationConstant.IFSC_CODE_ALREADY_EXIST);
 
         } else if (bankDto.getIfscCode().length()!=11) {
-            throw new BankException(ApplicationConstant.IFSC_CODE_LENGTH_NOT_PROPER);
-        } else {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApplicationConstant.IFSC_CODE_LENGTH_NOT_PROPER);
+        }
             Bank bank = new Bank();
             BeanUtils.copyProperties(bankDto, bank);
             bankRepository.save(bank);
             log.info(ApplicationConstant.BANK_SAVE_SUCCESSFULLY);
-        }
-        return bankDto;
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApplicationConstant.BANK_SAVE_SUCCESSFULLY);
     }
 
     @Override
-    public List<BankDto> getAllBank() throws ExecutionException, InterruptedException {
-        CompletableFuture<List<Bank>> banksFuture = CompletableFuture.supplyAsync(() -> Collections.singletonList(bankRepository.findAll().stream().findAny().orElseThrow(() -> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE))));
-        List<Bank> banks = banksFuture.get();
-        CompletableFuture<List<BankDto>> bankDtoListFuture = CompletableFuture.supplyAsync(() -> banks.stream().filter(Objects::nonNull).map(bank -> {
+    public List<Bank> getAllBank()  {
+        bankRepository.findAll().stream().findAny().orElseThrow(() ->
+                new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(bankRepository.findAll().stream().filter(Objects::nonNull).collect(Collectors.toList())).getBody();
+    }
+    @Override
+    public BankDto getBankById(Long bankId) {
+        Optional<Bank> byId = Optional.ofNullable(bankRepository.findById(bankId).orElseThrow(() -> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE)));
+            Bank bank=  byId.get();
             BankDto bankDto = new BankDto();
             BeanUtils.copyProperties(bank, bankDto);
             return bankDto;
-        }).collect(Collectors.toList()));
-        log.info(ApplicationConstant.BANKS_GET_SUCCESSFULLY);
-        return bankDtoListFuture.get();
-    }
-
-    @Override
-    public String getBankById(Long bankId) {
-
-            Bank bank = bankRepository.findById(bankId)
-                    .orElseThrow(() -> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
-             return String.format(ApplicationConstant.BANK_GET_SUCCESSFULLY).formatted(bank.getBankId());
 
     }
 
     @Override
-    public BankDto updateBankById(BankDto bankDto)
-    {
-        Bank bank = bankRepository.findById(bankDto.getBankId())
-                .orElseThrow(() -> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
-        BeanUtils.copyProperties(bankDto, bank);
-            bankRepository.save(bank);
-            log.info(ApplicationConstant.BANK_UPDATE);
-            return bankDto;
+    public ResponseEntity<String> updateBankById(Bank bank) {
+        bankRepository.findById(bank.getBankId()).orElseThrow(() -> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
+        bankRepository.save(bank);
+        log.info(ApplicationConstant.BANK_UPDATE);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApplicationConstant.BANK_UPDATE);
+
     }
 
     @Override
-    public String deleteBankById(Long bankId) {
+    public ResponseEntity<String> deleteBankById(Long bankId) {
         bankRepository.findById(bankId).orElseThrow(()-> new BankException(ApplicationConstant.BANK_NOT_AVAILABLE));
         bankRepository.deleteById(bankId);
         log.info(ApplicationConstant.BANK_DELETE);
-        return ApplicationConstant.BANK_DELETE;
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApplicationConstant.BANK_DELETE);
     }
 
 }

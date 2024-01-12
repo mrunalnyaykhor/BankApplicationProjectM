@@ -1,19 +1,21 @@
 package com.bankmanagement.service;
 
 import com.bankmanagement.dto.CustomerDto;
+import com.bankmanagement.entity.Customer;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface CustomerService {
-    String saveCustomer(CustomerDto customerDto) ;
+    ResponseEntity<String> saveCustomer(CustomerDto customerDto) ;
 
-    List<CustomerDto> getAllCustomer();
+    List<Customer> getAllCustomer();
 
     CustomerDto customerFindById(Long customerId);
 
     String deleteCustomerById(Long customerId);
 
-    CustomerDto updateCustomer(CustomerDto customerDto);
+    ResponseEntity<String> updateCustomer(Customer customer);
 
 
 }

@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransactionDto {
+
     @NotNull(message = "Amount should not be null")
     private double amount;
     @NotNull(message = "accountNumberFrom is Mandatory")

@@ -18,9 +18,12 @@ public class UrlConstant {
     public static final String DELETE_ACCOUNT = "/deleteAccountIdById/{accountId}";
     public static final String BALANCE_CHECK = "/checkAmountById/{accountId}";
     public static final String DEPOSIT_AMOUNT = "/deposit/{accountId}";
-    public static final String WITHDRAWAL_AMOUNT = "/{accountId}/withdrawalAmount";
+    public static final String WITHDRAWAL_AMOUNT = "withdrawalAmount/{accountId}";
+    public static final String WITHDRAWAL_MONEY= "withdrawalMoney";
     public static final String ACCOUNT_BLOCK_UNBLOCK_CHECK = "/blockAccountOrNot/{accountId}";
     public static final String ACCOUNT_TYPE= "/accountStatus/{accountId}";
     public static final String TRANSFER_MONEY = "/transferMoney";
+    public static final String TRANSACTIONDETAILS ="/transactionDetails/{accountNumber}";
+    public static final String GET_ALL_TRANSACTION= "/getAllTransaction";
     public static final String MINI_STATEMENT_DAY_WISE = "/statement/{accountNumber}/{days}";
 }

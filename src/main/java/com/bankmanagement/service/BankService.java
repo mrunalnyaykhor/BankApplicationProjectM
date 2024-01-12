@@ -2,18 +2,19 @@ package com.bankmanagement.service;
 
 import com.bankmanagement.dto.BankDto;
 import com.bankmanagement.entity.Bank;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface BankService {
-    BankDto saveBank(BankDto bankDto);
+    ResponseEntity<String> saveBank(BankDto bankDto);
 
-    List<BankDto> getAllBank() throws ExecutionException, InterruptedException;
+    List<Bank> getAllBank() throws ExecutionException, InterruptedException;
 
-    String getBankById(Long bankId);
+    BankDto getBankById(Long bankId);
 
-    BankDto updateBankById(BankDto bankDto);
+    ResponseEntity<String> updateBankById(Bank bank);
 
-    String deleteBankById(Long bankId);
+    ResponseEntity<String> deleteBankById(Long bankId);
 }

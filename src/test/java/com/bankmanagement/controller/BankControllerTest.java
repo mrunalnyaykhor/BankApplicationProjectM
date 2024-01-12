@@ -20,6 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -49,7 +50,7 @@ public class BankControllerTest {
     @DisplayName("Junit test case for save Bank")
     @Test
     public void createBank() {
-        ResponseEntity<BankDto> bankDtoResponseEntity = bankController.saveBanks(bankDto);
+        ResponseEntity<ResponseEntity<String>> bankDtoResponseEntity = bankController.saveBanks(bankDto);
         assertEquals(HttpStatus.OK, bankDtoResponseEntity.getStatusCode());
 
 
@@ -57,8 +58,8 @@ public class BankControllerTest {
 
     @DisplayName("Junit test case for save Bank")
     @Test
-    public void getAllBanks() {
-        ResponseEntity<List<BankDto>> allBank = bankController.getAllBank();
+    public void getAllBanks() throws ExecutionException, InterruptedException {
+        ResponseEntity<List<Bank>> allBank = bankController.getAllBank();
         assertEquals(HttpStatus.OK, allBank.getStatusCode());
 
     }
@@ -83,7 +84,7 @@ public class BankControllerTest {
     @DisplayName("Junit test case for updateBankById")
     @Test
     public void updateBankById() {
-        ResponseEntity<BankDto> bankDtoResponseEntity = bankController.updateBank(bankDto);
+        ResponseEntity<ResponseEntity<String>> bankDtoResponseEntity = bankController.updateBank(bank);
         assertEquals(HttpStatus.OK, bankDtoResponseEntity.getStatusCode());
 
 

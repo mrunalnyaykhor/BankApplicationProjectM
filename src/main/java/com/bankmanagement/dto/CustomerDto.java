@@ -14,8 +14,7 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerDto {
-    @NotNull(message = "customerId is mandatory")
-    private Long customerId;
+
     @NotBlank(message = "First Name is mandatory")
     private String firstName;
     @NotBlank(message = "Last Name is mandatory")
@@ -43,4 +42,7 @@ public class CustomerDto {
     private String address;
     @NotNull(message = "Bank Id is mandatory")
     private Long bankId;
+
+
+
 }

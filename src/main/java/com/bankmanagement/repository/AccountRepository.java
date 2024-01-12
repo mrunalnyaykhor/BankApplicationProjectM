@@ -14,10 +14,18 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Serializable> {
 
-    Account findByAccountNumber(Long accountNumberTo);
+    //Account findByAccountNumber(Long accountNumberTo);
     List<Account> findByCustomerAndBankAndAccountType(Customer customer, Bank bank, AccountType accountType);
 
     List<Account> findByAccountType(AccountType accountType);
 
     Optional<Account> findByAccountId(Long accountId);
+
+
+    Account findByAmount(Double amount);
+
+
+    Account findByAccountNumber(Long accountNumberTo);
+
+
 }

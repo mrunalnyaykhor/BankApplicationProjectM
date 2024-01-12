@@ -3,6 +3,7 @@ package com.bankmanagement.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Setter
 @Getter
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @Entity
 public class Customer {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "customerId")
     private Long customerId;
     @Column(name = "firstName")
@@ -37,6 +39,7 @@ public class Customer {
     private Bank bank;
     @Column(insertable = false, updatable = false)
     private Long bankId;
+
 
 
 }

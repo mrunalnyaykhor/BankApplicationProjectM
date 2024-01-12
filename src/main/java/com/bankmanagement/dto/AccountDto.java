@@ -16,8 +16,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountDto {
-    @NotNull(message = "accountId is mandatory")
-    private Long accountId;
+
 
     @NotNull(message = "amount is mandatory")
     @DecimalMin(value = "0.01", message = "Amount must be greater than zero")
@@ -28,10 +27,9 @@ public class AccountDto {
 
     private boolean isBlocked = false;
     @NotNull(message = "customerId should be mandatory")
-
     private Long customerId;
+    private long accountNumber;
     @NotNull(message = "bankId should be mandatory")
-
     private Long bankId;
 
     @NotNull(message = "Account type must not be null")

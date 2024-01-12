@@ -1,6 +1,7 @@
 package com.bankmanagement.controller;
 
 import com.bankmanagement.dto.TransactionDto;
+import com.bankmanagement.entity.Transaction;
 import com.bankmanagement.service.serviceimpl.TransactionServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +41,7 @@ public class TransactionControllerTest {
     @Test
     public void transferMoneyAPITest() throws AccountException {
 
-        ResponseEntity<String> stringResponseEntity = transactionController.transferMoney(transactionDto);
+        ResponseEntity<ResponseEntity<String>> stringResponseEntity = transactionController.transferMoney(transactionDto);
 
     }
 

@@ -42,7 +42,7 @@ public class AccountServiceTest {
             .accountNumber(550144298970l).amount(7072.00).accountType(AccountType.SAVING)
             .isBlocked(false).build();
 
-    AccountDto accountDto = AccountDto.builder().accountId(3l).amount(60345.00).accountType(AccountType.CURRENT).bankId(1L).customerId(1L)
+    AccountDto accountDto = AccountDto.builder().amount(60345.00).accountType(AccountType.CURRENT).bankId(1L).customerId(1L)
             .isBlocked(false).build();
 
 
@@ -69,7 +69,7 @@ public class AccountServiceTest {
         Mockito.when(accountRepository.save(Mockito.any())).thenReturn(account);
         Mockito.when(accountRepository.findByCustomerAndBankAndAccountType(Mockito.any(),Mockito.any(),Mockito.any())).thenReturn(accountList);
         Mockito.when(accountRepository.findByAccountNumber(Mockito.any())).thenReturn(null);
-        String result = accountService.saveAccount(accountDto);
+        String result = String.valueOf(accountService.saveAccount(accountDto));
 
         assertEquals(result,ApplicationConstant.ACCOUNT_IS_CREATED);
 
@@ -85,7 +85,7 @@ public class AccountServiceTest {
                 .accountNumber(550144298970l).amount(7072.00).accountType(AccountType.SAVING)
                 .isBlocked(false).build();
 
-        AccountDto accountDto = AccountDto.builder().accountId(3l).amount(605.00).accountType(AccountType.CURRENT).bankId(1L).customerId(1L)
+        AccountDto accountDto = AccountDto.builder().amount(605.00).accountType(AccountType.CURRENT).bankId(1L).customerId(1L)
                 .isBlocked(false).build();
 
 
@@ -101,7 +101,7 @@ public class AccountServiceTest {
         Mockito.when(accountRepository.findByAccountNumber(Mockito.any())).thenReturn(null);
 
 
-            String exception =accountService.saveAccount(accountDto);
+            String exception = String.valueOf(accountService.saveAccount(accountDto));
 
         assertEquals(exception,ApplicationConstant.MINIMUM_BALANCE_FOR_CURRENT_ACCOUNT );
 
@@ -118,7 +118,7 @@ public class AccountServiceTest {
                 .accountNumber(550144298970l).amount(7072.00).accountType(AccountType.SAVING)
                 .isBlocked(false).build();
 
-        AccountDto accountDto = AccountDto.builder().accountId(3l).amount(605.00).accountType(AccountType.CURRENT).bankId(1L).customerId(1L)
+        AccountDto accountDto = AccountDto.builder().amount(605.00).accountType(AccountType.CURRENT).bankId(1L).customerId(1L)
                 .isBlocked(false).build();
 
 
@@ -134,7 +134,7 @@ public class AccountServiceTest {
         Mockito.when(accountRepository.findByAccountNumber(Mockito.any())).thenReturn(null);
 
 
-        String exception =accountService.saveAccount(accountDto);
+        String exception = String.valueOf(accountService.saveAccount(accountDto));
 
         assertEquals(exception,ApplicationConstant.MINIMUM_BALANCE_FOR_SAVING_ACCOUNT );
 
@@ -149,7 +149,7 @@ public class AccountServiceTest {
                 .accountNumber(550144298970l).amount(7072.00).accountType(AccountType.SAVING)
                 .isBlocked(false).build();
 
-        AccountDto accountDto = AccountDto.builder().accountId(1l).amount(605.00).accountType(AccountType.CURRENT).bankId(1L).customerId(1L)
+        AccountDto accountDto = AccountDto.builder().amount(605.00).accountType(AccountType.CURRENT).bankId(1L).customerId(1L)
                 .isBlocked(false).build();
 
         Mockito.when(accountRepository.findById(Mockito.any())).thenReturn(Optional.of(account));
@@ -191,18 +191,18 @@ assertThrows(AccountException.class,()->{
     @DisplayName("JUnit test for updateAccountById method")
     @Test
     public void updateAccountByIdTest() {
-        Mockito.when(accountRepository.findById(accountDto.getAccountId())).thenReturn(Optional.ofNullable(account));
-        String result = accountService.updateAccountById(accountDto);
+        Mockito.when(accountRepository.findById(account.getAccountId())).thenReturn(Optional.ofNullable(account));
+        String result = String.valueOf(accountService.updateAccountById(account));
 
         assertEquals(result, ApplicationConstant.ACCOUNT_ID_UPDATE_SUCCESSFULLY);
     }
     @DisplayName("JUnit test for updateAccountById_Not_Found_method")
     @Test
     public void updateAccountByIdTest_failWhenAccountIdNotFound() {
-        Mockito.when(accountRepository.findById(accountDto.getAccountId())).thenReturn(Optional.empty());
+        Mockito.when(accountRepository.findById(account.getAccountId())).thenReturn(Optional.empty());
 
         assertThrows(AccountException.class,()->{
-            accountService.updateAccountById(accountDto);
+            accountService.updateAccountById(account);
         });
     }
 

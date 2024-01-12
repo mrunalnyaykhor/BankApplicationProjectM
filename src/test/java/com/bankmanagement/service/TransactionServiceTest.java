@@ -46,7 +46,7 @@ public class TransactionServiceTest {
     public void transferMoneySuccessfullyTest() {
         Mockito.when(accountRepository.findByAccountNumber(Mockito.any())).thenReturn(account1);
         Mockito.when(accountRepository.findByAccountNumber(Mockito.any())).thenReturn(account2);
-        String result = transactionService.transferMoney(transactionDto1);
+        String result = String.valueOf(transactionService.transferMoney(transactionDto1));
         assertEquals(result, ApplicationConstant.TRANSACTION_SUCCESSFUL);
 
     }
